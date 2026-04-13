@@ -1,9 +1,65 @@
 {
   "unitId": "U3",
-  "unitName": "Unit 3 Learning better",
+  "unitName": "Unit 3",
   "words": [
     {
       "text": "find",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "ruler",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "pen",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "pencil",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "book",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "bag",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "paper",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "these",
       "meaning": "",
       "round": 0,
       "nextReview": null,
@@ -19,39 +75,7 @@
       "history": []
     },
     {
-      "text": "smell",
-      "meaning": "",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "taste",
-      "meaning": "",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
       "text": "hear",
-      "meaning": "",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "touch",
-      "meaning": "",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "learn",
       "meaning": "",
       "round": 0,
       "nextReview": null,
@@ -67,7 +91,7 @@
       "history": []
     },
     {
-      "text": "tongue",
+      "text": "class",
       "meaning": "",
       "round": 0,
       "nextReview": null,
@@ -75,7 +99,15 @@
       "history": []
     },
     {
-      "text": "class",
+      "text": "computer",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "learn",
       "meaning": "",
       "round": 0,
       "nextReview": null,

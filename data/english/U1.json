@@ -1,6 +1,6 @@
 {
   "unitId": "U1",
-  "unitName": "Unit 1 Meeting new people",
+  "unitName": "Unit 1",
   "words": [
     {
       "text": "where",
@@ -19,6 +19,22 @@
       "history": []
     },
     {
+      "text": "about",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "today",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
       "text": "teacher",
       "meaning": "",
       "round": 0,
@@ -28,6 +44,14 @@
     },
     {
       "text": "student",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "after",
       "meaning": "",
       "round": 0,
       "nextReview": null,
@@ -76,6 +100,14 @@
     },
     {
       "text": "he",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "also",
       "meaning": "",
       "round": 0,
       "nextReview": null,

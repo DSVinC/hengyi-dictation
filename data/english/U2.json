@@ -1,7 +1,15 @@
 {
   "unitId": "U2",
-  "unitName": "Unit 2 Expressing yourself",
+  "unitName": "Unit 2",
   "words": [
+    {
+      "text": "has",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
     {
       "text": "long",
       "meaning": "",
@@ -51,6 +59,22 @@
       "history": []
     },
     {
+      "text": "picture",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "card",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
       "text": "sing",
       "meaning": "",
       "round": 0,
@@ -67,6 +91,14 @@
       "history": []
     },
     {
+      "text": "talk",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
       "text": "face",
       "meaning": "",
       "round": 0,
@@ -75,7 +107,39 @@
       "history": []
     },
     {
-      "text": "talk",
+      "text": "all",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "song",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "or",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "so",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "much",
       "meaning": "",
       "round": 0,
       "nextReview": null,

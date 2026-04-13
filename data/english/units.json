@@ -2,32 +2,32 @@
   "units": [
     {
       "id": "U1",
-      "name": "Unit 1 Meeting new people",
+      "name": "Unit 1",
       "status": "active"
     },
     {
       "id": "U2",
-      "name": "Unit 2 Expressing yourself",
+      "name": "Unit 2",
       "status": "active"
     },
     {
       "id": "U3",
-      "name": "Unit 3 Learning better",
+      "name": "Unit 3",
       "status": "active"
     },
     {
       "id": "U4",
-      "name": "Unit 4 Healthy food",
+      "name": "Unit 4",
       "status": "active"
     },
     {
       "id": "U5",
-      "name": "Unit 5 Old toys",
+      "name": "Unit 5",
       "status": "active"
     },
     {
       "id": "U6",
-      "name": "Unit 6 Numbers in life",
+      "name": "Unit 6",
       "status": "active"
     }
   ]

@@ -1,9 +1,17 @@
 {
   "unitId": "U4",
-  "unitName": "Unit 4 Healthy food",
+  "unitName": "Unit 4",
   "words": [
     {
       "text": "breakfast",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "time",
       "meaning": "",
       "round": 0,
       "nextReview": null,
@@ -83,6 +91,14 @@
       "history": []
     },
     {
+      "text": "soup",
+      "meaning": "",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
       "text": "fruit",
       "meaning": "",
       "round": 0,
@@ -91,7 +107,7 @@
       "history": []
     },
     {
-      "text": "yummy",
+      "text": "candy",
       "meaning": "",
       "round": 0,
       "nextReview": null,
