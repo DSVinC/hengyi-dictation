@@ -1,0 +1,5 @@
+TASK_001: 首页框架 + 听写模式页面 - 科目选择、课文/单元列表、词勾选界面（修改 index.html + js/app.js 部分）
+TASK_002: 词库管理页面 - 查看各课/单元词语列表和当前进度（修改 js/app.js + css/style.css）
+TASK_003: 进度总览页面 - 掌握率统计、高频错词排行、各课完成情况（修改 js/app.js + css/style.css）
+TASK_004: 数据层实现 - JSON 数据读取、艾宾浩斯轮次计算、复习词筛选逻辑（修改 js/app.js）
+TASK_005: 响应式适配 + 样式优化 - 手机/平板/PC 三端适配（修改 css/style.css + index.html）
