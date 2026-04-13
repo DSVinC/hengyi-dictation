@@ -347,7 +347,7 @@ async function selectSubject(subject) {
 }
 
 /**
- * 选择课/单元后渲染词语勾选列表
+ * 选择课/单元后渲染词语勾选列表（异步）
  */
 async function selectLesson(lessonId) {
   AppState.currentLesson = lessonId;
@@ -371,55 +371,109 @@ async function selectLesson(lessonId) {
   const isChinese = subject === 'chinese';
   const title = isChinese ? data.lessonName : data.unitName;
 
-  renderWordSelectionPage(data, title, isChinese);
+  await renderWordSelectionPage(data, title, isChinese);
 }
 
 /**
- * 渲染词语勾选页面
+ * 渲染词语勾选页面（带到期复习词独立区块）
  */
-function renderWordSelectionPage(data, title, isChinese) {
-  const wordsHtml = data.words.map(word => {
-    const isDue = isWordDueForReview(word);
-    const reviewTag = isDue
-      ? `<span class="review-tag round-${word.round}">R${word.round}</span>`
+async function renderWordSelectionPage(data, title, isChinese) {
+  const subject = AppState.currentSubject;
+
+  // 1. 当前课/单元的新词（R0）
+  const currentLessonWords = data.words.filter(w => w.round === 0);
+
+  // 2. 获取跨课/单元的到期复习词
+  const dueReviewWords = await getAllDueReviewWords(subject);
+  const r1DueWords = dueReviewWords.filter(w => w.round === 1);
+  const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2);
+
+  // 3. 新词勾选列表
+  const newWordsHtml = currentLessonWords.map(word => {
+    const typeHtml = isChinese && word.type
+      ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
 
     const meaningHtml = !isChinese && word.meaning
       ? `<span class="word-meaning">${word.meaning}</span>`
       : '';
 
-    const typeHtml = isChinese && word.type
-      ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
-      : '';
-
     return `
       <label class="word-item" data-word="${word.text}">
         <input type="checkbox" class="word-checkbox"
-          onchange="toggleWordSelection('${word.text}')"
-          ${word.round > 0 && isDue ? 'checked' : ''}>
-        <span class="word-text">${word.text}${reviewTag}</span>
+          onchange="toggleWordSelection('${word.text}')">
+        <span class="word-text">${word.text}</span>
         ${typeHtml}
         ${meaningHtml}
       </label>
     `;
   }).join('');
 
+  // 4. 到期复习词区块（R1 必听，disabled）
+  const r1WordsHtml = r1DueWords.length > 0
+    ? `
+      <div class="due-review-section">
+        <h3 class="section-title review-r1">🔴 到期复习-R1（必听写）</h3>
+        <p class="limit-hint">${r1DueWords.length} 个词已到期，自动加入听写清单</p>
+        <div class="word-list review-list">
+          ${r1DueWords.map(word => `
+            <label class="word-item disabled-item" data-word="${word.text}">
+              <input type="checkbox" class="word-checkbox" checked disabled>
+              <span class="word-text">${word.text}<span class="review-tag review-tag-r1">R1</span></span>
+              ${!isChinese && word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `
+    : '';
+
+  // 5. 到期复习词区块（R2+ 可选）
+  const r2PlusWordsHtml = r2PlusDueWords.length > 0
+    ? `
+      <div class="due-review-section">
+        <h3 class="section-title review">🔄 到期复习-R2+（建议复习）</h3>
+        <div class="word-list review-list">
+          ${r2PlusDueWords.map(word => {
+            const isSelected = AppState.selectedWords.has(word.text);
+            return `
+              <label class="word-item" data-word="${word.text}">
+                <input type="checkbox" class="word-checkbox"
+                  onchange="toggleWordSelection('${word.text}')"
+                  ${isSelected ? 'checked' : ''}>
+                <span class="word-text">${word.text}<span class="review-tag round-${word.round}">R${word.round}</span></span>
+                ${!isChinese && word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}
+              </label>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `
+    : '';
+
+  // 6. 计算词数限制提示
+  const WORD_LIMIT = 20;
+  const selectedCount = AppState.selectedWords.size;
+  const totalCount = selectedCount + r1DueWords.length;
+
   renderContent(`
     <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
     <h2 class="page-title">${title}</h2>
-    <div class="word-list">${wordsHtml}</div>
+    <p class="limit-hint">已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 共 ${totalCount}/${WORD_LIMIT}</p>
+    <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
+    <div class="word-list">${newWordsHtml}</div>
+    ${r1WordsHtml}
+    ${r2PlusWordsHtml}
     <div class="action-bar">
-      <button class="btn btn-secondary" onclick="selectAllWords()">全选</button>
+      <button class="btn btn-secondary" onclick="selectAllWords()">全选新词</button>
       <button class="btn btn-primary" onclick="generateDictationList()">生成听写清单</button>
     </div>
     <div id="dictation-result"></div>
   `);
 
-  // 自动选中所有到期复习的词
-  data.words.forEach(word => {
-    if (isWordDueForReview(word)) {
-      AppState.selectedWords.add(word.text);
-    }
+  // 自动加入 R1 到期词（不可取消）
+  r1DueWords.forEach(word => {
+    AppState.selectedWords.add(word.text);
   });
 }
 
@@ -435,7 +489,7 @@ function toggleWordSelection(wordText) {
 }
 
 /**
- * 全选当前课/单元的所有词语
+ * 全选当前课/单元的新词（R0）
  */
 function selectAllWords() {
   const subject = AppState.currentSubject;
@@ -444,13 +498,21 @@ function selectAllWords() {
   const data = AppState.wordData[cacheKey];
 
   if (data && data.words) {
+    // 只全选新词（R0），不选复习词
     data.words.forEach(word => {
-      AppState.selectedWords.add(word.text);
+      if (word.round === 0) {
+        AppState.selectedWords.add(word.text);
+      }
     });
 
-    // 更新 UI
-    document.querySelectorAll('.word-checkbox').forEach(cb => {
-      cb.checked = true;
+    // 更新 UI（只更新新词区块的 checkbox）
+    document.querySelectorAll('.word-list:not(.review-list) .word-checkbox').forEach(cb => {
+      const wordItem = cb.closest('.word-item');
+      const wordText = wordItem.dataset.word;
+      const wordData = data.words.find(w => w.text === wordText);
+      if (wordData && wordData.round === 0) {
+        cb.checked = true;
+      }
     });
   }
 }
