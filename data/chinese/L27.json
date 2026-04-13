@@ -1,0 +1,134 @@
+{
+  "lessonId": "L27",
+  "lessonName": "语文园地四",
+  "words": [
+    {
+      "text": "呼吸",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "咳嗽",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "唠叨",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "吆喝",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "诉说",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "讽刺",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "告诫",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "辩论",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "咳",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "嗽",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "唠",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "叨",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "吆",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "讽",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "诚",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "辩",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    }
+  ]
+}

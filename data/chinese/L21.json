@@ -1,0 +1,118 @@
+{
+  "lessonId": "L21",
+  "lessonName": "语文园地三",
+  "words": [
+    {
+      "text": "旭日",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "岛屿",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "海岸",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "浪花",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "军舰",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "铁锚",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "瞭望",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "巡航",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "旭",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "屿",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "舰",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "锚",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "瞭",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "巡",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    }
+  ]
+}

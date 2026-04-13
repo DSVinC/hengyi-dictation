@@ -1,0 +1,214 @@
+{
+  "lessonId": "L10",
+  "lessonName": "第10课",
+  "words": [
+    {
+      "text": "实验",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "验证",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "记号",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "减少",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "阻力",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "大约",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "包括",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "检查",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "至少",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "迷失",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "无误",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "逆风",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "陌生",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "景物",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "能力",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "验",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "证",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "阻",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "约",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "括",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "检",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "查",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "迷",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "误",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "逆",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "陌",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    }
+  ]
+}

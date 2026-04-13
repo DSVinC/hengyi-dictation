@@ -1,0 +1,110 @@
+{
+  "lessonId": "L15",
+  "lessonName": "语文园地二",
+  "words": [
+    {
+      "text": "援助",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "投掷",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "打捞",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "拆分",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "搅动",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "拓展",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "援",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "掷",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "投",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "捞",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "拆",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "搅",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "拓",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    }
+  ]
+}

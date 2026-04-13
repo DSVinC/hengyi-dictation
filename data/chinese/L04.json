@@ -1,0 +1,126 @@
+{
+  "lessonId": "L04",
+  "lessonName": "语文园地一",
+  "words": [
+    {
+      "text": "匕首",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "乙方",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "冗长",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "军犬",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "兑换",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "争执",
+      "type": "word",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "匕",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "忆",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "艺",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "乙",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "兄",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "犬",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "税",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "兑",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    },
+    {
+      "text": "执",
+      "type": "char",
+      "round": 0,
+      "nextReview": null,
+      "wrongCount": 0,
+      "history": []
+    }
+  ]
+}
