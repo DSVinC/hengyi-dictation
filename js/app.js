@@ -144,6 +144,47 @@ function isWordDueForReview(word) {
   return word.nextReview <= today;
 }
 
+/**
+ * 获取科目所有到期复习词
+ * @param {string} subject - 科目 (chinese/english)
+ * @returns {Promise<Array>} 到期复习词列表 [{ text, meaning, round, lessonId, lessonName, ... }]
+ */
+async function getAllDueReviewWords(subject) {
+  const isChinese = subject === 'chinese';
+  const items = isChinese ? AppState.lessons : AppState.units;
+  const today = new Date().toISOString().split('T')[0];
+
+  const dueWords = [];
+
+  for (const item of items) {
+    const cacheKey = `${subject}/${item.id}`;
+    // 确保数据已加载
+    if (!AppState.wordData[cacheKey]) {
+      await loadWordData(subject, item.id);
+    }
+    const data = AppState.wordData[cacheKey];
+
+    if (data && data.words) {
+      const lessonName = isChinese ? data.lessonName : data.unitName;
+      data.words.forEach(word => {
+        // round >= 1 且 nextReview <= today
+        if (word.round >= 1 && word.nextReview && word.nextReview <= today) {
+          dueWords.push({
+            ...word,
+            lessonId: item.id,
+            lessonName: lessonName
+          });
+        }
+      });
+    }
+  }
+
+  // 按轮次排序：R1 > R2 > R3 > R4 > R5
+  dueWords.sort((a, b) => a.round - b.round);
+
+  return dueWords;
+}
+
 // ============================================
 // 数据加载
 // ============================================
@@ -415,54 +456,116 @@ function selectAllWords() {
 }
 
 /**
- * 生成听写清单
+ * 生成听写清单（带自动到期复习词）
  */
-function generateDictationList() {
-  if (AppState.selectedWords.size === 0) {
-    alert('请先勾选词语');
-    return;
-  }
-
+async function generateDictationList() {
   const subject = AppState.currentSubject;
   const lessonId = AppState.currentLesson;
   const cacheKey = `${subject}/${lessonId}`;
   const data = AppState.wordData[cacheKey];
   const isChinese = subject === 'chinese';
 
-  // 分类：新课词 vs 复习词
-  const newWords = [];
-  const reviewWords = [];
-
+  // 1. 收集手动勾选的词
+  const manualSelected = [];
   data.words.forEach(word => {
     if (AppState.selectedWords.has(word.text)) {
-      if (word.round === 0) {
-        newWords.push(word);
-      } else {
-        reviewWords.push(word);
-      }
+      manualSelected.push({
+        ...word,
+        lessonId: lessonId,
+        lessonName: isChinese ? data.lessonName : data.unitName,
+        isManual: true
+      });
     }
   });
 
-  // 构建清单 HTML（两栏布局）
+  // 如果没有任何勾选，提示用户
+  if (manualSelected.length === 0) {
+    // 但仍检查是否有到期复习词
+    const dueWords = await getAllDueReviewWords(subject);
+    if (dueWords.length === 0) {
+      alert('请先勾选词语');
+      return;
+    }
+  }
+
+  // 2. 获取所有到期复习词（跨课/单元）
+  const allDueWords = await getAllDueReviewWords(subject);
+
+  // 3. 去重：到期词已被手动勾选的不重复
+  const manualTexts = new Set(manualSelected.map(w => w.text));
+  const autoDueWords = allDueWords.filter(w => !manualTexts.has(w.text));
+
+  // 4. 分类
+  const r1DueWords = autoDueWords.filter(w => w.round === 1);      // R1 到期（最高优先级）
+  const r2PlusDueWords = autoDueWords.filter(w => w.round >= 2);   // R2-R5 到期
+  const manualR0Words = manualSelected.filter(w => w.round === 0); // 手动勾选的 R0 新词
+  const manualReviewWords = manualSelected.filter(w => w.round >= 1); // 手动勾选的复习词
+
+  // 5. 排序逻辑
+  const WORD_LIMIT = 20;
+
+  // R1 必听写，可突破限制
+  const finalR1 = r1DueWords;
+
+  // 计算剩余名额
+  const remainingSlots = Math.max(0, WORD_LIMIT - finalR1.length);
+
+  // 手动勾选的 R0 新词（纳入剩余名额）
+  const finalR0 = manualR0Words.slice(0, remainingSlots);
+  const postponedR0 = manualR0Words.slice(remainingSlots);
+
+  // 再次计算剩余名额
+  const slotsAfterR0 = Math.max(0, remainingSlots - finalR0.length);
+
+  // 手动勾选的复习词优先纳入
+  const finalManualReview = manualReviewWords.slice(0, slotsAfterR0);
+  const postponedManualReview = manualReviewWords.slice(slotsAfterR0);
+
+  // 再次计算剩余名额
+  const slotsAfterManualReview = Math.max(0, slotsAfterR0 - finalManualReview.length);
+
+  // R2-R5 在剩余名额内按轮次排序纳入
+  const finalR2Plus = r2PlusDueWords.slice(0, slotsAfterManualReview);
+  const postponedR2Plus = r2PlusDueWords.slice(slotsAfterManualReview);
+
+  // 6. 合并延期词语
+  const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
+
+  // 7. 构建清单 HTML
   let resultHtml = '<div class="dictation-list dictation-two-column">';
 
-  if (newWords.length > 0) {
+  // 📝 新课词语（R0 手动勾选）
+  if (finalR0.length > 0) {
     resultHtml += `
       <div class="dictation-section">
-        <h3 class="section-title new">📝 新课词语 (${newWords.length})</h3>
+        <h3 class="section-title new">📝 新课词语 (${finalR0.length})</h3>
         <div class="dictation-words">
-          ${newWords.map(w => `<span class="dictation-word new">${w.text}</span>`).join('')}
+          ${finalR0.map(w => `<span class="dictation-word new">${w.text}</span>`).join('')}
         </div>
       </div>
     `;
   }
 
-  if (reviewWords.length > 0) {
+  // 🔴 到期复习-R1（自动加入）
+  if (finalR1.length > 0) {
     resultHtml += `
       <div class="dictation-section">
-        <h3 class="section-title review">🔄 复习词语 (${reviewWords.length})</h3>
+        <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})</h3>
         <div class="dictation-words">
-          ${reviewWords.map(w => {
+          ${finalR1.map(w => `<span class="dictation-word review-r1">${w.text}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // 🔄 到期复习-R2+（分批纳入）
+  const allReviewWords = [...finalManualReview, ...finalR2Plus];
+  if (allReviewWords.length > 0) {
+    resultHtml += `
+      <div class="dictation-section">
+        <h3 class="section-title review">🔄 到期复习-R2+ (${allReviewWords.length})</h3>
+        <div class="dictation-words">
+          ${allReviewWords.map(w => {
             const roundTag = w.round >= 5 ? '✅' : `R${w.round}`;
             return `<span class="dictation-word review">${w.text} <small>${roundTag}</small></span>`;
           }).join('')}
@@ -473,9 +576,18 @@ function generateDictationList() {
 
   resultHtml += '</div>';
 
+  // ⏸️ 延期词语提示
+  if (postponedWords.length > 0) {
+    resultHtml += `
+      <div class="postponed-notice">
+        ⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）
+      </div>
+    `;
+  }
+
   // 统计信息
-  const total = newWords.length + reviewWords.length;
-  resultHtml += `<p style="text-align:center; margin-top:16px; color:#666;">共 ${total} 个词语</p>`;
+  const totalIncluded = finalR0.length + finalR1.length + allReviewWords.length;
+  resultHtml += `<p style="text-align:center; margin-top:16px; color:#666;">共 ${totalIncluded} 个词（${postponedWords.length} 个延期到明天）</p>`;
 
   document.getElementById('dictation-result').innerHTML = resultHtml;
 }
