@@ -240,15 +240,15 @@ async function loadEnglishUnits() {
  * @param {string} subject - 科目 (chinese/english)
  * @param {string} lessonId - 课/单元ID
  */
-async function loadWordData(subject, lessonId) {
+async function loadWordData(subject, lessonId, silent = false) {
   const cacheKey = `${subject}/${lessonId}`;
   if (AppState.wordData[cacheKey]) {
     return AppState.wordData[cacheKey];
   }
 
   try {
-    showLoading();
-    hideError();
+    if (!silent) showLoading();
+    if (!silent) hideError();
     const path = subject === 'chinese'
       ? `data/chinese/${lessonId}.json`
       : `data/english/${lessonId}.json`;
@@ -261,10 +261,10 @@ async function loadWordData(subject, lessonId) {
     return data;
   } catch (error) {
     console.error(`加载词语数据失败 [${lessonId}]:`, error);
-    showError(error.message || '加载失败，请刷新页面重试');
+    if (!silent) showError(error.message || '加载失败，请刷新页面重试');
     return null;
   } finally {
-    hideLoading();
+    if (!silent) hideLoading();
   }
 }
 
@@ -767,7 +767,7 @@ async function selectVocabSubject(subject) {
 
   // 统计每个课/单元的词语状态
   const itemsWithStats = await Promise.all(items.map(async (item) => {
-    const data = await loadWordData(subject, item.id);
+    const data = await loadWordData(subject, item.id, true);
     if (!data || !data.words) {
       return { ...item, newCount: 0, reviewCount: 0, masteredCount: 0, totalCount: 0 };
     }
