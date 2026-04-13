@@ -65,54 +65,6 @@
       "nextReview": null,
       "wrongCount": 0,
       "history": []
-    },
-    {
-      "text": "旭",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "屿",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "舰",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "锚",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "瞭",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "巡",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
     }
   ]
 }

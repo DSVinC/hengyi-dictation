@@ -49,62 +49,6 @@
       "nextReview": null,
       "wrongCount": 0,
       "history": []
-    },
-    {
-      "text": "援",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "掷",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "投",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "捞",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "拆",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "搅",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "拓",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
     }
   ]
 }

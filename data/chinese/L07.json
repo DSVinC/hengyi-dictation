@@ -107,30 +107,6 @@
       "history": []
     },
     {
-      "text": "匀",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "称",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "致",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
       "text": "束",
       "type": "char",
       "round": 0,
@@ -155,14 +131,6 @@
       "history": []
     },
     {
-      "text": "丧",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
       "text": "追",
       "type": "char",
       "round": 0,
@@ -172,22 +140,6 @@
     },
     {
       "text": "扯",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "叹",
-      "type": "char",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "逃",
       "type": "char",
       "round": 0,
       "nextReview": null,
