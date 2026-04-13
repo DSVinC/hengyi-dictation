@@ -378,6 +378,204 @@ function goBackToLessons() {
 // ============================================
 
 /**
+ * 获取词语状态文本
+ * @param {number} round - 当前轮次
+ * @returns {object} {icon, text, className}
+ */
+function getWordStatus(round) {
+  if (round === 0) {
+    return { icon: '🆕', text: '新词', className: 'status-new' };
+  } else if (round >= 1 && round <= 5) {
+    return { icon: '📝', text: `复习中 R${round}`, className: 'status-review' };
+  } else {
+    return { icon: '✅', text: '已掌握', className: 'status-mastered' };
+  }
+}
+
+/**
+ * 格式化日期显示
+ * @param {string|null} dateStr - ISO日期字符串
+ * @returns {string}
+ */
+function formatDate(dateStr) {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const dateOnly = date.toDateString();
+  if (dateOnly === today.toDateString()) return '今天';
+  if (dateOnly === tomorrow.toDateString()) return '明天';
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${month}月${day}日`;
+}
+
+// ============================================
+// 词库管理页面
+// ============================================
+
+/**
+ * 渲染词库管理页面 - 科目选择
+ */
+function renderVocabularyPage() {
+  AppState.currentSubject = null;
+  AppState.currentLesson = null;
+
+  const html = `
+    <h2 class="page-title">词库管理</h2>
+    <div class="subject-select">
+      <button class="subject-btn chinese" onclick="selectVocabSubject('chinese')">
+        <span class="subject-icon">📖</span>
+        <span>语文</span>
+      </button>
+      <button class="subject-btn english" onclick="selectVocabSubject('english')">
+        <span class="subject-icon">📚</span>
+        <span>英语</span>
+      </button>
+    </div>
+  `;
+  renderContent(html);
+}
+
+/**
+ * 选择科目后渲染课/单元列表（词库管理）
+ */
+async function selectVocabSubject(subject) {
+  AppState.currentSubject = subject;
+
+  const isChinese = subject === 'chinese';
+  const items = isChinese
+    ? await loadChineseLessons()
+    : await loadEnglishUnits();
+
+  const subjectName = isChinese ? '语文' : '英语';
+  const itemName = isChinese ? '课' : '单元';
+
+  if (items.length === 0) {
+    renderContent(`
+      <button class="back-btn" onclick="renderVocabularyPage()">← 返回</button>
+      <div class="empty-state">
+        <p class="empty-icon">📭</p>
+        <p class="empty-text">暂无${itemName}数据</p>
+      </div>
+    `);
+    return;
+  }
+
+  // 统计每个课/单元的词语状态
+  const itemsWithStats = await Promise.all(items.map(async (item) => {
+    const data = await loadWordData(subject, item.id);
+    if (!data || !data.words) {
+      return { ...item, newCount: 0, reviewCount: 0, masteredCount: 0, totalCount: 0 };
+    }
+    const newCount = data.words.filter(w => w.round === 0).length;
+    const reviewCount = data.words.filter(w => w.round >= 1 && w.round <= 5).length;
+    const masteredCount = data.words.filter(w => w.round >= 6).length;
+    return { ...item, newCount, reviewCount, masteredCount, totalCount: data.words.length };
+  }));
+
+  const listHtml = itemsWithStats.map(item => `
+    <div class="lesson-item" onclick="selectVocabLesson('${item.id}')">
+      <div class="lesson-info">
+        <span class="lesson-name">${item.name}</span>
+        <div class="lesson-stats">
+          <span class="stat-badge stat-new">🆕 ${item.newCount}</span>
+          <span class="stat-badge stat-review">📝 ${item.reviewCount}</span>
+          <span class="stat-badge stat-mastered">✅ ${item.masteredCount}</span>
+        </div>
+      </div>
+      <span class="lesson-arrow">›</span>
+    </div>
+  `).join('');
+
+  renderContent(`
+    <button class="back-btn" onclick="renderVocabularyPage()">← 返回</button>
+    <h2 class="page-title">${subjectName}${itemName}列表</h2>
+    <div class="lesson-list">${listHtml}</div>
+  `);
+}
+
+/**
+ * 选择课/单元后渲染词语列表（词库管理）
+ */
+async function selectVocabLesson(lessonId) {
+  AppState.currentLesson = lessonId;
+
+  const subject = AppState.currentSubject;
+  const data = await loadWordData(subject, lessonId);
+  const isChinese = subject === 'chinese';
+
+  if (!data || !data.words || data.words.length === 0) {
+    renderContent(`
+      <button class="back-btn" onclick="selectVocabSubject('${subject}')">← 返回</button>
+      <div class="empty-state">
+        <p class="empty-icon">📭</p>
+        <p class="empty-text">暂无词语数据</p>
+      </div>
+    `);
+    return;
+  }
+
+  const title = isChinese ? data.lessonName : data.unitName;
+
+  // 按状态分组排序：新词 → 复习中 → 已掌握
+  const sortedWords = [...data.words].sort((a, b) => {
+    const getPriority = (w) => {
+      if (w.round === 0) return 0;
+      if (w.round >= 1 && w.round <= 5) return 1;
+      return 2;
+    };
+    return getPriority(a) - getPriority(b);
+  });
+
+  const wordsHtml = sortedWords.map(word => {
+    const status = getWordStatus(word.round);
+    const meaningHtml = !isChinese && word.meaning
+      ? `<span class="vocab-word-meaning">${word.meaning}</span>`
+      : '';
+
+    const typeHtml = isChinese && word.type
+      ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
+      : '';
+
+    const nextReviewText = word.nextReview ? formatDate(word.nextReview) : '-';
+
+    return `
+      <div class="vocab-word-item">
+        <div class="vocab-word-main">
+          <span class="vocab-word-text">${word.text}</span>
+          ${typeHtml}
+          ${meaningHtml}
+        </div>
+        <div class="vocab-word-meta">
+          <span class="vocab-status ${status.className}">${status.icon} ${status.text}</span>
+          <span class="vocab-next-review">下次: ${nextReviewText}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 统计信息
+  const newCount = data.words.filter(w => w.round === 0).length;
+  const reviewCount = data.words.filter(w => w.round >= 1 && w.round <= 5).length;
+  const masteredCount = data.words.filter(w => w.round >= 6).length;
+
+  renderContent(`
+    <button class="back-btn" onclick="selectVocabSubject('${subject}')">← 返回</button>
+    <h2 class="page-title">${title}</h2>
+    <div class="vocab-summary">
+      <span class="stat-badge stat-new">🆕 新词 ${newCount}</span>
+      <span class="stat-badge stat-review">📝 复习 ${reviewCount}</span>
+      <span class="stat-badge stat-mastered">✅ 掌握 ${masteredCount}</span>
+    </div>
+    <div class="vocab-word-list">${wordsHtml}</div>
+  `);
+}
+
+/**
  * 切换页面
  */
 function switchPage(page) {
@@ -388,19 +586,18 @@ function switchPage(page) {
     btn.classList.toggle('active', btn.dataset.page === page);
   });
 
+  // 重置状态
+  AppState.currentSubject = null;
+  AppState.currentLesson = null;
+  AppState.selectedWords.clear();
+
   // 渲染对应页面
   switch (page) {
     case 'dictation':
       renderDictationPage();
       break;
     case 'vocabulary':
-      renderContent(`
-        <div class="empty-state">
-          <p class="empty-icon">🔧</p>
-          <h2 class="page-title">词库管理</h2>
-          <p class="empty-text">功能开发中...</p>
-        </div>
-      `);
+      renderVocabularyPage();
       break;
     case 'progress':
       renderContent(`

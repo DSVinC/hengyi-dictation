@@ -421,3 +421,123 @@ body {
     font-size: 20px;
   }
 }
+
+/* ============================================
+   词库管理页面样式
+   ============================================ */
+
+/* 课/单元统计徽章 */
+.lesson-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lesson-stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.stat-badge.stat-new {
+  background: #fff0f6;
+  color: #eb2f96;
+}
+
+.stat-badge.stat-review {
+  background: #fff7e6;
+  color: #d46b08;
+}
+
+.stat-badge.stat-mastered {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+/* 词库统计汇总 */
+.vocab-summary {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* 词语列表（词库管理） */
+.vocab-word-list {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.vocab-word-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.vocab-word-item:last-child {
+  border-bottom: none;
+}
+
+.vocab-word-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vocab-word-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+}
+
+.vocab-word-meaning {
+  font-size: 14px;
+  color: #666;
+  margin-left: 8px;
+}
+
+.vocab-word-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vocab-status {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.vocab-status.status-new {
+  background: #fff0f6;
+  color: #eb2f96;
+}
+
+.vocab-status.status-review {
+  background: #fff7e6;
+  color: #d46b08;
+}
+
+.vocab-status.status-mastered {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.vocab-next-review {
+  font-size: 12px;
+  color: #999;
+}
