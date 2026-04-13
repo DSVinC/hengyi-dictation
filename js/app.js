@@ -17,8 +17,14 @@ const AppState = {
   selectedWords: new Set(),   // 已勾选的词语
   lessons: [],                // 语文课列表
   units: [],                  // 英语单元列表
-  wordData: {}                // 缓存的词语数据
+  wordData: {},               // 缓存的词语数据
+  isLoading: false            // 全局加载状态
 };
+
+// ============================================
+// 请求超时配置
+// ============================================
+const FETCH_TIMEOUT = 10000; // 10秒超时
 
 // ============================================
 // 艾宾浩斯复习间隔（天）
@@ -26,6 +32,93 @@ const AppState = {
 // 第3轮: 4天后 → 第4轮: 7天后 → 第5轮: 15天后
 // ============================================
 const EBINGHAUS_INTERVALS = [1, 2, 4, 7, 15];
+
+// ============================================
+// 工具函数
+// ============================================
+
+/**
+ * 带超时的 fetch 请求
+ * @param {string} url - 请求URL
+ * @param {object} options - fetch选项
+ * @returns {Promise<Response>}
+ */
+async function fetchWithTimeout(url, options = {}) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('请求超时，请检查网络连接后刷新页面');
+    }
+    throw error;
+  }
+}
+
+/**
+ * 解析 JSON 并捕获错误
+ * @param {Response} response - fetch响应
+ * @returns {Promise<object>}
+ */
+async function parseJsonSafe(response) {
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error('数据格式错误，请刷新页面重试');
+  }
+}
+
+/**
+ * 显示全局加载状态
+ */
+function showLoading() {
+  AppState.isLoading = true;
+  const loadingEl = document.getElementById('global-loading');
+  if (loadingEl) {
+    loadingEl.classList.add('visible');
+  }
+}
+
+/**
+ * 隐藏全局加载状态
+ */
+function hideLoading() {
+  AppState.isLoading = false;
+  const loadingEl = document.getElementById('global-loading');
+  if (loadingEl) {
+    loadingEl.classList.remove('visible');
+  }
+}
+
+/**
+ * 显示错误提示
+ * @param {string} message - 错误消息
+ */
+function showError(message) {
+  const errorEl = document.getElementById('global-error');
+  if (errorEl) {
+    errorEl.querySelector('.error-text').textContent = message;
+    errorEl.classList.add('visible');
+  }
+}
+
+/**
+ * 隐藏错误提示
+ */
+function hideError() {
+  const errorEl = document.getElementById('global-error');
+  if (errorEl) {
+    errorEl.classList.remove('visible');
+  }
+}
 
 /**
  * 计算下一次复习日期
@@ -60,13 +153,21 @@ function isWordDueForReview(word) {
  */
 async function loadChineseLessons() {
   try {
-    const response = await fetch('data/chinese/lessons.json');
-    const data = await response.json();
+    showLoading();
+    hideError();
+    const response = await fetchWithTimeout('data/chinese/lessons.json');
+    if (!response.ok) {
+      throw new Error('加载失败，请刷新页面重试');
+    }
+    const data = await parseJsonSafe(response);
     AppState.lessons = data.lessons;
     return data.lessons;
   } catch (error) {
     console.error('加载语文课列表失败:', error);
+    showError(error.message || '加载失败，请刷新页面重试');
     return [];
+  } finally {
+    hideLoading();
   }
 }
 
@@ -75,13 +176,21 @@ async function loadChineseLessons() {
  */
 async function loadEnglishUnits() {
   try {
-    const response = await fetch('data/english/units.json');
-    const data = await response.json();
+    showLoading();
+    hideError();
+    const response = await fetchWithTimeout('data/english/units.json');
+    if (!response.ok) {
+      throw new Error('加载失败，请刷新页面重试');
+    }
+    const data = await parseJsonSafe(response);
     AppState.units = data.units;
     return data.units;
   } catch (error) {
     console.error('加载英语单元列表失败:', error);
+    showError(error.message || '加载失败，请刷新页面重试');
     return [];
+  } finally {
+    hideLoading();
   }
 }
 
@@ -97,16 +206,24 @@ async function loadWordData(subject, lessonId) {
   }
 
   try {
+    showLoading();
+    hideError();
     const path = subject === 'chinese'
       ? `data/chinese/${lessonId}.json`
       : `data/english/${lessonId}.json`;
-    const response = await fetch(path);
-    const data = await response.json();
+    const response = await fetchWithTimeout(path);
+    if (!response.ok) {
+      throw new Error('加载失败，请刷新页面重试');
+    }
+    const data = await parseJsonSafe(response);
     AppState.wordData[cacheKey] = data;
     return data;
   } catch (error) {
     console.error(`加载词语数据失败 [${lessonId}]:`, error);
+    showError(error.message || '加载失败，请刷新页面重试');
     return null;
+  } finally {
+    hideLoading();
   }
 }
 
@@ -115,10 +232,16 @@ async function loadWordData(subject, lessonId) {
 // ============================================
 
 /**
- * 渲染主内容区
+ * 渲染主内容区（带淡入动画）
  */
 function renderContent(html) {
-  document.getElementById('main-content').innerHTML = html;
+  const mainContent = document.getElementById('main-content');
+  mainContent.classList.remove('fade-in');
+  mainContent.innerHTML = html;
+  // 触发动画
+  requestAnimationFrame(() => {
+    mainContent.classList.add('fade-in');
+  });
 }
 
 /**
@@ -161,7 +284,8 @@ async function selectSubject(subject) {
       <button class="back-btn" onclick="goBack()">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">暂无${itemName}数据</p>
+        <p class="empty-text">还没有${itemName}数据，请先添加课程内容</p>
+        <p class="empty-hint">提示：在 data/${subject} 目录下创建 lessons.json 或 units.json</p>
       </div>
     `);
     return;
@@ -196,7 +320,8 @@ async function selectLesson(lessonId) {
       <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">暂无词语数据</p>
+        <p class="empty-text">还没有词语数据，请先添加词语内容</p>
+        <p class="empty-hint">提示：在 data/${subject}/${lessonId}.json 中添加词语列表</p>
       </div>
     `);
     return;
@@ -318,8 +443,8 @@ function generateDictationList() {
     }
   });
 
-  // 构建清单 HTML
-  let resultHtml = '<div class="dictation-list">';
+  // 构建清单 HTML（两栏布局）
+  let resultHtml = '<div class="dictation-list dictation-two-column">';
 
   if (newWords.length > 0) {
     resultHtml += `
@@ -459,7 +584,8 @@ async function selectVocabSubject(subject) {
       <button class="back-btn" onclick="renderVocabularyPage()">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">暂无${itemName}数据</p>
+        <p class="empty-text">还没有${itemName}数据，请先添加课程内容</p>
+        <p class="empty-hint">提示：在 data/${subject} 目录下创建 lessons.json 或 units.json</p>
       </div>
     `);
     return;
@@ -513,7 +639,8 @@ async function selectVocabLesson(lessonId) {
       <button class="back-btn" onclick="selectVocabSubject('${subject}')">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">暂无词语数据</p>
+        <p class="empty-text">还没有词语数据，请先添加词语内容</p>
+        <p class="empty-hint">提示：在 data/${subject}/${lessonId}.json 中添加词语列表</p>
       </div>
     `);
     return;

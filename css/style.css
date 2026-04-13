@@ -18,6 +18,113 @@ body {
 }
 
 /* ============================================
+   全局加载与错误状态
+   ============================================ */
+#global-loading {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#global-loading.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #1890ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 16px;
+  font-size: 16px;
+  color: #666;
+}
+
+#global-error {
+  position: fixed;
+  top: 80px;
+  left: 16px;
+  right: 16px;
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+#global-error.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.error-icon {
+  color: #ff4d4f;
+  font-size: 20px;
+}
+
+.error-text {
+  color: #d4380d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.error-close:hover {
+  color: #666;
+}
+
+/* ============================================
+   页面切换动画
+   ============================================ */
+#main-content {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#main-content.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
    导航栏
    ============================================ */
 .navbar {
@@ -55,6 +162,11 @@ body {
 
 .nav-btn:hover:not(.active) {
   background: #e0e0e0;
+}
+
+.nav-btn:active:not(.active) {
+  background: #d0d0d0;
+  transform: scale(0.98);
 }
 
 .nav-btn:disabled {
@@ -113,6 +225,11 @@ body {
   box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
 }
 
+.subject-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.15);
+}
+
 .subject-btn.chinese {
   color: #d4380d;
 }
@@ -122,6 +239,10 @@ body {
   border-color: #d4380d;
 }
 
+.subject-btn.chinese:active {
+  background: #ffe7e5;
+}
+
 .subject-btn.english {
   color: #1890ff;
 }
@@ -129,6 +250,10 @@ body {
 .subject-btn.english:hover {
   background: #e6f7ff;
   border-color: #1890ff;
+}
+
+.subject-btn.english:active {
+  background: #d4e8fc;
 }
 
 .subject-icon {
@@ -159,6 +284,12 @@ body {
 .lesson-item:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.lesson-item:active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(0);
+  background: #fafafa;
 }
 
 .lesson-name {
@@ -193,6 +324,11 @@ body {
 .back-btn:hover {
   background: #e8e8e8;
   color: #333;
+}
+
+.back-btn:active {
+  background: #d8d8d8;
+  transform: scale(0.98);
 }
 
 /* ============================================
@@ -280,6 +416,11 @@ body {
   background: #40a9ff;
 }
 
+.btn-primary:active {
+  background: #096dd9;
+  transform: scale(0.98);
+}
+
 .btn-primary:disabled {
   background: #d9d9d9;
   cursor: not-allowed;
@@ -292,6 +433,11 @@ body {
 
 .btn-secondary:hover {
   background: #e8e8e8;
+}
+
+.btn-secondary:active {
+  background: #d8d8d8;
+  transform: scale(0.98);
 }
 
 /* ============================================
@@ -390,6 +536,13 @@ body {
   font-size: 16px;
 }
 
+.empty-hint {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
 /* ============================================
    加载状态
    ============================================ */
@@ -403,7 +556,13 @@ body {
 /* ============================================
    响应式适配
    ============================================ */
+
+/* 平板端 (768px-1023px) */
 @media (min-width: 768px) {
+  .container {
+    max-width: 900px;
+  }
+
   .subject-btn {
     padding: 60px 40px;
     font-size: 28px;
@@ -419,6 +578,156 @@ body {
 
   .dictation-word {
     font-size: 20px;
+  }
+
+  /* 听写清单两栏布局 */
+  .dictation-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .dictation-two-column .dictation-section {
+    margin-bottom: 0;
+  }
+
+  /* 词库管理页面两列网格 */
+  .vocab-word-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .vocab-word-item {
+    border-bottom: none;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+  }
+
+  /* 进度统计两列网格 */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mastery-ring {
+    width: 150px;
+    height: 150px;
+  }
+
+  .mastery-percent {
+    font-size: 32px;
+  }
+
+  /* 高频错词排行两列 */
+  .error-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
+/* PC端 (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    padding: 20px 32px;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  /* 科目选择按钮加大 */
+  .subject-btn {
+    padding: 80px 60px;
+    font-size: 32px;
+  }
+
+  .subject-icon {
+    font-size: 80px;
+  }
+
+  /* 课/单元列表三列网格 */
+  .lesson-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .lesson-item {
+    padding: 24px;
+  }
+
+  .lesson-name {
+    font-size: 20px;
+  }
+
+  /* 词语勾选列表两列 */
+  .word-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .word-item {
+    border-bottom: none;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+  }
+
+  /* 听写清单两栏保持 */
+  .dictation-two-column {
+    gap: 32px;
+  }
+
+  /* 词库管理三列网格 */
+  .vocab-word-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .vocab-word-text {
+    font-size: 22px;
+  }
+
+  /* 进度页面布局优化 */
+  .stats-card, .error-ranking, .lesson-progress {
+    padding: 32px;
+  }
+
+  .stats-grid {
+    gap: 24px;
+  }
+
+  .stat-value {
+    font-size: 36px;
+  }
+
+  .mastery-ring {
+    width: 180px;
+    height: 180px;
+  }
+
+  .mastery-percent {
+    font-size: 40px;
+  }
+
+  /* 高频错词三列 */
+  .error-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* 各课进度两列 */
+  .progress-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .progress-item {
+    padding: 16px;
   }
 }
 
@@ -821,20 +1130,4 @@ body {
 
 .progress-bar.medium {
   background: linear-gradient(90deg, #fa8c16, #ffc53d);
-}
-
-/* 响应式适配 */
-@media (min-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .mastery-ring {
-    width: 150px;
-    height: 150px;
-  }
-
-  .mastery-percent {
-    font-size: 32px;
-  }
 }

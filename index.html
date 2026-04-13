@@ -14,6 +14,19 @@
     <button class="nav-btn" data-page="progress">进度总览</button>
   </nav>
 
+  <!-- 全局加载状态 -->
+  <div id="global-loading">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">加载中...</span>
+  </div>
+
+  <!-- 全局错误提示 -->
+  <div id="global-error">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text"></span>
+    <button class="error-close" onclick="hideError()">×</button>
+  </div>
+
   <!-- 主内容区 -->
   <main class="container" id="main-content">
     <!-- 内容由 js/app.js 动态渲染 -->
