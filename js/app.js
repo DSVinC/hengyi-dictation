@@ -600,15 +600,198 @@ function switchPage(page) {
       renderVocabularyPage();
       break;
     case 'progress':
-      renderContent(`
-        <div class="empty-state">
-          <p class="empty-icon">📊</p>
-          <h2 class="page-title">进度总览</h2>
-          <p class="empty-text">功能开发中...</p>
-        </div>
-      `);
+      renderProgressPage('all');
       break;
   }
+}
+
+// ============================================
+// 进度总览页面
+// ============================================
+
+/**
+ * 渲染进度总览页面
+ * @param {string} filter - 筛选类型: all, chinese, english
+ */
+async function renderProgressPage(filter = 'all') {
+  renderContent('<div class="loading">加载中...</div>');
+
+  // 加载所有数据
+  const chineseLessons = await loadChineseLessons();
+  const englishUnits = await loadEnglishUnits();
+
+  // 收集所有词语数据
+  const allWords = [];
+  const lessonStats = [];
+
+  // 加载语文词语
+  if (filter === 'all' || filter === 'chinese') {
+    for (const lesson of chineseLessons) {
+      const data = await loadWordData('chinese', lesson.id);
+      if (data && data.words) {
+        data.words.forEach(word => {
+          allWords.push({ ...word, subject: 'chinese', lessonId: lesson.id, lessonName: data.lessonName });
+        });
+        const masteredCount = data.words.filter(w => w.round >= 6).length;
+        lessonStats.push({
+          name: lesson.name,
+          subject: 'chinese',
+          mastered: masteredCount,
+          total: data.words.length,
+          percent: data.words.length > 0 ? Math.round((masteredCount / data.words.length) * 100) : 0
+        });
+      }
+    }
+  }
+
+  // 加载英语词语
+  if (filter === 'all' || filter === 'english') {
+    for (const unit of englishUnits) {
+      const data = await loadWordData('english', unit.id);
+      if (data && data.words) {
+        data.words.forEach(word => {
+          allWords.push({ ...word, subject: 'english', unitId: unit.id, unitName: data.unitName });
+        });
+        const masteredCount = data.words.filter(w => w.round >= 6).length;
+        lessonStats.push({
+          name: unit.name,
+          subject: 'english',
+          mastered: masteredCount,
+          total: data.words.length,
+          percent: data.words.length > 0 ? Math.round((masteredCount / data.words.length) * 100) : 0
+        });
+      }
+    }
+  }
+
+  // 计算总体统计
+  const totalCount = allWords.length;
+  const masteredCount = allWords.filter(w => w.round >= 6).length;
+  const reviewCount = allWords.filter(w => w.round >= 1 && w.round <= 5).length;
+  const newCount = allWords.filter(w => w.round === 0).length;
+  const masteryPercent = totalCount > 0 ? Math.round((masteredCount / totalCount) * 100) : 0;
+
+  // 高频错词排行（前10）
+  const errorWords = allWords
+    .filter(w => w.wrongCount > 0)
+    .sort((a, b) => b.wrongCount - a.wrongCount)
+    .slice(0, 10);
+
+  // 按完成度排序课/单元
+  lessonStats.sort((a, b) => b.percent - a.percent);
+
+  // 渲染页面
+  const filterHtml = `
+    <div class="filter-bar">
+      <button class="filter-btn all ${filter === 'all' ? 'active' : ''}" onclick="renderProgressPage('all')">全部</button>
+      <button class="filter-btn chinese ${filter === 'chinese' ? 'active' : ''}" onclick="renderProgressPage('chinese')">语文</button>
+      <button class="filter-btn english ${filter === 'english' ? 'active' : ''}" onclick="renderProgressPage('english')">英语</button>
+    </div>
+  `;
+
+  // 总体统计卡片
+  const statsHtml = `
+    <div class="stats-card">
+      <h3 class="stats-title">📊 总体统计</h3>
+      <div class="stats-grid">
+        <div class="stat-item total">
+          <span class="stat-value">${totalCount}</span>
+          <span class="stat-label">总词数</span>
+        </div>
+        <div class="stat-item mastered">
+          <span class="stat-value">${masteredCount}</span>
+          <span class="stat-label">已掌握</span>
+        </div>
+        <div class="stat-item review">
+          <span class="stat-value">${reviewCount}</span>
+          <span class="stat-label">复习中</span>
+        </div>
+        <div class="stat-item new">
+          <span class="stat-value">${newCount}</span>
+          <span class="stat-label">新词</span>
+        </div>
+      </div>
+      <div class="mastery-section">
+        <div class="mastery-ring">
+          <svg viewBox="0 0 100 100">
+            <circle class="mastery-ring-bg" cx="50" cy="50" r="40"></circle>
+            <circle class="mastery-ring-progress" cx="50" cy="50" r="40"
+              stroke-dasharray="${2 * Math.PI * 40}"
+              stroke-dashoffset="${2 * Math.PI * 40 * (1 - masteryPercent / 100)}"></circle>
+          </svg>
+          <span class="mastery-percent">${masteryPercent}%</span>
+        </div>
+        <span class="mastery-label">掌握率</span>
+      </div>
+    </div>
+  `;
+
+  // 高频错词排行
+  const errorHtml = errorWords.length > 0
+    ? `
+      <div class="error-ranking">
+        <h3 class="error-title">⚠️ 高频错词排行 (前10)</h3>
+        <div class="error-list">
+          ${errorWords.map(word => `
+            <div class="error-item">
+              <span class="error-word">${word.text}</span>
+              <div class="error-info">
+                <span class="error-count">❌ ${word.wrongCount}次</span>
+                <span class="error-round">R${word.round}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `
+    : `
+      <div class="error-ranking">
+        <h3 class="error-title">⚠️ 高频错词排行</h3>
+        <div class="empty-state">
+          <p class="empty-text">暂无错词记录</p>
+        </div>
+      </div>
+    `;
+
+  // 各课/单元完成情况
+  const progressHtml = lessonStats.length > 0
+    ? `
+      <div class="lesson-progress">
+        <h3 class="progress-title">📚 各课/单元完成情况</h3>
+        <div class="progress-list">
+          ${lessonStats.map(stat => {
+            const barClass = stat.percent < 30 ? 'low' : stat.percent < 60 ? 'medium' : '';
+            return `
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-lesson-name">${stat.name}</span>
+                  <span class="progress-numbers">${stat.mastered}/${stat.total}</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar ${barClass}" style="width: ${stat.percent}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `
+    : `
+      <div class="lesson-progress">
+        <h3 class="progress-title">📚 各课/单元完成情况</h3>
+        <div class="empty-state">
+          <p class="empty-text">暂无课/单元数据</p>
+        </div>
+      </div>
+    `;
+
+  renderContent(`
+    <h2 class="page-title">进度总览</h2>
+    ${filterHtml}
+    ${statsHtml}
+    ${errorHtml}
+    ${progressHtml}
+  `);
 }
 
 // ============================================
