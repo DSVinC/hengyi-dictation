@@ -1,3 +1,6 @@
 {
-  "units": []
+  "units": [
+    {"id": "U01", "name": "Unit 1 Make Friends", "status": "active"},
+    {"id": "U02", "name": "Unit 2 My School", "status": "active"}
+  ]
 }

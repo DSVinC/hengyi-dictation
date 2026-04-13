@@ -1,0 +1,11 @@
+{
+  "unitId": "U02",
+  "unitName": "My School",
+  "words": [
+    {"text": "school", "meaning": "学校", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "classroom", "meaning": "教室", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "teacher", "meaning": "老师", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "student", "meaning": "学生", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "book", "meaning": "书", "round": 0, "nextReview": null, "wrongCount": 0, "history": []}
+  ]
+}

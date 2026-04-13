@@ -1,3 +1,6 @@
 {
-  "lessons": []
+  "lessons": [
+    {"id": "L01", "name": "第1课 大青树下的小学", "status": "active"},
+    {"id": "L02", "name": "第2课 花的学校", "status": "active"}
+  ]
 }

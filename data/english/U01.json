@@ -1,0 +1,11 @@
+{
+  "unitId": "U01",
+  "unitName": "Make Friends",
+  "words": [
+    {"text": "hello", "meaning": "你好", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "goodbye", "meaning": "再见", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "friend", "meaning": "朋友", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "name", "meaning": "名字", "round": 0, "nextReview": null, "wrongCount": 0, "history": []},
+    {"text": "nice", "meaning": "好的，友好的", "round": 0, "nextReview": null, "wrongCount": 0, "history": []}
+  ]
+}
