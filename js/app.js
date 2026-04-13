@@ -371,33 +371,27 @@ async function selectLesson(lessonId) {
   const isChinese = subject === 'chinese';
   const title = isChinese ? data.lessonName : data.unitName;
 
+  // 先渲染页面（不含到期复习词），再异步加载复习词
   await renderWordSelectionPage(data, title, isChinese);
+  // 异步加载到期复习词，不阻塞页面
+  loadAndRenderDueReviewWords(subject, isChinese);
 }
 
 /**
  * 渲染词语勾选页面（带到期复习词独立区块）
  */
-async function renderWordSelectionPage(data, title, isChinese) {
+function renderWordSelectionPage(data, title, isChinese) {
   const subject = AppState.currentSubject;
-
-  // 1. 当前课/单元的新词（R0）
   const currentLessonWords = data.words.filter(w => w.round === 0);
 
-  // 2. 获取跨课/单元的到期复习词
-  const dueReviewWords = await getAllDueReviewWords(subject);
-  const r1DueWords = dueReviewWords.filter(w => w.round === 1);
-  const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2);
-
-  // 3. 新词勾选列表
+  // 新词勾选列表
   const newWordsHtml = currentLessonWords.map(word => {
     const typeHtml = isChinese && word.type
       ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
-
     const meaningHtml = !isChinese && word.meaning
       ? `<span class="word-meaning">${word.meaning}</span>`
       : '';
-
     return `
       <label class="word-item" data-word="${word.text}">
         <input type="checkbox" class="word-checkbox"
@@ -409,9 +403,55 @@ async function renderWordSelectionPage(data, title, isChinese) {
     `;
   }).join('');
 
-  // 4. 到期复习词区块（R1 必听，disabled）
-  const r1WordsHtml = r1DueWords.length > 0
-    ? `
+  const WORD_LIMIT = 20;
+  const selectedCount = AppState.selectedWords.size;
+
+  renderContent(`
+    <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
+    <h2 class="page-title">${title}</h2>
+    <p id="limit-hint" class="limit-hint">已选 ${selectedCount} 词 / R1 到期 0 词 / 共 ${selectedCount}/${WORD_LIMIT}</p>
+    <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
+    <div class="word-list">${newWordsHtml}</div>
+    <div id="due-review-container"></div>
+    <div class="action-bar">
+      <button class="btn btn-secondary" onclick="selectAllWords()">全选新词</button>
+      <button class="btn btn-primary" onclick="generateDictationList()">生成听写清单</button>
+    </div>
+    <div id="dictation-result"></div>
+  `);
+}
+
+/**
+ * 异步加载到期复习词并插入到页面（不阻塞首屏渲染）
+ */
+async function loadAndRenderDueReviewWords(subject, isChinese) {
+  const dueReviewWords = await getAllDueReviewWords(subject);
+  const r1DueWords = dueReviewWords.filter(w => w.round === 1);
+  const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2);
+
+  if (dueReviewWords.length === 0) return;
+
+  // 自动加入 R1 到期词
+  r1DueWords.forEach(word => AppState.selectedWords.add(word.text));
+
+  const WORD_LIMIT = 20;
+  const selectedCount = AppState.selectedWords.size;
+  const totalCount = selectedCount + r1DueWords.length;
+
+  // 更新词数提示
+  const hintEl = document.getElementById('limit-hint');
+  if (hintEl) {
+    hintEl.textContent = `已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 共 ${totalCount}/${WORD_LIMIT}`;
+  }
+
+  // 渲染到期复习词区块
+  const container = document.getElementById('due-review-container');
+  if (!container) return;
+
+  let html = '';
+
+  if (r1DueWords.length > 0) {
+    html += `
       <div class="due-review-section">
         <h3 class="section-title review-r1">🔴 到期复习-R1（必听写）</h3>
         <p class="limit-hint">${r1DueWords.length} 个词已到期，自动加入听写清单</p>
@@ -425,12 +465,11 @@ async function renderWordSelectionPage(data, title, isChinese) {
           `).join('')}
         </div>
       </div>
-    `
-    : '';
+    `;
+  }
 
-  // 5. 到期复习词区块（R2+ 可选）
-  const r2PlusWordsHtml = r2PlusDueWords.length > 0
-    ? `
+  if (r2PlusDueWords.length > 0) {
+    html += `
       <div class="due-review-section">
         <h3 class="section-title review">🔄 到期复习-R2+（建议复习）</h3>
         <div class="word-list review-list">
@@ -448,33 +487,10 @@ async function renderWordSelectionPage(data, title, isChinese) {
           }).join('')}
         </div>
       </div>
-    `
-    : '';
+    `;
+  }
 
-  // 6. 计算词数限制提示
-  const WORD_LIMIT = 20;
-  const selectedCount = AppState.selectedWords.size;
-  const totalCount = selectedCount + r1DueWords.length;
-
-  renderContent(`
-    <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
-    <h2 class="page-title">${title}</h2>
-    <p class="limit-hint">已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 共 ${totalCount}/${WORD_LIMIT}</p>
-    <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
-    <div class="word-list">${newWordsHtml}</div>
-    ${r1WordsHtml}
-    ${r2PlusWordsHtml}
-    <div class="action-bar">
-      <button class="btn btn-secondary" onclick="selectAllWords()">全选新词</button>
-      <button class="btn btn-primary" onclick="generateDictationList()">生成听写清单</button>
-    </div>
-    <div id="dictation-result"></div>
-  `);
-
-  // 自动加入 R1 到期词（不可取消）
-  r1DueWords.forEach(word => {
-    AppState.selectedWords.add(word.text);
-  });
+  container.innerHTML = html;
 }
 
 /**
