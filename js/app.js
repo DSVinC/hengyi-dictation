@@ -617,6 +617,17 @@ async function generateDictationList() {
   const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
 
   // 7. 构建清单 HTML
+  // 英语词展示音标+中文意思的辅助函数
+  const formatWordExtra = (w) => {
+    if (w.subject === 'english') {
+      let extra = '';
+      if (w.phonetic) extra += `<span class="word-phonetic">/${w.phonetic}/</span>`;
+      if (w.meaning) extra += `<span class="word-meaning">${w.meaning}</span>`;
+      return extra ? `<span class="word-extra">${extra}</span>` : '';
+    }
+    return '';
+  };
+
   let resultHtml = '<div class="dictation-list dictation-two-column">';
 
   // 📝 新课词语（R0 手动勾选）
@@ -625,7 +636,7 @@ async function generateDictationList() {
       <div class="dictation-section">
         <h3 class="section-title new">📝 新课词语 (${finalR0.length})</h3>
         <div class="dictation-words">
-          ${finalR0.map(w => `<span class="dictation-word new">${w.text}</span>`).join('')}
+          ${finalR0.map(w => `<span class="dictation-word new" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)}</span>`).join('')}
         </div>
       </div>
     `;
@@ -637,7 +648,7 @@ async function generateDictationList() {
       <div class="dictation-section">
         <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})</h3>
         <div class="dictation-words">
-          ${finalR1.map(w => `<span class="dictation-word review-r1">${w.text}</span>`).join('')}
+          ${finalR1.map(w => `<span class="dictation-word review-r1" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)}</span>`).join('')}
         </div>
       </div>
     `;
@@ -652,7 +663,7 @@ async function generateDictationList() {
         <div class="dictation-words">
           ${allReviewWords.map(w => {
             const roundTag = w.round >= 5 ? '✅' : `R${w.round}`;
-            return `<span class="dictation-word review">${w.text} <small>${roundTag}</small></span>`;
+            return `<span class="dictation-word review" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)} <small>${roundTag}</small></span>`;
           }).join('')}
         </div>
       </div>
@@ -687,9 +698,9 @@ async function generateDictationList() {
 
   // 保存当前清单数据供批改使用
   AppState.currentDictationList = [];
-  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: lessonId, round: w.round || 0, subject: subject }));
-  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject }));
-  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject }));
+  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: lessonId, round: w.round || 0, subject: subject, meaning: w.meaning || '' }));
+  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject, meaning: w.meaning || '' }));
+  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject, meaning: w.meaning || '' }));
 }
 
 /**
@@ -740,12 +751,14 @@ function startDictationGrading() {
 
   // 把每个 dictation-word 替换为可勾选的 label
   html = html.replace(
-    /<span class="dictation-word ([^"]*)">([^<]+)<\/span>/g,
-    function(match, className, wordText) {
+    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(?:<span class="word-extra">[\s\S]*?<\/span>)?<\/span>/g,
+    function(match, className, meaningEncoded, wordText) {
+      const meaning = decodeURIComponent(meaningEncoded);
       const item = AppState.currentDictationList.find(w => w.text === wordText);
       const lessonId = item ? item.lessonId : '';
       const round = item ? item.round : 0;
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span></label>`;
+      const meaningHtml = meaning ? `<span class="grading-meaning">${meaning}</span>` : '';
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span>${meaningHtml}</label>`;
     }
   );
 

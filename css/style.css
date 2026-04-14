@@ -1357,3 +1357,34 @@ body {
   font-size: 16px;
   color: #555;
 }
+
+/* 英语词音标+中文意思 */
+.word-extra {
+  display: block;
+  margin-top: 2px;
+}
+
+.word-phonetic {
+  display: inline;
+  font-size: 12px;
+  color: #aaa;
+  font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+}
+
+.dictation-word .word-meaning,
+.dictation-word .word-phonetic {
+  display: inline-block;
+}
+
+.dictation-word .word-meaning {
+  margin-left: 0;
+}
+
+/* 批改模式下的英文词意思 */
+.grading-meaning {
+  display: block;
+  font-size: 13px;
+  color: #999;
+  margin-top: 2px;
+  padding-left: 24px;
+}
