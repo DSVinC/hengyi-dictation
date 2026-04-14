@@ -1215,3 +1215,145 @@ body {
 .section-title.review {
   border-bottom-color: #fa8c16;
 }
+/* ============================================
+   批改反馈闭环样式
+   ============================================ */
+
+/* 听写完毕按钮 */
+.grading-action-bar {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 18px;
+}
+
+.btn-success {
+  background: #52c41a;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background: #73d13d;
+}
+
+.btn-success:active {
+  background: #389e0d;
+  transform: scale(0.98);
+}
+
+/* 勾选模式提示区 */
+.grading-notice {
+  background: #FFF3E0;
+  border: 2px solid #FF9800;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.grading-notice p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #E65100;
+  font-weight: 600;
+}
+
+.grading-notice .grading-action-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 0;
+}
+
+/* 勾选模式词语样式 */
+.grading-word-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.grading-word-item:hover {
+  background: #F5F5F5;
+  border-color: #1890ff;
+}
+
+.grading-word-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #ff4d4f;
+}
+
+.grading-word-item .word-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.grading-word-item.new {
+  border-color: #b7eb8f;
+  background: #f6ffed;
+}
+
+.grading-word-item.review {
+  border-color: #ffd591;
+  background: #fff7e6;
+}
+
+/* 听写清单总词数 */
+.dictation-total {
+  text-align: center;
+  margin-top: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 结果摘要 */
+.result-summary {
+  text-align: center;
+  padding: 24px;
+  background: #E8F5E9;
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.result-summary h3 {
+  color: #2E7D32;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.result-summary .stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin: 16px 0;
+}
+
+.result-summary .stat {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.result-summary .stat.correct {
+  color: #2E7D32;
+}
+
+.result-summary .stat.wrong {
+  color: #C62828;
+}
+
+.result-summary p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
+}

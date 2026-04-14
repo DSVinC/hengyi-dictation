@@ -18,7 +18,9 @@ const AppState = {
   lessons: [],                // 语文课列表
   units: [],                  // 英语单元列表
   wordData: {},               // 缓存的词语数据
-  isLoading: false            // 全局加载状态
+  isLoading: false,           // 全局加载状态
+  currentDictationList: [],   // 当前听写清单（用于批改）
+  originalDictationHtml: ''   // 原始清单 HTML（用于取消批改）
 };
 
 // ============================================
@@ -165,6 +167,8 @@ async function getAllDueReviewWords(subject) {
     const data = AppState.wordData[cacheKey];
 
     if (data && data.words) {
+      // 合并 localStorage 进度
+      mergeProgressToWords(data, subject, item.id);
       const lessonName = isChinese ? data.lessonName : data.unitName;
       data.words.forEach(word => {
         // round >= 1 且 nextReview <= today
@@ -354,7 +358,7 @@ async function selectLesson(lessonId) {
   AppState.selectedWords.clear();
 
   const subject = AppState.currentSubject;
-  const data = await loadWordData(subject, lessonId);
+  let data = await loadWordData(subject, lessonId);
 
   if (!data || !data.words || data.words.length === 0) {
     renderContent(`
@@ -367,6 +371,9 @@ async function selectLesson(lessonId) {
     `);
     return;
   }
+
+  // 合并 localStorage 进度到词数据
+  data = mergeProgressToWords(data, subject, lessonId);
 
   const isChinese = subject === 'chinese';
   const title = isChinese ? data.lessonName : data.unitName;
@@ -665,9 +672,24 @@ async function generateDictationList() {
 
   // 统计信息
   const totalIncluded = finalR0.length + finalR1.length + allReviewWords.length;
-  resultHtml += `<p style="text-align:center; margin-top:16px; color:#666;">共 ${totalIncluded} 个词（${postponedWords.length} 个延期到明天）</p>`;
+  resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词（${postponedWords.length} 个延期到明天）</p>`;
+
+  // 追加听写完毕按钮
+  resultHtml += `
+    <div class="action-bar grading-action-bar">
+      <button class="btn btn-primary btn-lg" onclick="startDictationGrading()">
+        📝 听写完毕
+      </button>
+    </div>
+  `;
 
   document.getElementById('dictation-result').innerHTML = resultHtml;
+
+  // 保存当前清单数据供批改使用
+  AppState.currentDictationList = [];
+  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: lessonId, round: w.round || 0, subject: subject }));
+  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject }));
+  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject: subject }));
 }
 
 /**
@@ -686,6 +708,182 @@ function goBackToLessons() {
   AppState.currentLesson = null;
   AppState.selectedWords.clear();
   selectSubject(AppState.currentSubject);
+}
+
+// ============================================
+// 批改反馈闭环
+// ============================================
+
+/**
+ * 进入批改勾选模式
+ */
+function startDictationGrading() {
+  const resultEl = document.getElementById('dictation-result');
+  if (!resultEl) return;
+
+  // 保存原始 HTML
+  AppState.originalDictationHtml = resultEl.innerHTML;
+
+  // 把 dictation-word spans 替换为 checkbox labels
+  let html = resultEl.innerHTML;
+
+  // 先插入顶部提示区
+  const gradingNotice = `
+    <div class="grading-notice">
+      <p>📌 请在清单中勾选写错的字词（不勾选表示写对）</p>
+      <div class="grading-action-bar">
+        <button class="btn btn-success" onclick="finishDictationGrading()">✅ 错字词勾选完毕</button>
+        <button class="btn btn-secondary" onclick="cancelDictationGrading()">取消</button>
+      </div>
+    </div>
+  `;
+
+  // 把每个 dictation-word 替换为可勾选的 label
+  html = html.replace(
+    /<span class="dictation-word ([^"]*)">([^<]+)<\/span>/g,
+    function(match, className, wordText) {
+      const item = AppState.currentDictationList.find(w => w.text === wordText);
+      const lessonId = item ? item.lessonId : '';
+      const round = item ? item.round : 0;
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span></label>`;
+    }
+  );
+
+  // 隐藏听写完毕按钮
+  const gradingBar = resultEl.querySelector('.grading-action-bar');
+  if (gradingBar) gradingBar.style.display = 'none';
+
+  // 插入提示区 + 替换内容
+  resultEl.innerHTML = gradingNotice + html;
+}
+
+/**
+ * 退出批改勾选模式，恢复原清单
+ */
+function cancelDictationGrading() {
+  const resultEl = document.getElementById('dictation-result');
+  if (!resultEl || !AppState.originalDictationHtml) return;
+  resultEl.innerHTML = AppState.originalDictationHtml;
+}
+
+/**
+ * 完成批改，更新轮次并保存
+ */
+function finishDictationGrading() {
+  // 收集被勾选的错词
+  const wrongWords = new Set();
+  document.querySelectorAll('.wrong-cb:checked').forEach(cb => {
+    wrongWords.add(cb.dataset.word);
+  });
+
+  const wordUpdates = [];
+  let correctCount = 0;
+  let wrongCount = 0;
+
+  AppState.currentDictationList.forEach(item => {
+    const isWrong = wrongWords.has(item.text);
+    const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
+    const nextReview = calculateNextReview(newRound);
+
+    if (isWrong) {
+      wrongCount++;
+    } else {
+      correctCount++;
+    }
+
+    // 获取已有错词次数
+    const existing = findWordProgress(item.subject, item.lessonId, item.text);
+    const existingWrongCount = existing ? (existing.wrongCount || 0) : 0;
+
+    wordUpdates.push({
+      text: item.text,
+      lessonId: item.lessonId,
+      subject: item.subject,
+      round: newRound,
+      nextReview: nextReview,
+      wrongCount: isWrong ? existingWrongCount + 1 : existingWrongCount
+    });
+  });
+
+  // 保存进度
+  saveProgress(wordUpdates);
+
+  // 显示结果摘要
+  const earliestNext = wordUpdates
+    .filter(w => w.nextReview)
+    .sort((a, b) => a.nextReview.localeCompare(b.nextReview))[0];
+
+  const earliestDate = earliestNext ? formatDate(earliestNext.nextReview) : '-';
+
+  const summaryHtml = `
+    <div class="result-summary">
+      <h3>✅ 听写完成！</h3>
+      <div class="stats">
+        <span class="stat correct">✅ ${correctCount} 正确</span>
+        <span class="stat wrong">❌ ${wrongCount} 错误</span>
+      </div>
+      <p>📅 下次复习：<strong>${earliestDate}</strong></p>
+      <div class="action-bar" style="margin-top:16px;">
+        <button class="btn btn-primary" onclick="goBackToLessons()">返回选课</button>
+      </div>
+    </div>
+  `;
+
+  const resultEl = document.getElementById('dictation-result');
+  if (resultEl) resultEl.innerHTML = summaryHtml;
+}
+
+/**
+ * 保存进度到 localStorage
+ */
+function saveProgress(wordUpdates) {
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+
+  wordUpdates.forEach(update => {
+    const key = `${update.subject}/${update.lessonId}/${update.text}`;
+    const existing = progress[key] || {};
+    progress[key] = {
+      text: update.text,
+      lessonId: update.lessonId,
+      subject: update.subject,
+      round: update.round,
+      nextReview: update.nextReview,
+      wrongCount: update.wrongCount || existing.wrongCount || 0,
+      updatedAt: new Date().toISOString()
+    };
+  });
+
+  localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
+  console.log('进度已保存:', wordUpdates.length, '个词');
+}
+
+/**
+ * 查找某个词的进度记录
+ */
+function findWordProgress(subject, lessonId, text) {
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  const key = `${subject}/${lessonId}/${text}`;
+  return progress[key] || null;
+}
+
+/**
+ * 从 localStorage 合并进度到词数据
+ */
+function mergeProgressToWords(data, subject, lessonId) {
+  if (!data || !data.words) return data;
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  const lessonKey = `${subject}/${lessonId}`;
+
+  data.words.forEach(word => {
+    const key = `${lessonKey}/${word.text}`;
+    if (progress[key]) {
+      word.round = progress[key].round !== undefined ? progress[key].round : word.round;
+      word.nextReview = progress[key].nextReview || word.nextReview;
+      word.wrongCount = progress[key].wrongCount || word.wrongCount || 0;
+    }
+  });
+
+  return data;
 }
 
 // ============================================
