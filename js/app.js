@@ -512,6 +512,9 @@ function renderContent(html) {
  * 渲染听写模式页面
  */
 async function renderDictationPage() {
+  // 重置批改锁（防止切回主页后按钮不可点）
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
   const html = `
     <h2 class="page-title">选择科目</h2>
     <div class="subject-select">
@@ -532,6 +535,9 @@ async function renderDictationPage() {
  * 选择科目后渲染课/单元列表
  */
 async function selectSubject(subject) {
+  // 重置批改锁（防止切换科目后按钮不可点）
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
   AppState.currentSubject = subject;
   AppState.selectedWords.clear();
 
@@ -573,6 +579,9 @@ async function selectSubject(subject) {
  * 选择课/单元后渲染词语勾选列表（异步）
  */
 async function selectLesson(lessonId) {
+  // 重置批改锁（防止切换课后按钮不可点）
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
   AppState.currentLesson = lessonId;
   AppState.selectedWords.clear();
 
@@ -925,6 +934,8 @@ async function generateDictationList() {
 function goBack() {
   AppState.currentSubject = null;
   AppState.selectedWords.clear();
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
   renderDictationPage();
 }
 
@@ -934,6 +945,8 @@ function goBack() {
 function goBackToLessons() {
   AppState.currentLesson = null;
   AppState.selectedWords.clear();
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
   selectSubject(AppState.currentSubject);
 }
 
