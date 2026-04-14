@@ -397,16 +397,12 @@ function renderWordSelectionPage(data, title, isChinese) {
     const typeHtml = isChinese && word.type
       ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
-    const extraHtml = !isChinese
-      ? `<span class="word-phonetic-inline">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}`
-      : '';
     return `
       <label class="word-item" data-word="${word.text}">
         <input type="checkbox" class="word-checkbox"
           onchange="toggleWordSelection('${word.text}')">
         <span class="word-text">${word.text}</span>
         ${typeHtml}
-        ${extraHtml}
       </label>
     `;
   }).join('');
@@ -743,7 +739,7 @@ function startDictationGrading() {
   // 把 dictation-word spans 替换为 checkbox labels
   let html = resultEl.innerHTML;
 
-  // 移除按钮，防止重复触发（innerHTML 替换会丢失 DOM disabled 状态）
+  // 移除听写完毕按钮（innerHTML 替换会丢失 DOM disabled 状态）
   const startBtn = document.getElementById('btn-start-grading');
   if (startBtn) startBtn.remove();
 
@@ -752,7 +748,7 @@ function startDictationGrading() {
     <div class="grading-notice">
       <p>📌 请在清单中勾选写错的字词（不勾选表示写对）</p>
       <div class="grading-action-bar">
-        <button class="btn btn-success" id="btn-finish-grading" onclick="finishDictationGrading()">✅ 错字词勾选完毕</button>
+        <button class="btn btn-success" id="btn-finish-grading" onclick="confirmFinishGrading()">✅ 错字词勾选完毕</button>
         <button class="btn btn-secondary" id="btn-cancel-grading" onclick="cancelDictationGrading()">取消</button>
       </div>
     </div>
@@ -793,6 +789,18 @@ function cancelDictationGrading() {
     bar.innerHTML = '<button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">📝 听写完毕</button>';
     resultEl.appendChild(bar);
   }
+}
+
+/**
+ * 二次确认后完成批改
+ */
+function confirmFinishGrading() {
+  const wrongCount = document.querySelectorAll('.wrong-cb:checked').length;
+  const totalCount = document.querySelectorAll('.wrong-cb').length;
+  const correctCount = totalCount - wrongCount;
+  const msg = `共 ${totalCount} 个词，确认 ${wrongCount} 个写错、${correctCount} 个写对？\n确认后将更新复习轮次。`;
+  if (!confirm(msg)) return;
+  finishDictationGrading();
 }
 
 /**
