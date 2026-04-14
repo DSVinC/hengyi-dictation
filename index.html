@@ -12,6 +12,7 @@
     <button class="nav-btn active" data-page="dictation">听写模式</button>
     <button class="nav-btn" data-page="vocabulary">词库管理</button>
     <button class="nav-btn" data-page="progress">进度总览</button>
+    <span id="sync-status" class="sync-status idle" title="云端同步状态">☁️</span>
   </nav>
 
   <!-- 全局加载状态 -->
@@ -32,6 +33,7 @@
     <!-- 内容由 js/app.js 动态渲染 -->
   </main>
 
+  <script src="js/config.js" onerror="console.warn('[Config] config.js 未找到，GitHub 同步已跳过')"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -37,6 +37,213 @@ const FETCH_TIMEOUT = 10000; // 10秒超时
 const EBINGHAUS_INTERVALS = [1, 2, 4, 7, 15];
 
 // ============================================
+// GitHub 云端同步
+// 配置来自 js/config.js（不提交到 GitHub）
+// ============================================
+
+// GitHub 配置由 js/config.js 提供
+// 如果未加载（本地开发），跳过同步功能
+const isGitHubConfigured = typeof GITHUB_CONFIG !== 'undefined' && GITHUB_CONFIG?.token;
+
+// 同步状态
+const SyncState = {
+  status: 'idle', // idle, syncing, synced, error
+  lastSync: null,
+  error: null,
+  remoteSha: null
+};
+
+// 防抖定时器
+let syncDebounceTimer = null;
+const SYNC_DEBOUNCE_MS = 2000; // 2秒防抖
+
+/**
+ * 从 GitHub 加载进度
+ * @returns {Promise<object|null>} 进度数据或 null
+ */
+async function loadProgressFromGitHub() {
+  if (!isGitHubConfigured) return null;
+  try {
+    const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
+    const resp = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'If-None-Match': 'no-cache'
+      }
+    });
+
+    if (resp.status === 404) {
+      // 文件不存在，首次同步
+      console.log('[GitHub Sync] 进度文件不存在，将首次同步时创建');
+      return null;
+    }
+
+    if (!resp.ok) {
+      throw new Error(`HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    SyncState.remoteSha = data.sha;
+
+    // 解码 base64 内容
+    const content = atob(data.content.replace(/\n/g, ''));
+    const progress = JSON.parse(content);
+
+    console.log(`[GitHub Sync] 加载成功，${Object.keys(progress).length} 条记录`);
+    return progress;
+  } catch (error) {
+    console.warn('[GitHub Sync] 加载失败，使用本地缓存:', error.message);
+    return null;
+  }
+}
+
+/**
+ * 保存进度到 GitHub
+ * @param {object} progress - 进度数据
+ * @returns {Promise<boolean>} 是否成功
+ */
+async function saveProgressToGitHub(progress) {
+  if (!isGitHubConfigured) return false;
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(progress, null, 2))));
+    const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+
+    const body = {
+      message: `chore: 自动同步进度 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
+      content: content,
+      branch: GITHUB_CONFIG.branch
+    };
+
+    if (SyncState.remoteSha) {
+      body.sha = SyncState.remoteSha;
+    }
+
+    const resp = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      const errBody = await resp.json().catch(() => ({}));
+      throw new Error(`HTTP ${resp.status}: ${errBody.message || '未知错误'}`);
+    }
+
+    const result = await resp.json();
+    SyncState.remoteSha = result.content.sha;
+    SyncState.lastSync = new Date();
+    SyncState.status = 'synced';
+
+    console.log('[GitHub Sync] 保存成功');
+    return true;
+  } catch (error) {
+    console.error('[GitHub Sync] 保存失败:', error.message);
+    SyncState.status = 'error';
+    SyncState.error = error.message;
+    return false;
+  }
+}
+
+/**
+ * 防抖同步：延迟保存避免频繁请求
+ */
+function debouncedSyncToGitHub() {
+  if (!isGitHubConfigured) return;
+  if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+
+  SyncState.status = 'syncing';
+  updateSyncIndicator();
+
+  syncDebounceTimer = setTimeout(async () => {
+    const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    const success = await saveProgressToGitHub(progress);
+    updateSyncIndicator();
+    if (success) {
+      console.log('[GitHub Sync] 防抖同步完成');
+    }
+  }, SYNC_DEBOUNCE_MS);
+}
+
+/**
+ * 立即同步（用于用户手动触发）
+ */
+async function forceSyncToGitHub() {
+  if (!isGitHubConfigured) return false;
+  if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+
+  SyncState.status = 'syncing';
+  updateSyncIndicator();
+
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  const success = await saveProgressToGitHub(progress);
+  updateSyncIndicator();
+  return success;
+}
+
+/**
+ * 合并 GitHub 进度到 localStorage
+ */
+async function mergeGitHubProgress() {
+  if (!isGitHubConfigured) return;
+  const remoteProgress = await loadProgressFromGitHub();
+  if (!remoteProgress) return;
+
+  const localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+
+  // 合并策略：远程和本地都有的，取更新时间较新的
+  const merged = { ...remoteProgress };
+  for (const [key, localItem] of Object.entries(localProgress)) {
+    const remoteItem = merged[key];
+    if (!remoteItem) {
+      // 本地独有，保留
+      merged[key] = localItem;
+    } else if (localItem.updatedAt > remoteItem.updatedAt) {
+      // 本地更新，覆盖远程
+      merged[key] = localItem;
+    }
+    // 否则保留远程的（更新或相同）
+  }
+
+  localStorage.setItem('hengyi-dictation-progress', JSON.stringify(merged));
+  SyncState.status = 'synced';
+  console.log(`[GitHub Sync] 合并完成，${Object.keys(merged).length} 条记录`);
+}
+
+/**
+ * 更新同步状态指示器
+ */
+function updateSyncIndicator() {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+
+  switch (SyncState.status) {
+    case 'syncing':
+      el.textContent = '☁️ 同步中…';
+      el.className = 'sync-status syncing';
+      break;
+    case 'synced':
+      const timeStr = SyncState.lastSync
+        ? SyncState.lastSync.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+        : '';
+      el.textContent = `☁️ 已同步 ${timeStr}`;
+      el.className = 'sync-status synced';
+      break;
+    case 'error':
+      el.textContent = '☁️ 同步失败';
+      el.className = 'sync-status error';
+      break;
+    default:
+      el.textContent = '☁️';
+      el.className = 'sync-status idle';
+  }
+}
+
+// ============================================
 // 工具函数
 // ============================================
 
@@ -907,6 +1114,9 @@ function saveProgress(wordUpdates) {
 
   localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
   console.log('进度已保存:', wordUpdates.length, '个词');
+
+  // 自动同步到 GitHub（防抖）
+  debouncedSyncToGitHub();
 }
 
 /**
@@ -1544,6 +1754,36 @@ function manualAddWordR1() {
 }
 
 /**
+ * 手动添加词并设为指定轮次
+ */
+function manualAddWordWithRound() {
+  const wordInput = document.getElementById('manual-word-input');
+  const lessonSelect = document.getElementById('manual-lesson-select');
+  const roundSelect = document.getElementById('manual-round-select');
+  if (!wordInput.value.trim()) { alert('请输入词语'); return; }
+  if (!lessonSelect.value) { alert('请选择课/单元'); return; }
+
+  const [subject, lessonId] = lessonSelect.value.split('|');
+  const text = wordInput.value.trim();
+  const round = parseInt(roundSelect.value, 10);
+
+  // 查找词库中是否存在该词
+  const cacheKey = `${subject}/${lessonId}`;
+  const data = AppState.wordData[cacheKey];
+  if (!data || !data.words || !data.words.find(w => w.text === text)) {
+    if (!confirm(`词库中未找到 "${text}"，仍要添加吗？`)) return;
+  }
+
+  updateWordProgress(subject, lessonId, text, round);
+  const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+  wordInput.value = '';
+  alert(`✅ ${text} 已设为${roundName}`);
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+  renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
+}
+
+/**
  * 手动设词语为已掌握
  */
 function manualAddWordMastered() {
@@ -1574,4 +1814,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 默认显示听写模式
   renderDictationPage();
+
+  // 初始化 GitHub 同步
+  mergeGitHubProgress().then(() => {
+    updateSyncIndicator();
+  });
 });
