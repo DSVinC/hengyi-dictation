@@ -178,5 +178,32 @@
     "nextReview": "2026-04-16",
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "english/U3/find": {
+    "text": "find",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:43:41.150Z"
+  },
+  "english/U3/ruler": {
+    "text": "ruler",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:43:41.150Z"
+  },
+  "english/U3/pen": {
+    "text": "pen",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:43:41.150Z"
   }
 }
