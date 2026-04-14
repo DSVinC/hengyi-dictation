@@ -205,5 +205,167 @@
     "nextReview": "2026-04-16",
     "wrongCount": 1,
     "updatedAt": "2026-04-14T23:43:41.150Z"
+  },
+  "english/U2/has": {
+    "text": "has",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/long": {
+    "text": "long",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/short": {
+    "text": "short",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/fat": {
+    "text": "fat",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/thin": {
+    "text": "thin",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/slow": {
+    "text": "slow",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/love": {
+    "text": "love",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/picture": {
+    "text": "picture",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/card": {
+    "text": "card",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/sing": {
+    "text": "sing",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/dance": {
+    "text": "dance",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/talk": {
+    "text": "talk",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/face": {
+    "text": "face",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/all": {
+    "text": "all",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/song": {
+    "text": "song",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/or": {
+    "text": "or",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/so": {
+    "text": "so",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U2/much": {
+    "text": "much",
+    "lessonId": "U2",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:44:41.027Z"
   }
 }
