@@ -20,7 +20,8 @@ const AppState = {
   wordData: {},               // 缓存的词语数据
   isLoading: false,           // 全局加载状态
   currentDictationList: [],   // 当前听写清单（用于批改）
-  originalDictationHtml: ''   // 原始清单 HTML（用于取消批改）
+  originalDictationHtml: '',  // 原始清单 HTML（用于取消批改）
+  reviewWordsPage: 1          // 复习中的词分页页码
 };
 
 // ============================================
@@ -1249,9 +1250,9 @@ async function renderProgressPage(filter = 'all') {
   // 渲染页面
   const filterHtml = `
     <div class="filter-bar">
-      <button class="filter-btn all ${filter === 'all' ? 'active' : ''}" onclick="renderProgressPage('all')">全部</button>
-      <button class="filter-btn chinese ${filter === 'chinese' ? 'active' : ''}" onclick="renderProgressPage('chinese')">语文</button>
-      <button class="filter-btn english ${filter === 'english' ? 'active' : ''}" onclick="renderProgressPage('english')">英语</button>
+      <button class="filter-btn all ${filter === 'all' ? 'active' : ''}" onclick="AppState.reviewWordsPage=1;renderProgressPage('all')">全部</button>
+      <button class="filter-btn chinese ${filter === 'chinese' ? 'active' : ''}" onclick="AppState.reviewWordsPage=1;renderProgressPage('chinese')">语文</button>
+      <button class="filter-btn english ${filter === 'english' ? 'active' : ''}" onclick="AppState.reviewWordsPage=1;renderProgressPage('english')">英语</button>
     </div>
   `;
 
@@ -1296,12 +1297,21 @@ async function renderProgressPage(filter = 'all') {
   const reviewWords = allWords
     .filter(w => w.round >= 1 && w.round <= 5)
     .sort((a, b) => a.round - b.round);
+
+  // 分页配置
+  const REVIEW_PAGE_SIZE = 20;
+  const totalReviewPages = Math.ceil(reviewWords.length / REVIEW_PAGE_SIZE);
+  const reviewPage = Math.min(AppState.reviewWordsPage, totalReviewPages) || 1;
+  const startIdx = (reviewPage - 1) * REVIEW_PAGE_SIZE;
+  const endIdx = startIdx + REVIEW_PAGE_SIZE;
+  const pagedReviewWords = reviewWords.slice(startIdx, endIdx);
+
   const reviewHtml = reviewWords.length > 0
     ? `
       <div class="manual-section">
         <h3 class="manual-title">📝 复习中的词 (${reviewWords.length})</h3>
         <div class="manual-word-list">
-          ${reviewWords.slice(0, 30).map(word => {
+          ${pagedReviewWords.map(word => {
             const name = word.lessonName || word.unitName || '';
             const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
             return `<div class="manual-word-item">
@@ -1325,8 +1335,14 @@ async function renderProgressPage(filter = 'all') {
               </div>
             </div>`;
           }).join('')}
-          ${reviewWords.length > 30 ? '<p class="manual-more">... 还有 ' + (reviewWords.length - 30) + ' 个词</p>' : ''}
         </div>
+        ${totalReviewPages > 1 ? `
+          <div class="pagination" style="margin-top: 16px; display: flex; justify-content: center; align-items: center; gap: 12px;">
+            <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;" ${reviewPage <= 1 ? 'disabled' : ''} onclick="changeReviewPage(${reviewPage - 1}, '${filter}')">上一页</button>
+            <span style="color: #666; font-size: 14px;">第 ${reviewPage} / ${totalReviewPages} 页</span>
+            <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;" ${reviewPage >= totalReviewPages ? 'disabled' : ''} onclick="changeReviewPage(${reviewPage + 1}, '${filter}')">下一页</button>
+          </div>
+        ` : ''}
       </div>
     `
     : '';
@@ -1484,6 +1500,14 @@ function manualSetRound(subject, lessonId, text, round) {
  */
 function manualResetWord(subject, lessonId, text) {
   manualSetRound(subject, lessonId, text, 0);
+}
+
+/**
+ * 切换复习中的词分页
+ */
+function changeReviewPage(page, filter) {
+  AppState.reviewWordsPage = page;
+  renderProgressPage(filter);
 }
 
 /**
