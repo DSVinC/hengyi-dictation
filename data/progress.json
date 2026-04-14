@@ -1,1 +1,11 @@
-{}
+{
+  "chinese/L10/实验": {
+    "text": "实验",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T16:21:46.686Z"
+  }
+}
