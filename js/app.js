@@ -175,6 +175,7 @@ async function getAllDueReviewWords(subject) {
         if (word.round >= 1 && word.nextReview && word.nextReview <= today) {
           dueWords.push({
             ...word,
+            subject: subject,
             lessonId: item.id,
             lessonName: lessonName
           });
@@ -396,8 +397,8 @@ function renderWordSelectionPage(data, title, isChinese) {
     const typeHtml = isChinese && word.type
       ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
-    const meaningHtml = !isChinese && word.meaning
-      ? `<span class="word-meaning">${word.meaning}</span>`
+    const extraHtml = !isChinese
+      ? `<span class="word-phonetic-inline">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}`
       : '';
     return `
       <label class="word-item" data-word="${word.text}">
@@ -405,7 +406,7 @@ function renderWordSelectionPage(data, title, isChinese) {
           onchange="toggleWordSelection('${word.text}')">
         <span class="word-text">${word.text}</span>
         ${typeHtml}
-        ${meaningHtml}
+        ${extraHtml}
       </label>
     `;
   }).join('');
@@ -467,7 +468,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
             <label class="word-item disabled-item" data-word="${word.text}">
               <input type="checkbox" class="word-checkbox" checked disabled>
               <span class="word-text">${word.text}<span class="review-tag review-tag-r1">R1</span></span>
-              ${!isChinese && word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}
+              ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
             </label>
           `).join('')}
         </div>
@@ -488,7 +489,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
                   onchange="toggleWordSelection('${word.text}')"
                   ${isSelected ? 'checked' : ''}>
                 <span class="word-text">${word.text}<span class="review-tag round-${word.round}">R${word.round}</span></span>
-                ${!isChinese && word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}
+                ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
               </label>
             `;
           }).join('')}
@@ -688,7 +689,7 @@ async function generateDictationList() {
   // 追加听写完毕按钮
   resultHtml += `
     <div class="action-bar grading-action-bar">
-      <button class="btn btn-primary btn-lg" onclick="startDictationGrading()">
+      <button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">
         📝 听写完毕
       </button>
     </div>
@@ -738,13 +739,21 @@ function startDictationGrading() {
   // 把 dictation-word spans 替换为 checkbox labels
   let html = resultEl.innerHTML;
 
+  // 禁用听写完毕按钮
+  const startBtn = document.getElementById('btn-start-grading');
+  if (startBtn) {
+    startBtn.disabled = true;
+    startBtn.textContent = '📝 批改中…';
+    startBtn.style.opacity = '0.5';
+  }
+
   // 先插入顶部提示区
   const gradingNotice = `
     <div class="grading-notice">
       <p>📌 请在清单中勾选写错的字词（不勾选表示写对）</p>
       <div class="grading-action-bar">
-        <button class="btn btn-success" onclick="finishDictationGrading()">✅ 错字词勾选完毕</button>
-        <button class="btn btn-secondary" onclick="cancelDictationGrading()">取消</button>
+        <button class="btn btn-success" id="btn-finish-grading" onclick="finishDictationGrading()">✅ 错字词勾选完毕</button>
+        <button class="btn btn-secondary" id="btn-cancel-grading" onclick="cancelDictationGrading()">取消</button>
       </div>
     </div>
   `;
@@ -762,9 +771,7 @@ function startDictationGrading() {
     }
   );
 
-  // 隐藏听写完毕按钮
-  const gradingBar = resultEl.querySelector('.grading-action-bar');
-  if (gradingBar) gradingBar.style.display = 'none';
+  // 隐藏听写完毕按钮（已在上面被替换为禁用状态）
 
   // 插入提示区 + 替换内容
   resultEl.innerHTML = gradingNotice + html;
@@ -777,12 +784,29 @@ function cancelDictationGrading() {
   const resultEl = document.getElementById('dictation-result');
   if (!resultEl || !AppState.originalDictationHtml) return;
   resultEl.innerHTML = AppState.originalDictationHtml;
+  // 恢复听写完毕按钮
+  const startBtn = document.getElementById('btn-start-grading');
+  if (startBtn) {
+    startBtn.disabled = false;
+    startBtn.textContent = '📝 听写完毕';
+    startBtn.style.opacity = '1';
+  }
 }
 
 /**
  * 完成批改，更新轮次并保存
  */
 function finishDictationGrading() {
+  // 一次性锁定：禁用批改模式按钮
+  const finishBtn = document.getElementById('btn-finish-grading');
+  const cancelBtn = document.getElementById('btn-cancel-grading');
+  if (finishBtn) {
+    finishBtn.disabled = true;
+    finishBtn.textContent = '⏳ 保存中…';
+    finishBtn.style.opacity = '0.5';
+  }
+  if (cancelBtn) cancelBtn.disabled = true;
+
   // 收集被勾选的错词
   const wrongWords = new Set();
   document.querySelectorAll('.wrong-cb:checked').forEach(cb => {
@@ -1254,21 +1278,79 @@ async function renderProgressPage(filter = 'all') {
     </div>
   `;
 
-  // 高频错词排行
+  // 复习中词（可手动调整轮次）
+  const reviewWords = allWords
+    .filter(w => w.round >= 1 && w.round <= 5)
+    .sort((a, b) => a.round - b.round);
+  const reviewHtml = reviewWords.length > 0
+    ? `
+      <div class="manual-section">
+        <h3 class="manual-title">📝 复习中的词 (${reviewWords.length})</h3>
+        <div class="manual-word-list">
+          ${reviewWords.slice(0, 30).map(word => {
+            const name = word.lessonName || word.unitName || '';
+            const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
+            return `<div class="manual-word-item">
+              <span class="manual-word-text">${word.text} ${phonetic}${word.meaning || ''}</span>
+              <div class="manual-word-info">
+                <span class="manual-word-lesson">${name}</span>
+                <span class="error-round">R${word.round}</span>
+                <span class="manual-btn-group">
+                  <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId}','${word.text}',1)">R1</button>
+                  <button class="manual-btn btn-reset" onclick="manualResetWord('${word.subject}','${word.lessonId}','${word.text}')">重置</button>
+                </span>
+              </div>
+            </div>`;
+          }).join('')}
+          ${reviewWords.length > 30 ? '<p class="manual-more">... 还有 ' + (reviewWords.length - 30) + ' 个词</p>' : ''}
+        </div>
+      </div>
+    `
+    : '';
+
+  // 手动添加错词表单
+  const lessonOptions = [];
+  if (filter === 'all' || filter === 'chinese') {
+    chineseLessons.forEach(l => lessonOptions.push(`<option value="chinese|${l.id}">${l.name}</option>`));
+  }
+  if (filter === 'all' || filter === 'english') {
+    englishUnits.forEach(u => lessonOptions.push(`<option value="english|${u.id}">${u.name}</option>`));
+  }
+
+  const addWordHtml = `
+    <div class="manual-section">
+      <h3 class="manual-title">➕ 手动添加错词 / 设为R1</h3>
+      <div class="add-word-form">
+        <input type="text" id="manual-word-input" placeholder="输入词语" class="manual-input">
+        <select id="manual-lesson-select" class="manual-input">
+          <option value="">选择课/单元</option>
+          ${lessonOptions.join('')}
+        </select>
+        <div class="add-word-buttons">
+          <button class="btn btn-primary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordR1()">设为R1</button>
+          <button class="btn btn-secondary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordMastered()">设为已掌握</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 高频错词排行（带手动调整按钮）
   const errorHtml = errorWords.length > 0
     ? `
       <div class="error-ranking">
         <h3 class="error-title">⚠️ 高频错词排行 (前10)</h3>
         <div class="error-list">
-          ${errorWords.map(word => `
-            <div class="error-item">
-              <span class="error-word">${word.text}</span>
+          ${errorWords.map(word => {
+            const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
+            return `<div class="error-item">
+              <span class="error-word">${word.text} ${phonetic}${word.meaning || ''}</span>
               <div class="error-info">
                 <span class="error-count">❌ ${word.wrongCount}次</span>
                 <span class="error-round">R${word.round}</span>
+                <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId || word.unitId}','${word.text}',1)">设为R1</button>
               </div>
-            </div>
-          `).join('')}
+            </div>`;
+          }).join('')}
         </div>
       </div>
     `
@@ -1277,6 +1359,7 @@ async function renderProgressPage(filter = 'all') {
         <h3 class="error-title">⚠️ 高频错词排行</h3>
         <div class="empty-state">
           <p class="empty-text">暂无错词记录</p>
+          <p class="empty-hint">使用下方表单手动添加错词</p>
         </div>
       </div>
     `;
@@ -1317,9 +1400,94 @@ async function renderProgressPage(filter = 'all') {
     <h2 class="page-title">进度总览</h2>
     ${filterHtml}
     ${statsHtml}
+    ${addWordHtml}
+    ${reviewHtml}
     ${errorHtml}
     ${progressHtml}
   `);
+}
+
+// ============================================
+// 进度总览手动管理
+// ============================================
+
+/**
+ * 手动设置词语轮次（用于进度总览页面）
+ */
+function manualSetRound(subject, lessonId, text, round) {
+  const nextReview = round >= 6 ? null : calculateNextReview(round);
+  const key = `${subject}/${lessonId}/${text}`;
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  const existing = progress[key] || {};
+  progress[key] = {
+    text: text,
+    lessonId: lessonId,
+    subject: subject,
+    round: round,
+    nextReview: nextReview,
+    wrongCount: existing.wrongCount || 0,
+    updatedAt: new Date().toISOString()
+  };
+  localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
+
+  const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+  alert(`✅ ${text} 已设为${roundName}`);
+  // 刷新当前页面
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+  renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
+}
+
+/**
+ * 重置词语为新词（R0）
+ */
+function manualResetWord(subject, lessonId, text) {
+  manualSetRound(subject, lessonId, text, 0);
+}
+
+/**
+ * 手动添加错词并设为R1
+ */
+function manualAddWordR1() {
+  const wordInput = document.getElementById('manual-word-input');
+  const lessonSelect = document.getElementById('manual-lesson-select');
+  if (!wordInput.value.trim()) { alert('请输入词语'); return; }
+  if (!lessonSelect.value) { alert('请选择课/单元'); return; }
+
+  const [subject, lessonId] = lessonSelect.value.split('|');
+  const text = wordInput.value.trim();
+
+  // 查找词库中是否存在该词
+  const cacheKey = `${subject}/${lessonId}`;
+  const data = AppState.wordData[cacheKey];
+  if (!data || !data.words || !data.words.find(w => w.text === text)) {
+    if (!confirm(`词库中未找到 "${text}"，仍要添加吗？`)) return;
+  }
+
+  manualSetRound(subject, lessonId, text, 1);
+  // 增加错词次数
+  const key = `${subject}/${lessonId}/${text}`;
+  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  if (progress[key]) {
+    progress[key].wrongCount = (progress[key].wrongCount || 0) + 1;
+    localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
+  }
+  wordInput.value = '';
+}
+
+/**
+ * 手动设词语为已掌握
+ */
+function manualAddWordMastered() {
+  const wordInput = document.getElementById('manual-word-input');
+  const lessonSelect = document.getElementById('manual-lesson-select');
+  if (!wordInput.value.trim()) { alert('请输入词语'); return; }
+  if (!lessonSelect.value) { alert('请选择课/单元'); return; }
+
+  const [subject, lessonId] = lessonSelect.value.split('|');
+  const text = wordInput.value.trim();
+  manualSetRound(subject, lessonId, text, 6);
+  wordInput.value = '';
 }
 
 // ============================================

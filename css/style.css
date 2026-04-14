@@ -1360,8 +1360,7 @@ body {
 
 /* 英语词音标+中文意思 */
 .word-extra {
-  display: block;
-  margin-top: 2px;
+  display: inline;
 }
 
 .word-phonetic {
@@ -1387,4 +1386,148 @@ body {
   color: #999;
   margin-top: 2px;
   padding-left: 24px;
+}
+
+/* ============================================
+   进度总览手动管理样式
+   ============================================ */
+
+/* 手动管理区块 */
+.manual-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.manual-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 复习中词列表 */
+.manual-word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manual-word-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.manual-word-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.manual-word-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.manual-word-lesson {
+  font-size: 12px;
+  color: #999;
+}
+
+.manual-btn-group {
+  display: flex;
+  gap: 4px;
+}
+
+.manual-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.manual-btn:hover {
+  background: #f0f0f0;
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.manual-btn.btn-r1 {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+.manual-btn.btn-r1:hover {
+  background: #fff1f0;
+}
+
+.manual-btn.btn-reset {
+  border-color: #52c41a;
+  color: #52c41a;
+}
+
+.manual-btn.btn-reset:hover {
+  background: #f6ffed;
+}
+
+.manual-more {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 8px;
+}
+
+/* 手动添加表单 */
+.add-word-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.manual-input {
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.manual-input:focus {
+  border-color: #1890ff;
+}
+
+.add-word-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 高频错词行内的按钮 */
+.error-item .manual-btn {
+  flex-shrink: 0;
+}
+
+/* 单词选择页音标内联显示 */
+.word-phonetic-inline {
+  display: inline;
+  font-size: 13px;
+  color: #aaa;
+  font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+  margin: 0 4px;
 }
