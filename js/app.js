@@ -755,16 +755,19 @@ function startDictationGrading() {
     </div>
   `;
 
-  // 把每个 dictation-word 替换为可勾选的 label
+  // 把每个 dictation-word 替换为可勾选的 label（保留音标+中文）
   html = html.replace(
-    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(?:<span class="word-extra">[\s\S]*?<\/span>)?<\/span>/g,
-    function(match, className, meaningEncoded, wordText) {
+    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(<span class="word-extra">[\s\S]*?<\/span>)?<\/span>/g,
+    function(match, className, meaningEncoded, wordText, extraHtml) {
       const meaning = decodeURIComponent(meaningEncoded);
       const item = AppState.currentDictationList.find(w => w.text === wordText);
       const lessonId = item ? item.lessonId : '';
       const round = item ? item.round : 0;
+      // 从 word-extra 中提取音标
+      const phoneticMatch = extraHtml ? extraHtml.match(/\/([^/]+)\//) : null;
+      const phoneticHtml = phoneticMatch ? `<span class="grading-phonetic">/${phoneticMatch[1]}/</span>` : '';
       const meaningHtml = meaning ? `<span class="grading-meaning">${meaning}</span>` : '';
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span>${meaningHtml}</label>`;
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span>${phoneticHtml}${meaningHtml}</label>`;
     }
   );
 
