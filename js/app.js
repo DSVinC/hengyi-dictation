@@ -1487,6 +1487,8 @@ function updateWordProgress(subject, lessonId, text, round, wrongCountIncrement 
  * 手动设置词语进度并弹窗反馈 + 刷新页面（用户入口）
  */
 function manualSetRound(subject, lessonId, text, round) {
+  // 确保 round 是数字类型（从 select value 获取的是字符串）
+  round = parseInt(round, 10);
   updateWordProgress(subject, lessonId, text, round);
   const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
   alert(`✅ ${text} 已设为${roundName}`);
