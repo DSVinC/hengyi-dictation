@@ -4,123 +4,138 @@
   "words": [
     {
       "text": "boat",
-      "meaning": "",
+      "meaning": "小船",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bəʊt"
     },
     {
       "text": "cool",
-      "meaning": "",
+      "meaning": "酷的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kuːl"
     },
     {
       "text": "keep",
-      "meaning": "",
+      "meaning": "保持",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kiːp"
     },
     {
       "text": "at",
-      "meaning": "",
+      "meaning": "在",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "æt"
     },
     {
       "text": "home",
-      "meaning": "",
+      "meaning": "家",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "həʊm"
     },
     {
       "text": "ball",
-      "meaning": "",
+      "meaning": "球",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bɔːl"
     },
     {
       "text": "doll",
-      "meaning": "",
+      "meaning": "洋娃娃",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "dɒl"
     },
     {
       "text": "car",
-      "meaning": "",
+      "meaning": "小汽车",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kɑː(r)"
     },
     {
       "text": "on",
-      "meaning": "",
+      "meaning": "在…上",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ɒn"
     },
     {
       "text": "in",
-      "meaning": "",
+      "meaning": "在…里",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ɪn"
     },
     {
       "text": "box",
-      "meaning": "",
+      "meaning": "盒子",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bɒks"
     },
     {
       "text": "cap",
-      "meaning": "",
+      "meaning": "帽子",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kæp"
     },
     {
       "text": "map",
-      "meaning": "",
+      "meaning": "地图",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "mæp"
     },
     {
       "text": "under",
-      "meaning": "",
+      "meaning": "在…下",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈʌndə(r)"
     },
     {
       "text": "put",
-      "meaning": "",
+      "meaning": "放",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "pʊt"
     }
   ]
 }

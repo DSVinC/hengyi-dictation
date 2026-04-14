@@ -4,115 +4,129 @@
   "words": [
     {
       "text": "breakfast",
-      "meaning": "",
+      "meaning": "早餐",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈbrekfəst"
     },
     {
       "text": "time",
-      "meaning": "",
+      "meaning": "时间",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "taɪm"
     },
     {
       "text": "bread",
-      "meaning": "",
+      "meaning": "面包",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bred"
     },
     {
       "text": "egg",
-      "meaning": "",
+      "meaning": "鸡蛋",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "eɡ"
     },
     {
       "text": "milk",
-      "meaning": "",
+      "meaning": "牛奶",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "mɪlk"
     },
     {
       "text": "noodle",
-      "meaning": "",
+      "meaning": "面条",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈnuːdl"
     },
     {
       "text": "juice",
-      "meaning": "",
+      "meaning": "果汁",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "dʒuːs"
     },
     {
       "text": "rice",
-      "meaning": "",
+      "meaning": "米饭",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "raɪs"
     },
     {
       "text": "meat",
-      "meaning": "",
+      "meaning": "肉",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "miːt"
     },
     {
       "text": "vegetable",
-      "meaning": "",
+      "meaning": "蔬菜",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈvedʒtəbl"
     },
     {
       "text": "healthy",
-      "meaning": "",
+      "meaning": "健康的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈhelθi"
     },
     {
       "text": "soup",
-      "meaning": "",
+      "meaning": "汤",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "suːp"
     },
     {
       "text": "fruit",
-      "meaning": "",
+      "meaning": "水果",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "fruːt"
     },
     {
       "text": "candy",
-      "meaning": "",
+      "meaning": "糖果",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈkændi"
     }
   ]
 }

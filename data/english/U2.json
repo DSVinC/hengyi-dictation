@@ -4,147 +4,165 @@
   "words": [
     {
       "text": "has",
-      "meaning": "",
+      "meaning": "有",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "hæz"
     },
     {
       "text": "long",
-      "meaning": "",
+      "meaning": "长的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "lɒŋ"
     },
     {
       "text": "short",
-      "meaning": "",
+      "meaning": "短的；矮的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ʃɔːt"
     },
     {
       "text": "fat",
-      "meaning": "",
+      "meaning": "胖的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "fæt"
     },
     {
       "text": "thin",
-      "meaning": "",
+      "meaning": "瘦的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "θɪn"
     },
     {
       "text": "slow",
-      "meaning": "",
+      "meaning": "慢的",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "sləʊ"
     },
     {
       "text": "love",
-      "meaning": "",
+      "meaning": "喜爱",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "lʌv"
     },
     {
       "text": "picture",
-      "meaning": "",
+      "meaning": "图画",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈpɪktʃə(r)"
     },
     {
       "text": "card",
-      "meaning": "",
+      "meaning": "卡片",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kɑːd"
     },
     {
       "text": "sing",
-      "meaning": "",
+      "meaning": "唱歌",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "sɪŋ"
     },
     {
       "text": "dance",
-      "meaning": "",
+      "meaning": "跳舞",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "dɑːns"
     },
     {
       "text": "talk",
-      "meaning": "",
+      "meaning": "说话",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "tɔːk"
     },
     {
       "text": "face",
-      "meaning": "",
+      "meaning": "脸",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "feɪs"
     },
     {
       "text": "all",
-      "meaning": "",
+      "meaning": "全部",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ɔːl"
     },
     {
       "text": "song",
-      "meaning": "",
+      "meaning": "歌曲",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "sɒŋ"
     },
     {
       "text": "or",
-      "meaning": "",
+      "meaning": "或者",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ɔː(r)"
     },
     {
       "text": "so",
-      "meaning": "",
+      "meaning": "所以；这么",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "səʊ"
     },
     {
       "text": "much",
-      "meaning": "",
+      "meaning": "很多",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "mʌtʃ"
     }
   ]
 }

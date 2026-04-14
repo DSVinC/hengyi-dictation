@@ -4,11 +4,12 @@
   "words": [
     {
       "text": "back",
-      "meaning": "",
+      "meaning": "回；后面",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bæk"
     }
   ]
 }

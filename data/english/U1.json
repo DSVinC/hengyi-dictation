@@ -4,155 +4,174 @@
   "words": [
     {
       "text": "where",
-      "meaning": "",
+      "meaning": "在哪里",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "weə(r)"
     },
     {
       "text": "from",
-      "meaning": "",
+      "meaning": "来自",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "frɒm"
     },
     {
       "text": "about",
-      "meaning": "",
+      "meaning": "关于",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "əˈbaʊt"
     },
     {
       "text": "today",
-      "meaning": "",
+      "meaning": "今天",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "təˈdeɪ"
     },
     {
       "text": "teacher",
-      "meaning": "",
+      "meaning": "老师",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈtiːtʃə(r)"
     },
     {
       "text": "student",
-      "meaning": "",
+      "meaning": "学生",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈstjuːdənt"
     },
     {
       "text": "after",
-      "meaning": "",
+      "meaning": "在…之后",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈɑːftə(r)"
     },
     {
       "text": "who",
-      "meaning": "",
+      "meaning": "谁",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "huː"
     },
     {
       "text": "girl",
-      "meaning": "",
+      "meaning": "女孩",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ɡɜːl"
     },
     {
       "text": "boy",
-      "meaning": "",
+      "meaning": "男孩",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bɔɪ"
     },
     {
       "text": "woman",
-      "meaning": "",
+      "meaning": "女人",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈwʊmən"
     },
     {
       "text": "man",
-      "meaning": "",
+      "meaning": "男人",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "mæn"
     },
     {
       "text": "he",
-      "meaning": "",
+      "meaning": "他",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "hiː"
     },
     {
       "text": "also",
-      "meaning": "",
+      "meaning": "也",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈɔːlsəʊ"
     },
     {
       "text": "she",
-      "meaning": "",
+      "meaning": "她",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ʃiː"
     },
     {
       "text": "UK",
-      "meaning": "",
+      "meaning": "英国",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˌjuː ˈkeɪ"
     },
     {
       "text": "China",
-      "meaning": "",
+      "meaning": "中国",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈtʃaɪnə"
     },
     {
       "text": "Canada",
-      "meaning": "",
+      "meaning": "加拿大",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈkænədə"
     },
     {
       "text": "USA",
-      "meaning": "",
+      "meaning": "美国",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˌjuː es ˈeɪ"
     }
   ]
 }

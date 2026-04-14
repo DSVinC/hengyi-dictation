@@ -4,115 +4,129 @@
   "words": [
     {
       "text": "find",
-      "meaning": "",
+      "meaning": "找到",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "faɪnd"
     },
     {
       "text": "ruler",
-      "meaning": "",
+      "meaning": "尺子",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈruːlə(r)"
     },
     {
       "text": "pen",
-      "meaning": "",
+      "meaning": "钢笔",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "pen"
     },
     {
       "text": "pencil",
-      "meaning": "",
+      "meaning": "铅笔",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈpensl"
     },
     {
       "text": "book",
-      "meaning": "",
+      "meaning": "书",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bʊk"
     },
     {
       "text": "bag",
-      "meaning": "",
+      "meaning": "书包",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "bæɡ"
     },
     {
       "text": "paper",
-      "meaning": "",
+      "meaning": "纸",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ˈpeɪpə(r)"
     },
     {
       "text": "these",
-      "meaning": "",
+      "meaning": "这些",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "ðiːz"
     },
     {
       "text": "see",
-      "meaning": "",
+      "meaning": "看见",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "siː"
     },
     {
       "text": "hear",
-      "meaning": "",
+      "meaning": "听见",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "hɪə(r)"
     },
     {
       "text": "nose",
-      "meaning": "",
+      "meaning": "鼻子",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "nəʊz"
     },
     {
       "text": "class",
-      "meaning": "",
+      "meaning": "课堂",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "klɑːs"
     },
     {
       "text": "computer",
-      "meaning": "",
+      "meaning": "电脑",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "kəmˈpjuːtə(r)"
     },
     {
       "text": "learn",
-      "meaning": "",
+      "meaning": "学习",
       "round": 0,
       "nextReview": null,
       "wrongCount": 0,
-      "history": []
+      "history": [],
+      "phonetic": "lɜːn"
     }
   ]
 }
