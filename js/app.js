@@ -1194,7 +1194,7 @@ async function renderProgressPage(filter = 'all') {
   // 加载语文词语
   if (filter === 'all' || filter === 'chinese') {
     for (const lesson of chineseLessons) {
-      const data = await loadWordData('chinese', lesson.id);
+      let data = await loadWordData('chinese', lesson.id);
       if (data && data.words) {
         data = mergeProgressToWords(data, 'chinese', lesson.id);
         data.words.forEach(word => {
@@ -1215,7 +1215,7 @@ async function renderProgressPage(filter = 'all') {
   // 加载英语词语
   if (filter === 'all' || filter === 'english') {
     for (const unit of englishUnits) {
-      const data = await loadWordData('english', unit.id);
+      let data = await loadWordData('english', unit.id);
       if (data && data.words) {
         data = mergeProgressToWords(data, 'english', unit.id);
         data.words.forEach(word => {
