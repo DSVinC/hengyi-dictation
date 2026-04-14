@@ -1196,6 +1196,7 @@ async function renderProgressPage(filter = 'all') {
     for (const lesson of chineseLessons) {
       const data = await loadWordData('chinese', lesson.id);
       if (data && data.words) {
+        data = mergeProgressToWords(data, 'chinese', lesson.id);
         data.words.forEach(word => {
           allWords.push({ ...word, subject: 'chinese', lessonId: lesson.id, lessonName: data.lessonName });
         });
@@ -1216,6 +1217,7 @@ async function renderProgressPage(filter = 'all') {
     for (const unit of englishUnits) {
       const data = await loadWordData('english', unit.id);
       if (data && data.words) {
+        data = mergeProgressToWords(data, 'english', unit.id);
         data.words.forEach(word => {
           allWords.push({ ...word, subject: 'english', unitId: unit.id, unitName: data.unitName });
         });
