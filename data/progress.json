@@ -367,5 +367,176 @@
     "nextReview": "2026-04-16",
     "wrongCount": 1,
     "updatedAt": "2026-04-14T23:44:41.027Z"
+  },
+  "english/U1/where": {
+    "text": "where",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/from": {
+    "text": "from",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/about": {
+    "text": "about",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/today": {
+    "text": "today",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/teacher": {
+    "text": "teacher",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/student": {
+    "text": "student",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/after": {
+    "text": "after",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/who": {
+    "text": "who",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/girl": {
+    "text": "girl",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/boy": {
+    "text": "boy",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/woman": {
+    "text": "woman",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/man": {
+    "text": "man",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/he": {
+    "text": "he",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/also": {
+    "text": "also",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/she": {
+    "text": "she",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/UK": {
+    "text": "UK",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/China": {
+    "text": "China",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/Canada": {
+    "text": "Canada",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
+  },
+  "english/U1/USA": {
+    "text": "USA",
+    "lessonId": "U1",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:45:25.886Z"
   }
 }
