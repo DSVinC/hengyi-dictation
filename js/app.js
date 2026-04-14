@@ -1414,7 +1414,11 @@ async function renderProgressPage(filter = 'all') {
 /**
  * 手动设置词语轮次（用于进度总览页面）
  */
-function manualSetRound(subject, lessonId, text, round) {
+/**
+ * 静默更新词语进度（不弹窗、不重绘）
+ * @param {number} [wrongCountIncrement=0] - 错词次数增量
+ */
+function updateWordProgress(subject, lessonId, text, round, wrongCountIncrement = 0) {
   const nextReview = round >= 6 ? null : calculateNextReview(round);
   const key = `${subject}/${lessonId}/${text}`;
   const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
@@ -1425,14 +1429,20 @@ function manualSetRound(subject, lessonId, text, round) {
     subject: subject,
     round: round,
     nextReview: nextReview,
-    wrongCount: existing.wrongCount || 0,
+    wrongCount: (existing.wrongCount || 0) + wrongCountIncrement,
     updatedAt: new Date().toISOString()
   };
   localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
+  return key;
+}
 
+/**
+ * 手动设置词语进度并弹窗反馈 + 刷新页面（用户入口）
+ */
+function manualSetRound(subject, lessonId, text, round) {
+  updateWordProgress(subject, lessonId, text, round);
   const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
   alert(`✅ ${text} 已设为${roundName}`);
-  // 刷新当前页面
   const activeFilter = document.querySelector('.filter-btn.active');
   const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
   renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
@@ -1464,15 +1474,14 @@ function manualAddWordR1() {
     if (!confirm(`词库中未找到 "${text}"，仍要添加吗？`)) return;
   }
 
-  manualSetRound(subject, lessonId, text, 1);
-  // 增加错词次数
-  const key = `${subject}/${lessonId}/${text}`;
-  const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
-  if (progress[key]) {
-    progress[key].wrongCount = (progress[key].wrongCount || 0) + 1;
-    localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
-  }
-  wordInput.value = '';
+  // 一次性写入：设为R1 + 错词次数+1，只写一次 localStorage
+  updateWordProgress(subject, lessonId, text, 1, 1);
+  wordInput.value = ''; // 在重绘前清空
+  alert(`✅ ${text} 已设为 R1 复习中（错词次数+1）`);
+  // 刷新当前页面
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+  renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
 }
 
 /**
@@ -1486,8 +1495,13 @@ function manualAddWordMastered() {
 
   const [subject, lessonId] = lessonSelect.value.split('|');
   const text = wordInput.value.trim();
-  manualSetRound(subject, lessonId, text, 6);
-  wordInput.value = '';
+  wordInput.value = ''; // 在重绘前清空
+  updateWordProgress(subject, lessonId, text, 6);
+  alert(`✅ ${text} 已设为已掌握`);
+  // 刷新当前页面
+  const activeFilter = document.querySelector('.filter-btn.active');
+  const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+  renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
 }
 
 // ============================================
