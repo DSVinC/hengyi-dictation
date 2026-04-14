@@ -730,8 +730,12 @@ function goBackToLessons() {
  * 进入批改勾选模式
  */
 function startDictationGrading() {
+  // 防重复点击锁
+  if (AppState.isGrading) return;
+  AppState.isGrading = true;
+
   const resultEl = document.getElementById('dictation-result');
-  if (!resultEl) return;
+  if (!resultEl) { AppState.isGrading = false; return; }
 
   // 保存原始 HTML
   AppState.originalDictationHtml = resultEl.innerHTML;
@@ -739,13 +743,9 @@ function startDictationGrading() {
   // 把 dictation-word spans 替换为 checkbox labels
   let html = resultEl.innerHTML;
 
-  // 禁用听写完毕按钮
+  // 移除按钮，防止重复触发（innerHTML 替换会丢失 DOM disabled 状态）
   const startBtn = document.getElementById('btn-start-grading');
-  if (startBtn) {
-    startBtn.disabled = true;
-    startBtn.textContent = '📝 批改中…';
-    startBtn.style.opacity = '0.5';
-  }
+  if (startBtn) startBtn.remove();
 
   // 先插入顶部提示区
   const gradingNotice = `
@@ -781,15 +781,17 @@ function startDictationGrading() {
  * 退出批改勾选模式，恢复原清单
  */
 function cancelDictationGrading() {
+  AppState.isGrading = false;
   const resultEl = document.getElementById('dictation-result');
   if (!resultEl || !AppState.originalDictationHtml) return;
   resultEl.innerHTML = AppState.originalDictationHtml;
-  // 恢复听写完毕按钮
-  const startBtn = document.getElementById('btn-start-grading');
-  if (startBtn) {
-    startBtn.disabled = false;
-    startBtn.textContent = '📝 听写完毕';
-    startBtn.style.opacity = '1';
+  // 恢复听写完毕按钮（重新渲染 action-bar）
+  const actionBar = resultEl.querySelector('.action-bar');
+  if (!actionBar) {
+    const bar = document.createElement('div');
+    bar.className = 'action-bar grading-action-bar';
+    bar.innerHTML = '<button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">📝 听写完毕</button>';
+    resultEl.appendChild(bar);
   }
 }
 
