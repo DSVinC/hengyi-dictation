@@ -553,6 +553,7 @@ async function generateDictationList() {
     if (AppState.selectedWords.has(word.text)) {
       manualSelected.push({
         ...word,
+        subject: subject,
         lessonId: lessonId,
         lessonName: isChinese ? data.lessonName : data.unitName,
         isManual: true
