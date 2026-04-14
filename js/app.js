@@ -1298,7 +1298,16 @@ async function renderProgressPage(filter = 'all') {
                 <span class="manual-word-lesson">${name}</span>
                 <span class="error-round">R${word.round}</span>
                 <span class="manual-btn-group">
-                  <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId}','${word.text}',1)">R1</button>
+                  <select class="manual-round-select" id="round-select-${word.text.replace(/'/g, "\\'")}" style="font-size:12px;padding:2px 4px;border:1px solid #ddd;border-radius:4px;">
+                    <option value="0">R0</option>
+                    <option value="1" ${word.round===1?'selected':''}>R1</option>
+                    <option value="2" ${word.round===2?'selected':''}>R2</option>
+                    <option value="3" ${word.round===3?'selected':''}>R3</option>
+                    <option value="4" ${word.round===4?'selected':''}>R4</option>
+                    <option value="5" ${word.round===5?'selected':''}>R5</option>
+                    <option value="6">已掌握</option>
+                  </select>
+                  <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId}','${word.text}',document.getElementById('round-select-${word.text.replace(/'/g, "\\'")}').value)">确认</button>
                   <button class="manual-btn btn-reset" onclick="manualResetWord('${word.subject}','${word.lessonId}','${word.text}')">重置</button>
                 </span>
               </div>
@@ -1321,16 +1330,24 @@ async function renderProgressPage(filter = 'all') {
 
   const addWordHtml = `
     <div class="manual-section">
-      <h3 class="manual-title">➕ 手动添加错词 / 设为R1</h3>
+      <h3 class="manual-title">➕ 手动添加词 / 调整轮次</h3>
       <div class="add-word-form">
         <input type="text" id="manual-word-input" placeholder="输入词语" class="manual-input">
         <select id="manual-lesson-select" class="manual-input">
           <option value="">选择课/单元</option>
           ${lessonOptions.join('')}
         </select>
+        <select id="manual-round-select" class="manual-input">
+          <option value="0">R0 新词</option>
+          <option value="1" selected>R1（1天后复习）</option>
+          <option value="2">R2（3天后复习）</option>
+          <option value="3">R3（7天后复习）</option>
+          <option value="4">R4（16天后复习）</option>
+          <option value="5">R5（35天后复习）</option>
+          <option value="6">已掌握</option>
+        </select>
         <div class="add-word-buttons">
-          <button class="btn btn-primary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordR1()">设为R1</button>
-          <button class="btn btn-secondary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordMastered()">设为已掌握</button>
+          <button class="btn btn-primary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordWithRound()">添加</button>
         </div>
       </div>
     </div>
