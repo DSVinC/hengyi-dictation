@@ -2,29 +2,15 @@
   "lessonId": "L05",
   "lessonName": "第5课",
   "words": [
-    {
-      "text": "守株待宋",
-      "type": "word",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "耕折颈",
-      "type": "word",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    },
-    {
-      "text": "释其复",
-      "type": "word",
-      "round": 0,
-      "nextReview": null,
-      "wrongCount": 0,
-      "history": []
-    }
+    { "text": "守", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "株", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "待", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "宋", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "耕", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "折", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "颈", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "释", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "其", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] },
+    { "text": "复", "type": "word", "round": 0, "nextReview": null, "wrongCount": 0, "history": [] }
   ]
 }
