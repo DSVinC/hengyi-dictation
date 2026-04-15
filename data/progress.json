@@ -1371,10 +1371,10 @@
     "text": "尤其",
     "lessonId": "L13",
     "subject": "chinese",
-    "round": 0,
-    "nextReview": "2026-04-16",
+    "round": 1,
+    "nextReview": "2026-04-17",
     "wrongCount": 1,
-    "updatedAt": "2026-04-15T10:44:05.873Z"
+    "updatedAt": "2026-04-15T10:44:17.823Z"
   },
   "chinese/L13/保存": {
     "text": "保存",
