@@ -228,19 +228,19 @@
     "text": "short",
     "lessonId": "U2",
     "subject": "english",
-    "round": 0,
-    "nextReview": "2026-04-16",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-15T11:14:13.021Z"
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-15T11:16:39.398Z"
   },
   "english/U2/fat": {
     "text": "fat",
     "lessonId": "U2",
     "subject": "english",
-    "round": 0,
-    "nextReview": "2026-04-16",
+    "round": 1,
+    "nextReview": "2026-04-17",
     "wrongCount": 1,
-    "updatedAt": "2026-04-15T11:14:30.939Z"
+    "updatedAt": "2026-04-15T11:16:39.398Z"
   },
   "english/U2/thin": {
     "text": "thin",
@@ -282,10 +282,10 @@
     "text": "card",
     "lessonId": "U2",
     "subject": "english",
-    "round": 0,
-    "nextReview": "2026-04-16",
+    "round": 1,
+    "nextReview": "2026-04-17",
     "wrongCount": 0,
-    "updatedAt": "2026-04-15T11:14:40.914Z"
+    "updatedAt": "2026-04-15T11:16:39.398Z"
   },
   "english/U2/sing": {
     "text": "sing",
