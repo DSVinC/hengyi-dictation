@@ -1155,10 +1155,10 @@
     "text": "宁静",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 0,
-    "nextReview": "2026-04-16",
+    "round": 1,
+    "nextReview": "2026-04-17",
     "wrongCount": 0,
-    "updatedAt": "2026-04-15T00:45:34.982Z"
+    "updatedAt": "2026-04-15T00:45:46.841Z"
   },
   "chinese/L09/器官": {
     "text": "器官",
