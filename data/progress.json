@@ -804,10 +804,10 @@
     "text": "借",
     "lessonId": "L12",
     "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-04-17",
+    "round": 0,
+    "nextReview": "2026-04-16",
     "wrongCount": 1,
-    "updatedAt": "2026-04-15T00:42:07.800Z"
+    "updatedAt": "2026-04-15T00:47:53.888Z"
   },
   "chinese/L12/酒": {
     "text": "酒",
