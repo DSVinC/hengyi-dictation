@@ -399,10 +399,10 @@
     "text": "today",
     "lessonId": "U1",
     "subject": "english",
-    "round": 0,
-    "nextReview": "2026-04-16",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-15T11:14:19.695Z"
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-15T11:15:25.279Z"
   },
   "english/U1/teacher": {
     "text": "teacher",
