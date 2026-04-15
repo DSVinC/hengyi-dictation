@@ -1627,5 +1627,32 @@
     "nextReview": "2026-04-17",
     "wrongCount": 0,
     "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "english/U3/pencil": {
+    "text": "pencil",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T11:13:33.912Z"
+  },
+  "english/U3/book": {
+    "text": "book",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T11:13:33.912Z"
+  },
+  "english/U3/bag": {
+    "text": "bag",
+    "lessonId": "U3",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T11:13:33.912Z"
   }
 }
