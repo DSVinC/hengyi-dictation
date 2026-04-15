@@ -1015,5 +1015,140 @@
     "nextReview": "2026-04-17",
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L10/实验": {
+    "text": "实验",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/验证": {
+    "text": "验证",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/记号": {
+    "text": "记号",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/减少": {
+    "text": "减少",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/阻力": {
+    "text": "阻力",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/大约": {
+    "text": "大约",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/包括": {
+    "text": "包括",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/检查": {
+    "text": "检查",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/至少": {
+    "text": "至少",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/迷失": {
+    "text": "迷失",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/无误": {
+    "text": "无误",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/逆风": {
+    "text": "逆风",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/陌生": {
+    "text": "陌生",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/景物": {
+    "text": "景物",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
+  },
+  "chinese/L10/能力": {
+    "text": "能力",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:43:04.239Z"
   }
 }
