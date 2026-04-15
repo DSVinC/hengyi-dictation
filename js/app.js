@@ -1564,8 +1564,8 @@ async function renderProgressPage(filter = 'all') {
                     <option value="5" ${word.round===5?'selected':''}>R5</option>
                     <option value="6">已掌握</option>
                   </select>
-                  <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId}','${word.text}',document.getElementById('round-select-${word.text.replace(/'/g, "\\'")}').value)">确认</button>
-                  <button class="manual-btn btn-reset" onclick="manualResetWord('${word.subject}','${word.lessonId}','${word.text}')">重置</button>
+                  <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId || word.unitId}','${word.text}',document.getElementById('round-select-${word.text.replace(/'/g, "\\'")}').value)">确认</button>
+                  <button class="manual-btn btn-reset" onclick="manualResetWord('${word.subject}','${word.lessonId || word.unitId}','${word.text}')">重置</button>
                 </span>
               </div>
             </div>`;
