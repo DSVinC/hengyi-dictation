@@ -345,10 +345,10 @@
     "text": "or",
     "lessonId": "U2",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-16",
+    "round": 2,
+    "nextReview": "2026-04-19",
     "wrongCount": 0,
-    "updatedAt": "2026-04-14T23:44:41.027Z"
+    "updatedAt": "2026-04-15T00:41:06.229Z"
   },
   "english/U2/so": {
     "text": "so",
