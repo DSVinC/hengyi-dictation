@@ -1715,6 +1715,8 @@ function updateWordProgress(subject, lessonId, text, round, wrongCountIncrement 
     updatedAt: new Date().toISOString()
   };
   localStorage.setItem('hengyi-dictation-progress', JSON.stringify(progress));
+  // 手动修改也触发 GitHub 防抖同步
+  if (isGitHubConfigured) debouncedSyncToGitHub();
   return key;
 }
 
