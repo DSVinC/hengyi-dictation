@@ -300,10 +300,10 @@
     "text": "dance",
     "lessonId": "U2",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-16",
+    "round": 3,
+    "nextReview": "2026-04-22",
     "wrongCount": 0,
-    "updatedAt": "2026-04-14T23:44:41.027Z"
+    "updatedAt": "2026-04-15T00:40:26.296Z"
   },
   "english/U2/talk": {
     "text": "talk",
