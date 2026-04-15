@@ -903,10 +903,10 @@
     "text": "创造",
     "lessonId": "L13",
     "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-04-17",
+    "round": 0,
+    "nextReview": "2026-04-16",
     "wrongCount": 0,
-    "updatedAt": "2026-04-15T00:42:23.431Z"
+    "updatedAt": "2026-04-15T00:47:44.578Z"
   },
   "chinese/L13/材料": {
     "text": "材料",
