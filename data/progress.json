@@ -862,5 +862,158 @@
     "nextReview": "2026-04-17",
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.801Z"
+  },
+  "chinese/L13/文明": {
+    "text": "文明",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/伟大": {
+    "text": "伟大",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/贡献": {
+    "text": "贡献",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/祖先": {
+    "text": "祖先",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/创造": {
+    "text": "创造",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/材料": {
+    "text": "材料",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/尤其": {
+    "text": "尤其",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/保存": {
+    "text": "保存",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/吸收": {
+    "text": "吸收",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/积累": {
+    "text": "积累",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/经验": {
+    "text": "经验",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/改进": {
+    "text": "改进",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/价格": {
+    "text": "价格",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/便宜": {
+    "text": "便宜",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/满足": {
+    "text": "满足",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/促进": {
+    "text": "促进",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
+  },
+  "chinese/L13/社会": {
+    "text": "社会",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T00:42:23.431Z"
   }
 }
