@@ -228,10 +228,10 @@
     "text": "short",
     "lessonId": "U2",
     "subject": "english",
-    "round": 1,
+    "round": 0,
     "nextReview": "2026-04-16",
     "wrongCount": 1,
-    "updatedAt": "2026-04-14T23:44:41.027Z"
+    "updatedAt": "2026-04-15T11:14:13.021Z"
   },
   "english/U2/fat": {
     "text": "fat",
