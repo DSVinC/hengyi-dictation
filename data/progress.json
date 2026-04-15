@@ -1,4 +1,13 @@
 {
+  "chinese/L10/ÃÂÃÂ¥ÃÂÃÂ®ÃÂÃÂÃÂÃÂ©ÃÂÃÂªÃÂÃÂ": {
+    "text": "ÃÂÃÂ¥ÃÂÃÂ®ÃÂÃÂÃÂÃÂ©ÃÂÃÂªÃÂÃÂ",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T16:21:46.686Z"
+  },
   "chinese/L10/ÃÂ¥ÃÂ®ÃÂÃÂ©ÃÂªÃÂ": {
     "text": "ÃÂ¥ÃÂ®ÃÂÃÂ©ÃÂªÃÂ",
     "lessonId": "L10",
@@ -8,17 +17,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-14T16:21:46.686Z"
   },
-  "chinese/L10/Ã¥Â®ÂÃ©ÂªÂ": {
-    "text": "Ã¥Â®ÂÃ©ÂªÂ",
-    "lessonId": "L10",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-04-16",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-14T16:21:46.686Z"
-  },
-  "chinese/L12/Ã¥ÂÂ": {
-    "text": "Ã¥ÂÂ",
+  "chinese/L12/ÃÂ¥ÃÂÃÂ": {
+    "text": "ÃÂ¥ÃÂÃÂ",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -26,8 +26,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T16:23:22.330Z"
   },
-  "chinese/L13/Ã¦ÂÂÃ¦ÂÂ": {
-    "text": "Ã¦ÂÂÃ¦ÂÂ",
+  "chinese/L13/ÃÂ¦ÃÂÃÂÃÂ¦ÃÂÃÂ": {
+    "text": "ÃÂ¦ÃÂÃÂÃÂ¦ÃÂÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -35,8 +35,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¤Â¼ÂÃ¥Â¤Â§": {
-    "text": "Ã¤Â¼ÂÃ¥Â¤Â§",
+  "chinese/L13/ÃÂ¤ÃÂ¼ÃÂÃÂ¥ÃÂ¤ÃÂ§": {
+    "text": "ÃÂ¤ÃÂ¼ÃÂÃÂ¥ÃÂ¤ÃÂ§",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -44,8 +44,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¨Â´Â¡Ã§ÂÂ®": {
-    "text": "Ã¨Â´Â¡Ã§ÂÂ®",
+  "chinese/L13/ÃÂ¨ÃÂ´ÃÂ¡ÃÂ§ÃÂÃÂ®": {
+    "text": "ÃÂ¨ÃÂ´ÃÂ¡ÃÂ§ÃÂÃÂ®",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -53,8 +53,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã§Â¥ÂÃ¥ÂÂ": {
-    "text": "Ã§Â¥ÂÃ¥ÂÂ",
+  "chinese/L13/ÃÂ§ÃÂ¥ÃÂÃÂ¥ÃÂÃÂ": {
+    "text": "ÃÂ§ÃÂ¥ÃÂÃÂ¥ÃÂÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -62,8 +62,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¥ÂÂÃ©ÂÂ ": {
-    "text": "Ã¥ÂÂÃ©ÂÂ ",
+  "chinese/L13/ÃÂ¥ÃÂÃÂÃÂ©ÃÂÃÂ ": {
+    "text": "ÃÂ¥ÃÂÃÂÃÂ©ÃÂÃÂ ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -71,8 +71,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¦ÂÂÃ¦ÂÂ": {
-    "text": "Ã¦ÂÂÃ¦ÂÂ",
+  "chinese/L13/ÃÂ¦ÃÂÃÂÃÂ¦ÃÂÃÂ": {
+    "text": "ÃÂ¦ÃÂÃÂÃÂ¦ÃÂÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -80,8 +80,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¥Â°Â¤Ã¥ÂÂ¶": {
-    "text": "Ã¥Â°Â¤Ã¥ÂÂ¶",
+  "chinese/L13/ÃÂ¥ÃÂ°ÃÂ¤ÃÂ¥ÃÂÃÂ¶": {
+    "text": "ÃÂ¥ÃÂ°ÃÂ¤ÃÂ¥ÃÂÃÂ¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -89,8 +89,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¤Â¿ÂÃ¥Â­Â": {
-    "text": "Ã¤Â¿ÂÃ¥Â­Â",
+  "chinese/L13/ÃÂ¤ÃÂ¿ÃÂÃÂ¥ÃÂ­ÃÂ": {
+    "text": "ÃÂ¤ÃÂ¿ÃÂÃÂ¥ÃÂ­ÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -98,8 +98,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¥ÂÂ¸Ã¦ÂÂ¶": {
-    "text": "Ã¥ÂÂ¸Ã¦ÂÂ¶",
+  "chinese/L13/ÃÂ¥ÃÂÃÂ¸ÃÂ¦ÃÂÃÂ¶": {
+    "text": "ÃÂ¥ÃÂÃÂ¸ÃÂ¦ÃÂÃÂ¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -107,8 +107,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã§Â§Â¯Ã§Â´Â¯": {
-    "text": "Ã§Â§Â¯Ã§Â´Â¯",
+  "chinese/L13/ÃÂ§ÃÂ§ÃÂ¯ÃÂ§ÃÂ´ÃÂ¯": {
+    "text": "ÃÂ§ÃÂ§ÃÂ¯ÃÂ§ÃÂ´ÃÂ¯",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -116,8 +116,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã§Â»ÂÃ©ÂªÂ": {
-    "text": "Ã§Â»ÂÃ©ÂªÂ",
+  "chinese/L13/ÃÂ§ÃÂ»ÃÂÃÂ©ÃÂªÃÂ": {
+    "text": "ÃÂ§ÃÂ»ÃÂÃÂ©ÃÂªÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -125,8 +125,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¦ÂÂ¹Ã¨Â¿Â": {
-    "text": "Ã¦ÂÂ¹Ã¨Â¿Â",
+  "chinese/L13/ÃÂ¦ÃÂÃÂ¹ÃÂ¨ÃÂ¿ÃÂ": {
+    "text": "ÃÂ¦ÃÂÃÂ¹ÃÂ¨ÃÂ¿ÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -134,8 +134,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¤Â»Â·Ã¦Â Â¼": {
-    "text": "Ã¤Â»Â·Ã¦Â Â¼",
+  "chinese/L13/ÃÂ¤ÃÂ»ÃÂ·ÃÂ¦ÃÂ ÃÂ¼": {
+    "text": "ÃÂ¤ÃÂ»ÃÂ·ÃÂ¦ÃÂ ÃÂ¼",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -143,8 +143,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¤Â¾Â¿Ã¥Â®Â": {
-    "text": "Ã¤Â¾Â¿Ã¥Â®Â",
+  "chinese/L13/ÃÂ¤ÃÂ¾ÃÂ¿ÃÂ¥ÃÂ®ÃÂ": {
+    "text": "ÃÂ¤ÃÂ¾ÃÂ¿ÃÂ¥ÃÂ®ÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -152,8 +152,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¦Â»Â¡Ã¨Â¶Â³": {
-    "text": "Ã¦Â»Â¡Ã¨Â¶Â³",
+  "chinese/L13/ÃÂ¦ÃÂ»ÃÂ¡ÃÂ¨ÃÂ¶ÃÂ³": {
+    "text": "ÃÂ¦ÃÂ»ÃÂ¡ÃÂ¨ÃÂ¶ÃÂ³",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -161,8 +161,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã¤Â¿ÂÃ¨Â¿Â": {
-    "text": "Ã¤Â¿ÂÃ¨Â¿Â",
+  "chinese/L13/ÃÂ¤ÃÂ¿ÃÂÃÂ¨ÃÂ¿ÃÂ": {
+    "text": "ÃÂ¤ÃÂ¿ÃÂÃÂ¨ÃÂ¿ÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -170,8 +170,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/Ã§Â¤Â¾Ã¤Â¼Â": {
-    "text": "Ã§Â¤Â¾Ã¤Â¼Â",
+  "chinese/L13/ÃÂ§ÃÂ¤ÃÂ¾ÃÂ¤ÃÂ¼ÃÂ": {
+    "text": "ÃÂ§ÃÂ¤ÃÂ¾ÃÂ¤ÃÂ¼ÃÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -539,8 +539,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:45:25.886Z"
   },
-  "chinese/L10/å®éª": {
-    "text": "å®éª",
+  "chinese/L10/Ã¥Â®ÂÃ©ÂªÂ": {
+    "text": "Ã¥Â®ÂÃ©ÂªÂ",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -548,8 +548,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-14T16:21:46.686Z"
   },
-  "chinese/L12/å": {
-    "text": "å",
+  "chinese/L12/Ã¥ÂÂ": {
+    "text": "Ã¥ÂÂ",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -557,8 +557,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T16:23:22.330Z"
   },
-  "chinese/L13/ææ": {
-    "text": "ææ",
+  "chinese/L13/Ã¦ÂÂÃ¦ÂÂ": {
+    "text": "Ã¦ÂÂÃ¦ÂÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -566,8 +566,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ä¼å¤§": {
-    "text": "ä¼å¤§",
+  "chinese/L13/Ã¤Â¼ÂÃ¥Â¤Â§": {
+    "text": "Ã¤Â¼ÂÃ¥Â¤Â§",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -575,8 +575,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/è´¡ç®": {
-    "text": "è´¡ç®",
+  "chinese/L13/Ã¨Â´Â¡Ã§ÂÂ®": {
+    "text": "Ã¨Â´Â¡Ã§ÂÂ®",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -584,8 +584,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ç¥å": {
-    "text": "ç¥å",
+  "chinese/L13/Ã§Â¥ÂÃ¥ÂÂ": {
+    "text": "Ã§Â¥ÂÃ¥ÂÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -593,8 +593,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/åé ": {
-    "text": "åé ",
+  "chinese/L13/Ã¥ÂÂÃ©ÂÂ ": {
+    "text": "Ã¥ÂÂÃ©ÂÂ ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -602,8 +602,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ææ": {
-    "text": "ææ",
+  "chinese/L13/Ã¦ÂÂÃ¦ÂÂ": {
+    "text": "Ã¦ÂÂÃ¦ÂÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -611,8 +611,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/å°¤å¶": {
-    "text": "å°¤å¶",
+  "chinese/L13/Ã¥Â°Â¤Ã¥ÂÂ¶": {
+    "text": "Ã¥Â°Â¤Ã¥ÂÂ¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -620,8 +620,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ä¿å­": {
-    "text": "ä¿å­",
+  "chinese/L13/Ã¤Â¿ÂÃ¥Â­Â": {
+    "text": "Ã¤Â¿ÂÃ¥Â­Â",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -629,8 +629,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/å¸æ¶": {
-    "text": "å¸æ¶",
+  "chinese/L13/Ã¥ÂÂ¸Ã¦ÂÂ¶": {
+    "text": "Ã¥ÂÂ¸Ã¦ÂÂ¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -638,8 +638,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ç§¯ç´¯": {
-    "text": "ç§¯ç´¯",
+  "chinese/L13/Ã§Â§Â¯Ã§Â´Â¯": {
+    "text": "Ã§Â§Â¯Ã§Â´Â¯",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -647,8 +647,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ç»éª": {
-    "text": "ç»éª",
+  "chinese/L13/Ã§Â»ÂÃ©ÂªÂ": {
+    "text": "Ã§Â»ÂÃ©ÂªÂ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -656,8 +656,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/æ¹è¿": {
-    "text": "æ¹è¿",
+  "chinese/L13/Ã¦ÂÂ¹Ã¨Â¿Â": {
+    "text": "Ã¦ÂÂ¹Ã¨Â¿Â",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -665,8 +665,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ä»·æ ¼": {
-    "text": "ä»·æ ¼",
+  "chinese/L13/Ã¤Â»Â·Ã¦Â Â¼": {
+    "text": "Ã¤Â»Â·Ã¦Â Â¼",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -674,8 +674,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ä¾¿å®": {
-    "text": "ä¾¿å®",
+  "chinese/L13/Ã¤Â¾Â¿Ã¥Â®Â": {
+    "text": "Ã¤Â¾Â¿Ã¥Â®Â",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -683,8 +683,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/æ»¡è¶³": {
-    "text": "æ»¡è¶³",
+  "chinese/L13/Ã¦Â»Â¡Ã¨Â¶Â³": {
+    "text": "Ã¦Â»Â¡Ã¨Â¶Â³",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -692,8 +692,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ä¿è¿": {
-    "text": "ä¿è¿",
+  "chinese/L13/Ã¤Â¿ÂÃ¨Â¿Â": {
+    "text": "Ã¤Â¿ÂÃ¨Â¿Â",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -701,8 +701,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:43:08.545Z"
   },
-  "chinese/L13/ç¤¾ä¼": {
-    "text": "ç¤¾ä¼",
+  "chinese/L13/Ã§Â¤Â¾Ã¤Â¼Â": {
+    "text": "Ã§Â¤Â¾Ã¤Â¼Â",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -755,8 +755,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-14T23:47:27.583Z"
   },
-  "chinese/L12/旧": {
-    "text": "旧",
+  "chinese/L12/æ§": {
+    "text": "æ§",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -764,8 +764,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/符": {
-    "text": "符",
+  "chinese/L12/ç¬¦": {
+    "text": "ç¬¦",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -773,8 +773,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/牧": {
-    "text": "牧",
+  "chinese/L12/ç§": {
+    "text": "ç§",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -782,8 +782,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/纷": {
-    "text": "纷",
+  "chinese/L12/çº·": {
+    "text": "çº·",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -791,8 +791,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/魂": {
-    "text": "魂",
+  "chinese/L12/é­": {
+    "text": "é­",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -800,8 +800,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/借": {
-    "text": "借",
+  "chinese/L12/å": {
+    "text": "å",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 0,
@@ -809,8 +809,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:47:53.888Z"
   },
-  "chinese/L12/酒": {
-    "text": "酒",
+  "chinese/L12/é": {
+    "text": "é",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -818,8 +818,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/遥": {
-    "text": "遥",
+  "chinese/L12/é¥": {
+    "text": "é¥",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -827,8 +827,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/兄": {
-    "text": "兄",
+  "chinese/L12/å": {
+    "text": "å",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -836,8 +836,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/逢": {
-    "text": "逢",
+  "chinese/L12/é¢": {
+    "text": "é¢",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -845,8 +845,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.800Z"
   },
-  "chinese/L12/佳": {
-    "text": "佳",
+  "chinese/L12/ä½³": {
+    "text": "ä½³",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -854,8 +854,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.801Z"
   },
-  "chinese/L12/倍": {
-    "text": "倍",
+  "chinese/L12/å": {
+    "text": "å",
     "lessonId": "L12",
     "subject": "chinese",
     "round": 1,
@@ -863,8 +863,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:07.801Z"
   },
-  "chinese/L13/文明": {
-    "text": "文明",
+  "chinese/L13/ææ": {
+    "text": "ææ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -872,8 +872,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:23.431Z"
   },
-  "chinese/L13/伟大": {
-    "text": "伟大",
+  "chinese/L13/ä¼å¤§": {
+    "text": "ä¼å¤§",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -881,8 +881,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:23.431Z"
   },
-  "chinese/L13/贡献": {
-    "text": "贡献",
+  "chinese/L13/è´¡ç®": {
+    "text": "è´¡ç®",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -890,8 +890,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:23.431Z"
   },
-  "chinese/L13/祖先": {
-    "text": "祖先",
+  "chinese/L13/ç¥å": {
+    "text": "ç¥å",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 1,
@@ -899,8 +899,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:42:23.431Z"
   },
-  "chinese/L13/创造": {
-    "text": "创造",
+  "chinese/L13/åé ": {
+    "text": "åé ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -908,8 +908,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:44.578Z"
   },
-  "chinese/L13/材料": {
-    "text": "材料",
+  "chinese/L13/ææ": {
+    "text": "ææ",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -917,8 +917,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:40.025Z"
   },
-  "chinese/L13/尤其": {
-    "text": "尤其",
+  "chinese/L13/å°¤å¶": {
+    "text": "å°¤å¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -926,8 +926,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:46:59.464Z"
   },
-  "chinese/L13/保存": {
-    "text": "保存",
+  "chinese/L13/ä¿å­": {
+    "text": "ä¿å­",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -935,8 +935,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:46:49.100Z"
   },
-  "chinese/L13/吸收": {
-    "text": "吸收",
+  "chinese/L13/å¸æ¶": {
+    "text": "å¸æ¶",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -944,8 +944,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:46:53.158Z"
   },
-  "chinese/L13/积累": {
-    "text": "积累",
+  "chinese/L13/ç§¯ç´¯": {
+    "text": "ç§¯ç´¯",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -953,8 +953,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:05.891Z"
   },
-  "chinese/L13/经验": {
-    "text": "经验",
+  "chinese/L13/ç»éª": {
+    "text": "ç»éª",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -962,8 +962,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:36.337Z"
   },
-  "chinese/L13/改进": {
-    "text": "改进",
+  "chinese/L13/æ¹è¿": {
+    "text": "æ¹è¿",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -971,8 +971,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:31.813Z"
   },
-  "chinese/L13/价格": {
-    "text": "价格",
+  "chinese/L13/ä»·æ ¼": {
+    "text": "ä»·æ ¼",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -980,8 +980,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:28.581Z"
   },
-  "chinese/L13/便宜": {
-    "text": "便宜",
+  "chinese/L13/ä¾¿å®": {
+    "text": "ä¾¿å®",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -989,8 +989,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:25.025Z"
   },
-  "chinese/L13/满足": {
-    "text": "满足",
+  "chinese/L13/æ»¡è¶³": {
+    "text": "æ»¡è¶³",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -998,8 +998,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:21.344Z"
   },
-  "chinese/L13/促进": {
-    "text": "促进",
+  "chinese/L13/ä¿è¿": {
+    "text": "ä¿è¿",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -1007,8 +1007,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:17.936Z"
   },
-  "chinese/L13/社会": {
-    "text": "社会",
+  "chinese/L13/ç¤¾ä¼": {
+    "text": "ç¤¾ä¼",
     "lessonId": "L13",
     "subject": "chinese",
     "round": 0,
@@ -1016,8 +1016,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:47:13.760Z"
   },
-  "chinese/L10/实验": {
-    "text": "实验",
+  "chinese/L10/å®éª": {
+    "text": "å®éª",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1025,8 +1025,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/验证": {
-    "text": "验证",
+  "chinese/L10/éªè¯": {
+    "text": "éªè¯",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1034,8 +1034,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/记号": {
-    "text": "记号",
+  "chinese/L10/è®°å·": {
+    "text": "è®°å·",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1043,8 +1043,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/减少": {
-    "text": "减少",
+  "chinese/L10/åå°": {
+    "text": "åå°",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1052,8 +1052,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/阻力": {
-    "text": "阻力",
+  "chinese/L10/é»å": {
+    "text": "é»å",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1061,8 +1061,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/大约": {
-    "text": "大约",
+  "chinese/L10/å¤§çº¦": {
+    "text": "å¤§çº¦",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1070,8 +1070,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/包括": {
-    "text": "包括",
+  "chinese/L10/åæ¬": {
+    "text": "åæ¬",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1079,8 +1079,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/检查": {
-    "text": "检查",
+  "chinese/L10/æ£æ¥": {
+    "text": "æ£æ¥",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1088,8 +1088,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/至少": {
-    "text": "至少",
+  "chinese/L10/è³å°": {
+    "text": "è³å°",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1097,8 +1097,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/迷失": {
-    "text": "迷失",
+  "chinese/L10/è¿·å¤±": {
+    "text": "è¿·å¤±",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1106,8 +1106,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/无误": {
-    "text": "无误",
+  "chinese/L10/æ è¯¯": {
+    "text": "æ è¯¯",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1115,8 +1115,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/逆风": {
-    "text": "逆风",
+  "chinese/L10/éé£": {
+    "text": "éé£",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1124,8 +1124,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/陌生": {
-    "text": "陌生",
+  "chinese/L10/éç": {
+    "text": "éç",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1133,8 +1133,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/景物": {
-    "text": "景物",
+  "chinese/L10/æ¯ç©": {
+    "text": "æ¯ç©",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1142,8 +1142,8 @@
     "wrongCount": 1,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L10/能力": {
-    "text": "能力",
+  "chinese/L10/è½å": {
+    "text": "è½å",
     "lessonId": "L10",
     "subject": "chinese",
     "round": 1,
@@ -1151,8 +1151,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:04.239Z"
   },
-  "chinese/L09/宁静": {
-    "text": "宁静",
+  "chinese/L09/å®é": {
+    "text": "å®é",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1160,8 +1160,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:45:46.841Z"
   },
-  "chinese/L09/器官": {
-    "text": "器官",
+  "chinese/L09/å¨å®": {
+    "text": "å¨å®",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1169,8 +1169,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/是否": {
-    "text": "是否",
+  "chinese/L09/æ¯å¦": {
+    "text": "æ¯å¦",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1178,8 +1178,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/窃窃私语": {
-    "text": "窃窃私语",
+  "chinese/L09/çªçªç§è¯­": {
+    "text": "çªçªç§è¯­",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1187,8 +1187,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/危险": {
-    "text": "危险",
+  "chinese/L09/å±é©": {
+    "text": "å±é©",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1196,8 +1196,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/方法": {
-    "text": "方法",
+  "chinese/L09/æ¹æ³": {
+    "text": "æ¹æ³",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1205,8 +1205,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/肌肉": {
-    "text": "肌肉",
+  "chinese/L09/èè": {
+    "text": "èè",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1214,8 +1214,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/攻击": {
-    "text": "攻击",
+  "chinese/L09/æ»å»": {
+    "text": "æ»å»",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1223,8 +1223,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/利用": {
-    "text": "利用",
+  "chinese/L09/å©ç¨": {
+    "text": "å©ç¨",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1232,8 +1232,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/后退": {
-    "text": "后退",
+  "chinese/L09/åé": {
+    "text": "åé",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1241,8 +1241,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/免费": {
-    "text": "免费",
+  "chinese/L09/åè´¹": {
+    "text": "åè´¹",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1250,8 +1250,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/差异": {
-    "text": "差异",
+  "chinese/L09/å·®å¼": {
+    "text": "å·®å¼",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1259,8 +1259,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/清楚": {
-    "text": "清楚",
+  "chinese/L09/æ¸æ¥": {
+    "text": "æ¸æ¥",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1268,8 +1268,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/奇异": {
-    "text": "奇异",
+  "chinese/L09/å¥å¼": {
+    "text": "å¥å¼",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1277,8 +1277,8 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/汪": {
-    "text": "汪",
+  "chinese/L09/æ±ª": {
+    "text": "æ±ª",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
@@ -1286,13 +1286,346 @@
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
   },
-  "chinese/L09/达": {
-    "text": "达",
+  "chinese/L09/è¾¾": {
+    "text": "è¾¾",
     "lessonId": "L09",
     "subject": "chinese",
     "round": 1,
     "nextReview": "2026-04-17",
     "wrongCount": 0,
     "updatedAt": "2026-04-15T00:43:32.849Z"
+  },
+  "chinese/L10/实验": {
+    "text": "实验",
+    "lessonId": "L10",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T16:21:46.686Z"
+  },
+  "chinese/L12/借": {
+    "text": "借",
+    "lessonId": "L12",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T16:23:22.330Z"
+  },
+  "chinese/L13/文明": {
+    "text": "文明",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/伟大": {
+    "text": "伟大",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/贡献": {
+    "text": "贡献",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/祖先": {
+    "text": "祖先",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/创造": {
+    "text": "创造",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/材料": {
+    "text": "材料",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/尤其": {
+    "text": "尤其",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/保存": {
+    "text": "保存",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/吸收": {
+    "text": "吸收",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/积累": {
+    "text": "积累",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/经验": {
+    "text": "经验",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/改进": {
+    "text": "改进",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/价格": {
+    "text": "价格",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/便宜": {
+    "text": "便宜",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/满足": {
+    "text": "满足",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/促进": {
+    "text": "促进",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L13/社会": {
+    "text": "社会",
+    "lessonId": "L13",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-16",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-14T23:43:08.545Z"
+  },
+  "chinese/L14/闻名": {
+    "text": "闻名",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/设计": {
+    "text": "设计",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/创举": {
+    "text": "创举",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/减轻": {
+    "text": "减轻",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/不但": {
+    "text": "不但",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/坚固": {
+    "text": "坚固",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/而且": {
+    "text": "而且",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/美观": {
+    "text": "美观",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/体现": {
+    "text": "体现",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/才干": {
+    "text": "才干",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/宝贵": {
+    "text": "宝贵",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/历史": {
+    "text": "历史",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/文化": {
+    "text": "文化",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/赵": {
+    "text": "赵",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/桥": {
+    "text": "桥",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/拱": {
+    "text": "拱",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/济": {
+    "text": "济",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
+  },
+  "chinese/L14/栏": {
+    "text": "栏",
+    "lessonId": "L14",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-15T10:43:25.138Z"
   }
 }
