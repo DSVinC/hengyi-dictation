@@ -72,7 +72,40 @@ let syncRefreshTimer = null;
 const SYNC_REFRESH_MS = 30000; // 30秒刷新远程
 
 /**
- * 从 GitHub 加载进度
+ * 尝试解码被双重/三重 UTF-8 编码损坏的中文字符串
+ * 例如: "Ã¥Â®ÂÃ©ÂªÂ" → "实验"
+ */
+function fixDoubleEncoded(str) {
+  if (!str || /[一-鿿]/.test(str)) return str; // 已经是正常中文，跳过
+  try {
+    // 尝试一次解码
+    let decoded = decodeURIComponent(escape(str));
+    if (/[一-鿿]/.test(decoded)) return decoded;
+    // 尝试二次解码（三重编码）
+    decoded = decodeURIComponent(escape(decoded));
+    if (/[一-鿿]/.test(decoded)) return decoded;
+  } catch (e) {
+    // 无法解码，返回原文
+  }
+  return str;
+}
+
+/**
+ * 清洗进度数据：修复所有被编码损坏的 key 和 text 字段
+ */
+function sanitizeProgress(progress) {
+  if (!progress) return progress;
+  const cleaned = {};
+  for (const [key, item] of Object.entries(progress)) {
+    const fixedKey = fixDoubleEncoded(key);
+    const fixedText = fixDoubleEncoded(item.text || '');
+    cleaned[fixedKey] = { ...item, text: fixedText };
+  }
+  return cleaned;
+}
+
+/**
+ * 从 GitHub 加载进度（加载后自动清洗编码损坏的 key）
  * @returns {Promise<object|null>} 进度数据或 null
  */
 async function loadProgressFromGitHub() {
@@ -102,7 +135,10 @@ async function loadProgressFromGitHub() {
 
     // 解码 base64 内容
     const content = atob(data.content.replace(/\n/g, ''));
-    const progress = JSON.parse(content);
+    let progress = JSON.parse(content);
+
+    // 清洗被编码损坏的中文 key
+    progress = sanitizeProgress(progress);
 
     console.log(`[GitHub Sync] 加载成功，${Object.keys(progress).length} 条记录`);
     return progress;
@@ -143,11 +179,18 @@ async function saveProgressToGitHub(localProgress) {
     // 1. 先拉取远程最新版本
     const remoteProgress = await loadProgressFromGitHub();
 
-    // 2. 合并远程和本地，取较新的
-    const toSave = remoteProgress ? mergeProgress(remoteProgress, localProgress) : localProgress;
+    // 2. 清洗本地数据（确保没有编码损坏的 key）
+    const cleanProgress = sanitizeProgress(localProgress);
 
-    // 3. 编码并上传
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
+    // 3. 合并远程和清洗后的本地数据
+    const toSave = remoteProgress ? mergeProgress(remoteProgress, cleanProgress) : cleanProgress;
+
+    // 4. 编码并上传 — 用 Unicode 转义保护中文 key
+    const jsonStr = JSON.stringify(toSave, null, 2);
+    // 将所有中文字符转为 \uXXXX 转义，避免 base64 编码过程中的损坏
+    const safeJson = jsonStr.replace(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/g,
+      ch => '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0'));
+    const content = btoa(unescape(encodeURIComponent(safeJson)));
     const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
 
     const body = {
