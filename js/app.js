@@ -52,6 +52,27 @@ const GITHUB_CONFIG = {
   apiUrl: 'https://api.github.com'
 };
 
+/**
+ * 清洗 localStorage 中的进度数据（修复编码损坏的 key）
+ * 页面加载时调用一次，确保后续所有读取都是干净数据
+ */
+function sanitizeLocalStorageProgress() {
+  try {
+    const raw = localStorage.getItem('hengyi-dictation-progress');
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    const cleaned = sanitizeProgress(parsed);
+    // 如果有变化（key 被修复了），写回 localStorage
+    if (JSON.stringify(cleaned) !== raw) {
+      localStorage.setItem('hengyi-dictation-progress', JSON.stringify(cleaned));
+      console.log('[Sanitize] localStorage 清洗完成，修复了编码损坏的 key');
+    }
+    return cleaned;
+  } catch (e) {
+    return {};
+  }
+}
+
 // GitHub 配置已内联
 const isGitHubConfigured = true;
 
@@ -251,7 +272,9 @@ function debouncedSyncToGitHub() {
   updateSyncIndicator();
 
   syncDebounceTimer = setTimeout(async () => {
-    const progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    let progress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    // 确保发送前再次清洗（防止运行时脏数据写入）
+    progress = sanitizeProgress(progress);
     const success = await saveProgressToGitHub(progress);
     updateSyncIndicator();
     if (success) {
@@ -284,9 +307,11 @@ async function mergeGitHubProgress() {
   const remoteProgress = await loadProgressFromGitHub();
   if (!remoteProgress) return;
 
-  const localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  let localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+  // 清洗本地 localStorage 中可能存在的编码损坏 key
+  localProgress = sanitizeProgress(localProgress);
   const merged = mergeProgress(remoteProgress, localProgress);
-
+  // 写回清洗后的数据（修复 localStorage 中的乱码 key）
   localStorage.setItem('hengyi-dictation-progress', JSON.stringify(merged));
   SyncState.status = 'synced';
   console.log(`[GitHub Sync] 合并完成，${Object.keys(merged).length} 条记录`);
@@ -304,8 +329,11 @@ async function backgroundSyncRefresh() {
     const remoteProgress = await loadProgressFromGitHub();
     if (!remoteProgress) return;
 
-    const localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    let localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    // 清洗本地 localStorage 中可能存在的编码损坏 key
+    localProgress = sanitizeProgress(localProgress);
     const merged = mergeProgress(remoteProgress, localProgress);
+    localStorage.setItem('hengyi-dictation-progress', JSON.stringify(merged));
 
     // 只有数据有变化才更新 localStorage
     if (JSON.stringify(merged) !== JSON.stringify(localProgress)) {
@@ -1947,6 +1975,9 @@ function manualAddWordMastered() {
 // 初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+  // 页面加载时立即清洗 localStorage 中的编码损坏 key
+  sanitizeLocalStorageProgress();
+
   // 绑定导航按钮事件
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => switchPage(btn.dataset.page));
