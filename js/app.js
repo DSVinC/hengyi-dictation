@@ -67,6 +67,10 @@ const SyncState = {
 let syncDebounceTimer = null;
 const SYNC_DEBOUNCE_MS = 2000; // 2秒防抖
 
+// 后台定时刷新（多设备同步）
+let syncRefreshTimer = null;
+const SYNC_REFRESH_MS = 30000; // 30秒刷新远程
+
 /**
  * 从 GitHub 加载进度
  * @returns {Promise<object|null>} 进度数据或 null
@@ -109,14 +113,41 @@ async function loadProgressFromGitHub() {
 }
 
 /**
- * 保存进度到 GitHub
- * @param {object} progress - 进度数据
+ * 合并两个进度对象，取每个词条更新时间较新的
+ * @param {object} remote - 远程数据
+ * @param {object} local - 本地数据
+ * @returns {object} 合并后的数据
+ */
+function mergeProgress(remote, local) {
+  const merged = { ...remote };
+  for (const [key, localItem] of Object.entries(local)) {
+    const remoteItem = merged[key];
+    if (!remoteItem) {
+      merged[key] = localItem;
+    } else if (localItem.updatedAt >= remoteItem.updatedAt) {
+      merged[key] = localItem;
+    }
+    // 否则保留远程的（更新）
+  }
+  return merged;
+}
+
+/**
+ * 保存进度到 GitHub（先拉取远程最新版再合并，防止多设备覆盖）
+ * @param {object} localProgress - 本地进度数据
  * @returns {Promise<boolean>} 是否成功
  */
-async function saveProgressToGitHub(progress) {
+async function saveProgressToGitHub(localProgress) {
   if (!isGitHubConfigured) return false;
   try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(progress, null, 2))));
+    // 1. 先拉取远程最新版本
+    const remoteProgress = await loadProgressFromGitHub();
+
+    // 2. 合并远程和本地，取较新的
+    const toSave = remoteProgress ? mergeProgress(remoteProgress, localProgress) : localProgress;
+
+    // 3. 编码并上传
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
     const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
 
     const body = {
@@ -141,6 +172,13 @@ async function saveProgressToGitHub(progress) {
 
     if (!resp.ok) {
       const errBody = await resp.json().catch(() => ({}));
+      // 409 冲突或 422 SHA 不匹配 → 重试一次（重新拉取+合并）
+      if ((resp.status === 409 || resp.status === 422) && !body._retried) {
+        console.warn('[GitHub Sync] 冲突/SHA 不匹配，重试中...');
+        SyncState.remoteSha = null; // 清除旧 SHA，强制重新获取
+        body._retried = true;
+        return saveProgressToGitHub(localProgress);
+      }
       throw new Error(`HTTP ${resp.status}: ${errBody.message || '未知错误'}`);
     }
 
@@ -149,7 +187,7 @@ async function saveProgressToGitHub(progress) {
     SyncState.lastSync = new Date();
     SyncState.status = 'synced';
 
-    console.log('[GitHub Sync] 保存成功');
+    console.log('[GitHub Sync] 保存成功，共', Object.keys(toSave).length, '条记录');
     return true;
   } catch (error) {
     console.error('[GitHub Sync] 保存失败:', error.message);
@@ -196,7 +234,7 @@ async function forceSyncToGitHub() {
 }
 
 /**
- * 合并 GitHub 进度到 localStorage
+ * 合并 GitHub 进度到 localStorage（页面加载时调用）
  */
 async function mergeGitHubProgress() {
   if (!isGitHubConfigured) return;
@@ -204,24 +242,58 @@ async function mergeGitHubProgress() {
   if (!remoteProgress) return;
 
   const localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
-
-  // 合并策略：远程和本地都有的，取更新时间较新的
-  const merged = { ...remoteProgress };
-  for (const [key, localItem] of Object.entries(localProgress)) {
-    const remoteItem = merged[key];
-    if (!remoteItem) {
-      // 本地独有，保留
-      merged[key] = localItem;
-    } else if (localItem.updatedAt > remoteItem.updatedAt) {
-      // 本地更新，覆盖远程
-      merged[key] = localItem;
-    }
-    // 否则保留远程的（更新或相同）
-  }
+  const merged = mergeProgress(remoteProgress, localProgress);
 
   localStorage.setItem('hengyi-dictation-progress', JSON.stringify(merged));
   SyncState.status = 'synced';
   console.log(`[GitHub Sync] 合并完成，${Object.keys(merged).length} 条记录`);
+}
+
+/**
+ * 后台刷新：从 GitHub 拉取最新数据并合并到 localStorage
+ * 用于多设备同时使用时保持数据一致
+ */
+async function backgroundSyncRefresh() {
+  if (!isGitHubConfigured) return;
+  if (document.hidden) return; // 页面不可见时不刷新
+
+  try {
+    const remoteProgress = await loadProgressFromGitHub();
+    if (!remoteProgress) return;
+
+    const localProgress = JSON.parse(localStorage.getItem('hengyi-dictation-progress') || '{}');
+    const merged = mergeProgress(remoteProgress, localProgress);
+
+    // 只有数据有变化才更新 localStorage
+    if (JSON.stringify(merged) !== JSON.stringify(localProgress)) {
+      localStorage.setItem('hengyi-dictation-progress', JSON.stringify(merged));
+      SyncState.status = 'synced';
+      SyncState.lastSync = new Date();
+      updateSyncIndicator();
+      // 如果当前在进度页面，重新渲染
+      if (AppState.currentPage === 'progress') {
+        renderProgressPage();
+      }
+      console.log('[GitHub Sync] 后台刷新：远程有新数据，已合并');
+    }
+  } catch (error) {
+    console.warn('[GitHub Sync] 后台刷新失败:', error.message);
+  }
+}
+
+/**
+ * 启动后台定时刷新
+ */
+function startBackgroundSync() {
+  if (syncRefreshTimer) clearInterval(syncRefreshTimer);
+  syncRefreshTimer = setInterval(backgroundSyncRefresh, SYNC_REFRESH_MS);
+  // 页面可见性变化时也刷新
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      backgroundSyncRefresh();
+    }
+  });
+  console.log('[GitHub Sync] 后台定时刷新已启动（30秒）');
 }
 
 /**
@@ -1844,4 +1916,7 @@ document.addEventListener('DOMContentLoaded', () => {
   mergeGitHubProgress().then(() => {
     updateSyncIndicator();
   });
+
+  // 启动后台定时刷新（多设备同步）
+  startBackgroundSync();
 });
