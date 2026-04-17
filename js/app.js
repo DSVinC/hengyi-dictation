@@ -778,12 +778,13 @@ function renderWordSelectionPage(data, title, isChinese) {
   }).join('');
 
   const WORD_LIMIT = 20;
+  const R1_SOFT_CAP = 30;
   const selectedCount = AppState.selectedWords.size;
 
   renderContent(`
     <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
     <h2 class="page-title">${title}</h2>
-    <p id="limit-hint" class="limit-hint">已选 ${selectedCount} 词 / R1 到期 0 词 / 共 ${selectedCount}/${WORD_LIMIT}</p>
+    <p id="limit-hint" class="limit-hint">已选 ${selectedCount} 词 / R1 到期 0 词 / 新词+R1 ≤ ${R1_SOFT_CAP}</p>
     <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
     <div class="word-list">${newWordsHtml}</div>
     <div id="due-review-container"></div>
@@ -809,13 +810,14 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
   r1DueWords.forEach(word => AppState.selectedWords.add(word.text));
 
   const WORD_LIMIT = 20;
+  const R1_SOFT_CAP = 30;
   const selectedCount = AppState.selectedWords.size;
   const totalCount = selectedCount + r1DueWords.length;
 
   // 更新词数提示
   const hintEl = document.getElementById('limit-hint');
   if (hintEl) {
-    hintEl.textContent = `已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 共 ${totalCount}/${WORD_LIMIT}`;
+    hintEl.textContent = `已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 新词+R1 ≤ ${R1_SOFT_CAP}`;
   }
 
   // 渲染到期复习词区块
@@ -827,7 +829,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
   if (r1DueWords.length > 0) {
     html += `
       <div class="due-review-section">
-        <h3 class="section-title review-r1">🔴 到期复习-R1（必听写）</h3>
+        <h3 class="section-title review-r1">🔴 到期复习-R1（必听写，≤30）</h3>
         <p class="limit-hint">${r1DueWords.length} 个词已到期，自动加入听写清单</p>
         <div class="word-list review-list">
           ${r1DueWords.map(word => `
@@ -954,21 +956,22 @@ async function generateDictationList() {
   const manualR0Words = manualSelected.filter(w => w.round === 0); // 手动勾选的 R0 新词
   const manualReviewWords = manualSelected.filter(w => w.round >= 1); // 手动勾选的复习词
 
-  // 5. 排序逻辑
+  // 5. 排序逻辑（R1 软上限 30：R1 + 新词合计不超过 30）
   const WORD_LIMIT = 20;
+  const R1_SOFT_CAP = 30;
 
-  // R1 必听写，可突破限制
-  const finalR1 = r1DueWords;
+  // R1 必听写，但有软上限 30
+  const cappedR1 = r1DueWords.slice(0, R1_SOFT_CAP);
+  const postponedR1 = r1DueWords.slice(R1_SOFT_CAP);
+  const finalR1 = cappedR1;
 
-  // 计算剩余名额
-  const remainingSlots = Math.max(0, WORD_LIMIT - finalR1.length);
-
-  // 手动勾选的 R0 新词（纳入剩余名额）
-  const finalR0 = manualR0Words.slice(0, remainingSlots);
-  const postponedR0 = manualR0Words.slice(remainingSlots);
+  // 计算剩余名额（R1 + R0 ≤ 30）
+  const remainingSlotsForR0 = Math.max(0, R1_SOFT_CAP - finalR1.length);
+  const finalR0 = manualR0Words.slice(0, remainingSlotsForR0);
+  const postponedR0 = manualR0Words.slice(remainingSlotsForR0);
 
   // 再次计算剩余名额
-  const slotsAfterR0 = Math.max(0, remainingSlots - finalR0.length);
+  const slotsAfterR0 = Math.max(0, remainingSlotsForR0 - finalR0.length);
 
   // 手动勾选的复习词优先纳入
   const finalManualReview = manualReviewWords.slice(0, slotsAfterR0);
@@ -982,7 +985,7 @@ async function generateDictationList() {
   const postponedR2Plus = r2PlusDueWords.slice(slotsAfterManualReview);
 
   // 6. 合并延期词语
-  const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
+  const postponedWords = [...postponedR1, ...postponedR0, ...postponedManualReview, ...postponedR2Plus];
 
   // 7. 构建清单 HTML
   // 英语词展示音标+中文意思的辅助函数
@@ -1012,9 +1015,10 @@ async function generateDictationList() {
 
   // 🔴 到期复习-R1（自动加入）
   if (finalR1.length > 0) {
+    const r1CappedNote = postponedR1.length > 0 ? `（含 ${finalR1.length}/${finalR1.length + postponedR1.length} 个，其余延期）` : '';
     resultHtml += `
       <div class="dictation-section">
-        <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})</h3>
+        <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})${r1CappedNote}</h3>
         <div class="dictation-words">
           ${finalR1.map(w => `<span class="dictation-word review-r1" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)}</span>`).join('')}
         </div>
@@ -1042,9 +1046,10 @@ async function generateDictationList() {
 
   // ⏸️ 延期词语提示
   if (postponedWords.length > 0) {
+    const r1PostponedNote = postponedR1.length > 0 ? `（含 ${postponedR1.length} 个 R1 到期词，因 R1+新词已达 30 上限）` : '';
     resultHtml += `
       <div class="postponed-notice">
-        ⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）
+        ⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）${r1PostponedNote}
       </div>
     `;
   }
