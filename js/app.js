@@ -497,6 +497,34 @@ function calculateNextReview(round) {
 }
 
 /**
+ * 计算下一次复习日期（带错开逻辑，避免同批词同一天到期堆积）
+ * @param {number} round - 目标轮次
+ * @param {number} index - 在同批词中的索引
+ * @param {number} totalInBatch - 同批词总数
+ * @returns {string|null}
+ */
+function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
+  if (round >= 5) return null;
+  const baseDays = EBINGHAUS_INTERVALS[round];
+  // 同批词错开：在 baseDays ± max(1, floor(totalInBatch/6)) 范围内分散
+  const spread = Math.max(1, Math.floor(totalInBatch / 6));
+  const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread * 2) - spread : 0;
+  const days = Math.max(1, baseDays + offset);
+  const nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate.toISOString().split('T')[0];
+}
+
+/**
+ * 获取明天日期字符串
+ */
+function getTomorrowDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().split('T')[0];
+}
+
+/**
  * 判断词语是否需要复习（已到期）
  * @param {object} word - 词语对象
  * @returns {boolean}
@@ -956,14 +984,39 @@ async function generateDictationList() {
   const manualR0Words = manualSelected.filter(w => w.round === 0); // 手动勾选的 R0 新词
   const manualReviewWords = manualSelected.filter(w => w.round >= 1); // 手动勾选的复习词
 
-  // 5. 排序逻辑（R1 软上限 30：R1 + 新词合计不超过 30）
+  // 5. 排序逻辑（清债模式：R1 堆积时错开 nextReview，避免层层堆积）
   const WORD_LIMIT = 20;
   const R1_SOFT_CAP = 30;
+  const DAILY_DEBT_LIMIT = 30;
+  const isDebtMode = r1DueWords.length > R1_SOFT_CAP;
 
   // R1 必听写，但有软上限 30
   const cappedR1 = r1DueWords.slice(0, R1_SOFT_CAP);
   const postponedR1 = r1DueWords.slice(R1_SOFT_CAP);
   const finalR1 = cappedR1;
+
+  // 清债模式：超出的 R1 分摊到后续每天，保持 round=1 但 nextReview 错开
+  const debtSchedule = [];
+  if (isDebtMode && postponedR1.length > 0) {
+    const remaining = postponedR1;
+    let dayOffset = 1;
+    let idx = 0;
+    while (idx < remaining.length) {
+      const batchSize = Math.min(DAILY_DEBT_LIMIT, remaining.length - idx);
+      for (let i = 0; i < batchSize; i++) {
+        const word = remaining[idx + i];
+        const nextDate = new Date();
+        nextDate.setDate(nextDate.getDate() + dayOffset);
+        debtSchedule.push({
+          ...word,
+          nextReview: nextDate.toISOString().split('T')[0],
+          // round 不变（仍是 R1），只是 nextReview 分摊到不同日期
+        });
+      }
+      idx += batchSize;
+      dayOffset++;
+    }
+  }
 
   // 计算剩余名额（R1 + R0 ≤ 30）
   const remainingSlotsForR0 = Math.max(0, R1_SOFT_CAP - finalR1.length);
@@ -985,7 +1038,20 @@ async function generateDictationList() {
   const postponedR2Plus = r2PlusDueWords.slice(slotsAfterManualReview);
 
   // 6. 合并延期词语
-  const postponedWords = [...postponedR1, ...postponedR0, ...postponedManualReview, ...postponedR2Plus];
+  const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
+
+  // 6.5 清债模式：保存分摊的 R1 进度
+  if (isDebtMode && debtSchedule.length > 0) {
+    const debtUpdates = debtSchedule.map(w => ({
+      text: w.text,
+      lessonId: w.lessonId,
+      subject: w.subject,
+      round: 1, // 保持 R1
+      nextReview: w.nextReview,
+      wrongCount: w.wrongCount || 0
+    }));
+    saveProgress(debtUpdates);
+  }
 
   // 7. 构建清单 HTML
   // 英语词展示音标+中文意思的辅助函数
@@ -1044,12 +1110,22 @@ async function generateDictationList() {
 
   resultHtml += '</div>';
 
+  // ⏸️ 清债模式提示
+  if (isDebtMode) {
+    const days = debtSchedule.length > 0 ? Math.ceil(debtSchedule.length / DAILY_DEBT_LIMIT) : 0;
+    resultHtml += `
+      <div class="postponed-notice debt-mode">
+        🧹 <strong>清债模式</strong>：${postponedR1.length} 个 R1 词已分摊到未来 ${days} 天（每天最多 ${DAILY_DEBT_LIMIT} 个）<br>
+        <small>明天到期: ${debtSchedule.filter(w => w.nextReview === getTomorrowDate()).length} 个</small>
+      </div>
+    `;
+  }
+
   // ⏸️ 延期词语提示
   if (postponedWords.length > 0) {
-    const r1PostponedNote = postponedR1.length > 0 ? `（含 ${postponedR1.length} 个 R1 到期词，因 R1+新词已达 30 上限）` : '';
     resultHtml += `
       <div class="postponed-notice">
-        ⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）${r1PostponedNote}
+        ⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）
       </div>
     `;
   }
@@ -1187,7 +1263,7 @@ function confirmFinishGrading() {
 }
 
 /**
- * 完成批改，更新轮次并保存
+ * 完成批改，更新轮次并保存（带错开逻辑，避免同批词同一天到期堆积）
  */
 function finishDictationGrading() {
   // 一次性锁定：禁用批改模式按钮
@@ -1209,11 +1285,15 @@ function finishDictationGrading() {
   const wordUpdates = [];
   let correctCount = 0;
   let wrongCount = 0;
+  const totalWords = AppState.currentDictationList.length;
 
-  AppState.currentDictationList.forEach(item => {
+  AppState.currentDictationList.forEach((item, idx) => {
     const isWrong = wrongWords.has(item.text);
     const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
-    const nextReview = calculateNextReview(newRound);
+    // 错开 nextReview：即使同一批听写，也分散到不同日期
+    const nextReview = isWrong
+      ? calculateNextReview(1)  // 错词回到 R1，明天再听
+      : calculateStaggeredNextReview(newRound, idx, totalWords);
 
     if (isWrong) {
       wrongCount++;

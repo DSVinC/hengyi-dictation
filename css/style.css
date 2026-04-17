@@ -1234,6 +1234,13 @@ body {
   text-align: center;
 }
 
+.postponed-notice.debt-mode {
+  background: #fff1f0;
+  border-color: #ff4d4f;
+  color: #cf1322;
+  font-size: 15px;
+}
+
 /* R1 复习区块标题 */
 .section-title.review-r1 {
   border-bottom-color: #ff4d4f;
