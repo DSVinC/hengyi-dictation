@@ -390,10 +390,10 @@
     "text": "about",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-19",
+    "round": 2,
+    "nextReview": "2026-04-22",
     "wrongCount": 2,
-    "updatedAt": "2026-04-17T12:48:52.380Z"
+    "updatedAt": "2026-04-18T05:40:27.385Z"
   },
   "english/U1/today": {
     "text": "today",
