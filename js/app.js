@@ -212,12 +212,12 @@ async function forceSyncToGitHub() {
  * P0 改造后：跳过 GitHub 拉取，仅使用本地数据
  */
 async function mergeGitHubProgress() {
-  if (!isGitHubConfigured) {
-    console.log('[GitHub Sync] 前端同步已禁用，使用本地数据');
+  // 始终尝试从 GitHub 拉取进度（公开仓库读取无需 token）
+  const remoteProgress = await loadProgressFromGitHub();
+  if (!remoteProgress) {
+    console.log('[GitHub Sync] 未找到远程进度，使用本地数据');
     return;
   }
-  const remoteProgress = await loadProgressFromGitHub();
-  if (!remoteProgress) return;
 
   ProgressStore.mergeFromRemote(remoteProgress);
   SyncState.status = 'synced';
