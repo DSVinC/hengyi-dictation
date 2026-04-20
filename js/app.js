@@ -56,27 +56,101 @@ function getLocalDate(d) {
 }
 
 // ============================================
-// GitHub 云端同步（P0: 已移除前端硬编码 token）
+// GitHub 云端同步
 // ============================================
-
-// ⚠️ v0.5.3 起，GitHub PAT 不再硬编码在前端
-// 同步通过 scripts/sync-to-github.mjs 脚本执行（从 .env 或环境变量读取 token）
-// 浏览器端仅保留 localStorage 读写，GitHub 同步需通过 Node.js 脚本触发
 
 const GITHUB_CONFIG = {
   owner: 'DSVinC',
   repo: 'hengyi-dictation',
   path: 'data/progress.json',
   branch: 'main',
-  apiUrl: 'https://api.github.com'
+  apiUrl: 'https://api.github.com',
+  token: ''
 };
 
-// 同步开关：始终为 false（前端不再直接调用 GitHub API）
-// 如需同步，请运行: bun scripts/sync-to-github.mjs
-const isGitHubConfigured = Settings.isSyncEnabled();
+const isGitHubConfigured = true;
+
+function getGitHubContentUrl() {
+  return `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+}
+
+function parseEnvToken(content) {
+  for (const line of content.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
+    const [key, ...valueParts] = trimmed.split('=');
+    if (key.trim() === 'GITHUB_TOKEN') {
+      return valueParts.join('=').trim().replace(/^["']|["']$/g, '');
+    }
+  }
+  return '';
+}
+
+async function loadGitHubToken() {
+  if (GITHUB_CONFIG.token) return GITHUB_CONFIG.token;
+
+  try {
+    const response = await fetch('.env?sync=1', { cache: 'no-store' });
+    if (response.ok) {
+      GITHUB_CONFIG.token = parseEnvToken(await response.text());
+    }
+  } catch (error) {
+    console.warn('[GitHub Sync] 读取 .env 失败:', error.message);
+  }
+
+  if (!GITHUB_CONFIG.token && window.Settings) {
+    GITHUB_CONFIG.token = Settings.getGitHubToken();
+  }
+
+  return GITHUB_CONFIG.token;
+}
+
+function getGitHubHeaders(token) {
+  const headers = {
+    'Accept': 'application/vnd.github.v3+json'
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+function decodeBase64Utf8(base64) {
+  const binary = atob(base64.replace(/\n/g, ''));
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+function encodeBase64Utf8(text) {
+  const bytes = new TextEncoder().encode(text);
+  let binary = '';
+  bytes.forEach(byte => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+}
+
+function unicodeEscapeChinese(json) {
+  return json.replace(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g,
+    ch => '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0'));
+}
+
+function hasChinese(str) {
+  return /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(str);
+}
+
+function hasMojibake(str) {
+  return /[ÃÂ]|[\u00c0-\u00ff]{2,}/.test(str);
+}
+
+function isCleanChinese(str) {
+  return hasChinese(str) && !hasMojibake(str);
+}
+
+function isPrintableAscii(str) {
+  return /^[\x20-\x7e]+$/.test(str);
+}
 
 /**
- * 从 localStorage 加载本地进度（不再从 GitHub 拉取）
+ * 从 localStorage 加载本地进度
  * @returns {object} 进度数据
  */
 function loadLocalProgress() {
@@ -85,7 +159,7 @@ function loadLocalProgress() {
 
 /**
  * 合并两个进度对象，取每个词条更新时间较新的
- * @param {object} remote - 远程数据（从 sync-to-github.mjs 获取）
+ * @param {object} remote - 远程数据
  * @param {object} local - 本地数据
  * @returns {object} 合并后的数据
  */
@@ -110,9 +184,20 @@ function sanitizeProgress(progress) {
   if (!progress) return progress;
   const cleaned = {};
   for (const [key, item] of Object.entries(progress)) {
-    const fixedKey = fixDoubleEncoded(key);
-    const fixedText = fixDoubleEncoded(item.text || '');
-    cleaned[fixedKey] = { ...item, text: fixedText };
+    const v1Parsed = key.includes('/') ? parseV1Key(key) : null;
+    const subject = item.subject || v1Parsed?.subject;
+    const lessonId = item.lessonId || v1Parsed?.lessonId;
+    const rawText = item.text || v1Parsed?.text || '';
+    const fixedText = fixDoubleEncoded(rawText);
+    const fixedItem = { ...item, text: fixedText };
+
+    if (subject && lessonId && fixedText) {
+      fixedItem.subject = subject;
+      fixedItem.lessonId = lessonId;
+      cleaned[makeKey(subject, lessonId, fixedText)] = fixedItem;
+    } else {
+      cleaned[fixDoubleEncoded(key)] = fixedItem;
+    }
   }
   return cleaned;
 }
@@ -122,18 +207,26 @@ function sanitizeProgress(progress) {
  * 例如: "Ã¥Â®ÂÃ©ÂªÂ" → "实验"
  */
 function fixDoubleEncoded(str) {
-  if (!str || /[一-鿿]/.test(str)) return str; // 已经是正常中文，跳过
-  try {
-    // 尝试一次解码
-    let decoded = decodeURIComponent(escape(str));
-    if (/[一-鿿]/.test(decoded)) return decoded;
-    // 尝试二次解码（三重编码）
-    decoded = decodeURIComponent(escape(decoded));
-    if (/[一-鿿]/.test(decoded)) return decoded;
-  } catch (e) {
-    // 无法解码，返回原文
+  if (typeof str !== 'string' || !str) return str;
+  if (isCleanChinese(str) || isPrintableAscii(str)) return str;
+
+  let current = str;
+  for (let i = 0; i < 20; i++) {
+    const next = decodeLatin1Mojibake(current);
+    if (next === current) break;
+    current = next;
+    if (isCleanChinese(current) || isPrintableAscii(current)) return current;
   }
-  return str;
+
+  return current;
+}
+
+function decodeLatin1Mojibake(str) {
+  const bytes = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) {
+    bytes[i] = str.charCodeAt(i) & 0xff;
+  }
+  return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
 }
 
 // 同步状态
@@ -154,21 +247,97 @@ const SYNC_REFRESH_MS = 30000; // 30秒刷新远程
 
 /**
  * 从 GitHub 加载进度
- * P0 改造后：返回 null，前端不再直接调用 GitHub API
  */
 async function loadProgressFromGitHub() {
-  return null;
+  const token = await loadGitHubToken();
+  const response = await fetchWithTimeout(`${getGitHubContentUrl()}?ref=${GITHUB_CONFIG.branch}`, {
+    headers: getGitHubHeaders(token)
+  });
+
+  if (response.status === 404) {
+    SyncState.remoteSha = null;
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`GitHub 拉取失败: HTTP ${response.status}`);
+  }
+
+  const data = await parseJsonSafe(response);
+  SyncState.remoteSha = data.sha;
+  SyncState.lastSync = new Date();
+
+  let content = data.content ? decodeBase64Utf8(data.content) : '';
+  if (!content) {
+    const rawResponse = await fetchWithTimeout(`${getGitHubContentUrl()}?ref=${GITHUB_CONFIG.branch}`, {
+      headers: {
+        ...getGitHubHeaders(token),
+        'Accept': 'application/vnd.github.raw'
+      }
+    });
+    if (rawResponse.ok) content = await rawResponse.text();
+  }
+  if (!content && data.download_url) {
+    const rawResponse = await fetchWithTimeout(data.download_url, {
+      headers: getGitHubHeaders(token)
+    });
+    if (!rawResponse.ok) {
+      throw new Error(`GitHub 原始文件拉取失败: HTTP ${rawResponse.status}`);
+    }
+    content = await rawResponse.text();
+  }
+  if (!content) return null;
+
+  return sanitizeProgress(JSON.parse(content));
 }
 
 /**
  * 保存进度到 GitHub
- * P0 改造后：返回 false，前端不再直接调用 GitHub API
- * 请使用 scripts/sync-to-github.mjs 进行同步
  */
 async function saveProgressToGitHub(localProgress) {
-  console.log('[GitHub Sync] 前端同步已禁用，请使用: bun scripts/sync-to-github.mjs');
-  SyncState.status = 'idle';
-  return false;
+  try {
+    const token = await loadGitHubToken();
+    if (!token) {
+      throw new Error('未找到 GITHUB_TOKEN');
+    }
+
+    const remoteProgress = await loadProgressFromGitHub();
+    const progressToSave = mergeProgress(remoteProgress || {}, sanitizeProgress(localProgress || {}));
+    ProgressStore.mergeFromRemote(progressToSave);
+
+    const safeJson = unicodeEscapeChinese(JSON.stringify(progressToSave, null, 2));
+    const body = {
+      message: `chore: 同步进度 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
+      content: encodeBase64Utf8(safeJson),
+      branch: GITHUB_CONFIG.branch
+    };
+    if (SyncState.remoteSha) body.sha = SyncState.remoteSha;
+
+    const response = await fetchWithTimeout(getGitHubContentUrl(), {
+      method: 'PUT',
+      headers: {
+        ...getGitHubHeaders(token),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub 保存失败: HTTP ${response.status}`);
+    }
+
+    const result = await parseJsonSafe(response);
+    SyncState.remoteSha = result.content?.sha || SyncState.remoteSha;
+    SyncState.status = 'synced';
+    SyncState.lastSync = new Date();
+    SyncState.error = null;
+    return true;
+  } catch (error) {
+    SyncState.status = 'error';
+    SyncState.error = error;
+    console.error('[GitHub Sync] 保存失败:', error);
+    return false;
+  }
 }
 
 /**
@@ -209,24 +378,27 @@ async function forceSyncToGitHub() {
 
 /**
  * 合并 GitHub 进度到 v2 存储（页面加载时调用）
- * P0 改造后：跳过 GitHub 拉取，仅使用本地数据
  */
 async function mergeGitHubProgress() {
-  // 始终尝试从 GitHub 拉取进度（公开仓库读取无需 token）
-  const remoteProgress = await loadProgressFromGitHub();
-  if (!remoteProgress) {
-    console.log('[GitHub Sync] 未找到远程进度，使用本地数据');
-    return;
-  }
+  try {
+    const remoteProgress = await loadProgressFromGitHub();
+    if (!remoteProgress) {
+      console.log('[GitHub Sync] 未找到远程进度，使用本地数据');
+      return;
+    }
 
-  ProgressStore.mergeFromRemote(remoteProgress);
-  SyncState.status = 'synced';
-  console.log('[GitHub Sync] 合并完成');
+    ProgressStore.mergeFromRemote(remoteProgress);
+    SyncState.status = 'synced';
+    console.log('[GitHub Sync] 合并完成');
+  } catch (error) {
+    SyncState.status = 'error';
+    SyncState.error = error;
+    console.warn('[GitHub Sync] 合并失败:', error.message);
+  }
 }
 
 /**
  * 后台刷新：从 GitHub 拉取最新数据并合并到 v2 存储
- * P0 改造后：跳过
  */
 async function backgroundSyncRefresh() {
   if (!isGitHubConfigured) return;
@@ -255,7 +427,6 @@ async function backgroundSyncRefresh() {
 
 /**
  * 启动后台定时刷新
- * P0 改造后：仅在 isGitHubConfigured 时启动（当前为 false）
  */
 function startBackgroundSync() {
   if (!isGitHubConfigured) return;
@@ -1573,7 +1744,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   renderDictationPage();
-  mergeGitHubProgress().then(() => updateSyncIndicator());
+  mergeGitHubProgress().then(() => { renderDictationPage(); updateSyncIndicator(); });
   startBackgroundSync();
 });
 
