@@ -44,5 +44,11 @@ hengyi-dictation/
 - 超出上限的词延期到明天
 - 显示延期提示：⏸️ 延期词语: X 个（明天再复习）
 
+## 工作流
+1. 家长：打开网页 → 选课/选词 → 生成清单 → 人工报词
+2. 恒一：写字/默写
+3. 家长：点「听写完毕」→ 在页面上勾选错字词 → 点「错字词勾选完毕」
+4. 系统：自动更新 localStorage 并同步到 GitHub progress.json
+
 ## 数据流
-仓库 JSON → GitHub Pages 读取 → 网页展示 → 灵爪更新 → 仓库提交
+仓库 JSON → GitHub Pages 读取 → 网页展示 → 家长批改 → 自动保存到 localStorage → 后台同步到 GitHub
