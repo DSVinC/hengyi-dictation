@@ -73,7 +73,7 @@ const GITHUB_CONFIG = {
 
 // 同步开关：始终为 false（前端不再直接调用 GitHub API）
 // 如需同步，请运行: bun scripts/sync-to-github.mjs
-const isGitHubConfigured = false;
+const isGitHubConfigured = Settings.isSyncEnabled();
 
 /**
  * 从 localStorage 加载本地进度（不再从 GitHub 拉取）
@@ -1575,4 +1575,28 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDictationPage();
   mergeGitHubProgress().then(() => updateSyncIndicator());
   startBackgroundSync();
+});
+
+/**
+ * 同步设置点击事件
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  const syncEl = document.getElementById('sync-status');
+  if (syncEl) {
+    syncEl.style.cursor = 'pointer';
+    syncEl.title = '点击配置 GitHub 同步';
+    syncEl.addEventListener('click', () => {
+      const currentToken = Settings.getGitHubToken();
+      const token = prompt('请输入 GitHub Personal Access Token（用于同步进度到 GitHub）:\n\n生成方式：GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)\n需要 repo 权限', currentToken);
+      if (token !== null) {
+        if (token === '') {
+          Settings.disableSync();
+          alert('已关闭 GitHub 同步');
+        } else if (Settings.enableSync(token)) {
+          alert('GitHub 同步已启用！\n刷新页面后会自动同步。');
+          location.reload();
+        }
+      }
+    });
+  }
 });
