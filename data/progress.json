@@ -184,9 +184,9 @@
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-20",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "nextReview": "2026-04-22",
+    "wrongCount": 3,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U3/ruler": {
     "text": "ruler",
@@ -364,9 +364,9 @@
     "lessonId": "U2",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-20",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "nextReview": "2026-04-22",
+    "wrongCount": 3,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U1/where": {
     "text": "where",
@@ -498,19 +498,19 @@
     "text": "she",
     "lessonId": "U1",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-04-17T12:48:52.380Z"
+    "round": 1,
+    "nextReview": "2026-04-22",
+    "wrongCount": 1,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U1/UK": {
     "text": "UK",
     "lessonId": "U1",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-20",
+    "round": 3,
+    "nextReview": "2026-04-28",
     "wrongCount": 0,
-    "updatedAt": "2026-04-17T12:48:52.380Z"
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U1/China": {
     "text": "China",
@@ -1461,10 +1461,10 @@
     "text": "pencil",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-20",
+    "round": 2,
+    "nextReview": "2026-04-23",
     "wrongCount": 2,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U3/book": {
     "text": "book",
@@ -2361,37 +2361,37 @@
     "text": "paper",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-20",
+    "round": 2,
+    "nextReview": "2026-04-23",
     "wrongCount": 1,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U3/these": {
     "text": "these",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "nextReview": "2026-04-22",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U3/see": {
     "text": "see",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "nextReview": "2026-04-22",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "english/U3/hear": {
     "text": "hear",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "nextReview": "2026-04-22",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-20T10:04:35.845Z"
   },
   "chinese/L10/ÃÂÃÂÃÂÃÂ¥ÃÂÃÂÃÂÃÂ®ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©ÃÂÃÂÃÂÃÂªÃÂÃÂÃÂÃÂ": {
     "text": "ÃÂÃÂÃÂÃÂ¥ÃÂÃÂÃÂÃÂ®ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©ÃÂÃÂÃÂÃÂªÃÂÃÂÃÂÃÂ",
