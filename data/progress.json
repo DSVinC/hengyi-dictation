@@ -855,13 +855,13 @@
     "updatedAt": "2026-04-21T12:09:50.950Z"
   },
   "chinese|L09|e8828ce88289": {
+    "round": 1,
+    "nextReview": "2026-04-23",
+    "wrongCount": 0,
     "text": "\u808c\u8089",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-04-25",
-    "wrongCount": 0,
-    "updatedAt": "2026-04-21T12:09:50.950Z"
+    "updatedAt": "2026-04-21T12:10:56.287Z"
   },
   "chinese|L09|e694bbe587bb": {
     "text": "\u653b\u51fb",
