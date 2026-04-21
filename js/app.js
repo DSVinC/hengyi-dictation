@@ -1135,13 +1135,14 @@ function startDictationGrading() {
     /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
     function(match, className, meaningEncoded, wordText, extraHtml) {
       const meaning = decodeURIComponent(meaningEncoded);
-      const item = AppState.currentDictationList.find(w => w.text === wordText);
+      const trimmedWordText = wordText.trim();
+      const item = AppState.currentDictationList.find(w => w.text === trimmedWordText);
       const lessonId = item ? item.lessonId : '';
       const round = item ? item.round : 0;
       const phoneticMatch = extraHtml ? extraHtml.match(/\/([^/]+)\//) : null;
       const phoneticHtml = phoneticMatch ? `<span class="grading-phonetic">/${phoneticMatch[1]}/</span>` : '';
       const meaningHtml = meaning ? `<span class="grading-meaning">${meaning}</span>` : '';
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${wordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${wordText}</span>${phoneticHtml}${meaningHtml}</label>`;
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${trimmedWordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${trimmedWordText}</span>${phoneticHtml}${meaningHtml}</label>`;
     }
   );
 
