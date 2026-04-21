@@ -1131,7 +1131,7 @@ function startDictationGrading() {
   `;
 
   html = html.replace(
-    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(<span class="word-extra">[\s\S]*?<\/span>)?<\/span>/g,
+    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+)(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
     function(match, className, meaningEncoded, wordText, extraHtml) {
       const meaning = decodeURIComponent(meaningEncoded);
       const item = AppState.currentDictationList.find(w => w.text === wordText);
