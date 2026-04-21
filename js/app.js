@@ -1162,8 +1162,14 @@ function cancelDictationGrading() {
 }
 
 function confirmFinishGrading() {
-  const wrongCount = document.querySelectorAll('.wrong-cb:checked').length;
-  const totalCount = document.querySelectorAll('.wrong-cb').length;
+  // 移动端修复：显式检查 checked 属性而非依赖 :checked 伪选择器
+  // 避免移动端 touch/click 事件与 DOM 更新的竞态条件
+  const allCheckboxes = document.querySelectorAll('.wrong-cb');
+  const totalCount = allCheckboxes.length;
+  let wrongCount = 0;
+  allCheckboxes.forEach(cb => {
+    if (cb.checked) wrongCount++;
+  });
   const correctCount = totalCount - wrongCount;
   const msg = `共 ${totalCount} 个词，确认 ${wrongCount} 个写错、${correctCount} 个写对？\n确认后将更新复习轮次。`;
   if (!confirm(msg)) return;
