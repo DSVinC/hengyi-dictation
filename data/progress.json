@@ -183,10 +183,10 @@
     "text": "ruler",
     "lessonId": "U3",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-18T05:37:38.053Z"
+    "round": 1,
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U3|pen": {
     "text": "pen",
@@ -202,9 +202,9 @@
     "lessonId": "U2",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U2|long": {
     "text": "long",
@@ -337,9 +337,9 @@
     "lessonId": "U2",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U2|so": {
     "text": "so",
@@ -364,9 +364,9 @@
     "lessonId": "U1",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U1|from": {
     "text": "from",
@@ -427,9 +427,9 @@
     "lessonId": "U1",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 3,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U1|girl": {
     "text": "girl",
@@ -453,19 +453,19 @@
     "text": "woman",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-21",
+    "round": 2,
+    "nextReview": "2026-04-23",
     "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U1|man": {
     "text": "man",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-21",
+    "round": 2,
+    "nextReview": "2026-04-24",
     "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U1|he": {
     "text": "he",
@@ -481,9 +481,9 @@
     "lessonId": "U1",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 3,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U1|she": {
     "text": "she",
@@ -525,10 +525,10 @@
     "text": "USA",
     "lessonId": "U1",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-21",
+    "round": 3,
+    "nextReview": "2026-04-30",
     "wrongCount": 0,
-    "updatedAt": "2026-04-17T12:48:52.380Z"
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|undefined|where": {
     "text": "where",
@@ -1228,36 +1228,36 @@
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U3|class": {
     "text": "class",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U3|computer": {
     "text": "computer",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "english|U3|learn": {
     "text": "learn",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-04-21",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-19T07:06:34.024Z"
+    "nextReview": "2026-04-23",
+    "wrongCount": 2,
+    "updatedAt": "2026-04-21T12:31:20.548Z"
   },
   "chinese|L12|e799bbe9ab98": {
     "text": "\u767b\u9ad8",
