@@ -994,8 +994,9 @@ async function generateDictationList() {
   const finalManualReview = manualReviewWords.slice(0, slotsAfterR0);
   const postponedManualReview = manualReviewWords.slice(slotsAfterR0);
   const slotsAfterManualReview = Math.max(0, slotsAfterR0 - finalManualReview.length);
-  const finalR2Plus = r2PlusDueWords.slice(0, slotsAfterManualReview);
-  const postponedR2Plus = r2PlusDueWords.slice(slotsAfterManualReview);
+  // R2+ 词不限制数量，全部加入听写清单
+  const finalR2Plus = r2PlusDueWords;
+  const postponedR2Plus = [];
   const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
 
   if (isDebtMode && debtSchedule.length > 0) {
