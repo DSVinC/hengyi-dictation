@@ -1324,10 +1324,17 @@ body {
 }
 
 .grading-word-item input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  /* iOS Safari 兼容：强制显示原生 checkbox */
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
   cursor: pointer;
   accent-color: #ff4d4f;
+  margin-right: 6px;
+  flex-shrink: 0;
 }
 
 .grading-word-item .word-text {
