@@ -787,10 +787,11 @@ async function selectSubject(subject) {
   renderContent(`
     <button class="back-btn" onclick="goBack()">← 返回</button>
     <h2 class="page-title">${subjectName}${itemName}列表</h2>
-    <div class="lesson-list">${listHtml}</div>
-    <div class="lesson-item custom-entry" onclick="selectCustomWords()" style="cursor:pointer;">
-      <span class="lesson-name">📝 自定义词语</span>
-      <span class="lesson-arrow">›</span>
+    <div class="lesson-list">${listHtml}
+      <div class="lesson-item custom-entry" onclick="selectCustomWords()" style="cursor:pointer;">
+        <span class="lesson-name">📝 自定义词语</span>
+        <span class="lesson-arrow">›</span>
+      </div>
     </div>
   `);
 }
