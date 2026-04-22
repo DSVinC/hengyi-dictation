@@ -321,6 +321,11 @@ body {
   background: #fafafa;
 }
 
+.lesson-item.custom-entry {
+  background: #f0f7ff;
+  border: 1px dashed #4a90d9;
+}
+
 .lesson-name {
   font-size: 18px;
   font-weight: 500;

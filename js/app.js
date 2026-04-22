@@ -1,5 +1,5 @@
 /**
- * 恒一听写系统 - 主逻辑 (v0.6.0)
+ * 恒一听写系统 - 主逻辑 (v0.8.0)
  *
  * 功能：
  * 1. 三级导航：科目 → 课/单元 → 词勾选
@@ -597,15 +597,35 @@ function isWordDueForReview(word) {
 
 /**
  * 获取科目所有到期复习词
- * @param {string} subject - 科目 (chinese/english)
+ * @param {string} subject - 科目 (chinese/english/custom)
  * @returns {Promise<Array>} 到期复习词列表
  */
 async function getAllDueReviewWords(subject) {
+  const today = getLocalDate();
+  const dueWords = [];
+
+  // 自定义词语特殊处理
+  if (subject === 'custom') {
+    const data = await loadCustomWords();
+    if (data && data.words) {
+      mergeProgressToWords(data, 'custom', 'CUSTOM');
+      data.words.forEach(word => {
+        if (word.round >= 1 && word.nextReview && word.nextReview <= today) {
+          dueWords.push({
+            ...word,
+            subject: 'custom',
+            lessonId: 'CUSTOM',
+            lessonName: '自定义词语'
+          });
+        }
+      });
+    }
+    dueWords.sort((a, b) => a.round - b.round);
+    return dueWords;
+  }
+
   const isChinese = subject === 'chinese';
   const items = isChinese ? AppState.lessons : AppState.units;
-  const today = getLocalDate();
-
-  const dueWords = [];
 
   for (const item of items) {
     const cacheKey = `${subject}/${item.id}`;
@@ -725,6 +745,10 @@ async function renderDictationPage() {
         <span class="subject-icon">📚</span>
         <span>英语</span>
       </button>
+      <button class="subject-btn custom" onclick="selectCustomWords()" style="border-color:#4a90d9;background:#f0f7ff;">
+        <span class="subject-icon">📝</span>
+        <span>自定义词语</span>
+      </button>
     </div>
   `;
   renderContent(html);
@@ -764,7 +788,88 @@ async function selectSubject(subject) {
     <button class="back-btn" onclick="goBack()">← 返回</button>
     <h2 class="page-title">${subjectName}${itemName}列表</h2>
     <div class="lesson-list">${listHtml}</div>
+    <div class="lesson-item custom-entry" onclick="selectCustomWords()" style="cursor:pointer;">
+      <span class="lesson-name">📝 自定义词语</span>
+      <span class="lesson-arrow">›</span>
+    </div>
   `);
+}
+
+async function selectCustomWords() {
+  AppState.isGrading = false;
+  AppState.originalDictationHtml = null;
+  AppState.currentSubject = 'custom';
+  AppState.currentLesson = 'CUSTOM';
+  AppState.selectedWords.clear();
+
+  let data = await loadCustomWords();
+  if (!data) {
+    data = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
+  }
+  data = mergeProgressToWords(data, 'custom', 'CUSTOM');
+  await renderWordSelectionPage(data, '自定义词语', true);
+  loadAndRenderDueReviewWords('custom', true);
+}
+
+async function loadCustomWords() {
+  const cacheKey = 'custom/CUSTOM';
+  if (AppState.wordData[cacheKey]) return AppState.wordData[cacheKey];
+  try {
+    const response = await fetchWithTimeout('data/custom.json');
+    if (!response.ok) return null;
+    const data = await parseJsonSafe(response);
+    // 合并 localStorage 中的最新进度（本地优先）
+    const local = localStorage.getItem('hengyi_custom_words');
+    if (local) {
+      try {
+        const localData = JSON.parse(local);
+        if (localData.words && localData.words.length > 0) {
+          // 以 localStorage 为准合并进度
+          const map = new Map();
+          data.words.forEach(w => map.set(w.text, { ...w }));
+          localData.words.forEach(w => {
+            const existing = map.get(w.text);
+            if (existing) {
+              // 合并：取较新的进度
+              if (w.round > existing.round) Object.assign(existing, w);
+            } else {
+              map.set(w.text, { ...w });
+            }
+          });
+          data.words = Array.from(map.values());
+        }
+      } catch { /* 忽略本地数据解析错误 */ }
+    }
+    AppState.wordData[cacheKey] = data;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+async function saveCustomWords(data) {
+  const cacheKey = 'custom/CUSTOM';
+  AppState.wordData[cacheKey] = data;
+  // 保存到 localStorage（静态服务器不支持 PUT）
+  try {
+    localStorage.setItem('hengyi_custom_words', JSON.stringify(data));
+  } catch (e) {
+    console.error('保存自定义词语失败:', e);
+  }
+  // 同时尝试写入文件（如果服务器支持）
+  try {
+    const response = await fetch('data/custom.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      // PUT 不可用时静默忽略，以 localStorage 为准
+      console.log('data/custom.json PUT 不可用，已保存到 localStorage');
+    }
+  } catch {
+    // 静默忽略，以 localStorage 为准
+  }
 }
 
 async function selectLesson(lessonId) {
@@ -1463,6 +1568,17 @@ async function renderProgressPage(filter = 'all') {
     }
   }
 
+  // 纳入自定义词语统计（仅 filter='all' 时）
+  if (filter === 'all') {
+    const customData = await loadCustomWords();
+    if (customData && customData.words && customData.words.length > 0) {
+      mergeProgressToWords(customData, 'custom', 'CUSTOM');
+      customData.words.forEach(word => allWords.push({ ...word, subject: 'custom', lessonId: 'CUSTOM', lessonName: '自定义词语' }));
+      const mastered = customData.words.filter(w => w.round >= 6).length;
+      lessonStats.push({ name: '📝 自定义词语', subject: 'custom', mastered, total: customData.words.length, percent: customData.words.length > 0 ? Math.round((mastered / customData.words.length) * 100) : 0 });
+    }
+  }
+
   const totalCount = allWords.length;
   const masteredCount = allWords.filter(w => w.round >= 6).length;
   const reviewCount = allWords.filter(w => w.round >= 1 && w.round <= 5).length;
@@ -1547,7 +1663,7 @@ async function renderProgressPage(filter = 'all') {
     </div>
   ` : '';
 
-  const lessonOptions = [];
+  const lessonOptions = ['<option value="custom|CUSTOM">📝 自定义词语</option>'];
   if (filter === 'all' || filter === 'chinese') chineseLessons.forEach(l => lessonOptions.push(`<option value="chinese|${l.id}">${l.name}</option>`));
   if (filter === 'all' || filter === 'english') englishUnits.forEach(u => lessonOptions.push(`<option value="english|${u.id}">${u.name}</option>`));
 
@@ -1666,7 +1782,7 @@ function changeReviewPage(page, filter) {
   renderProgressPage(filter);
 }
 
-function manualAddWordR1() {
+async function manualAddWordR1() {
   const wordInput = document.getElementById('manual-word-input');
   const lessonSelect = document.getElementById('manual-lesson-select');
   if (!wordInput.value.trim()) { alert('请输入词语'); return; }
@@ -1674,6 +1790,32 @@ function manualAddWordR1() {
 
   const [subject, lessonId] = lessonSelect.value.split('|');
   const text = wordInput.value.trim();
+
+  // 自定义词语：直接入库
+  if (subject === 'custom') {
+    let customData = await loadCustomWords();
+    if (!customData) customData = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
+    if (!customData.words) customData.words = [];
+    const existing = customData.words.find(w => w.text === text);
+    if (existing) {
+      // 已存在，更新轮次和错词次数
+      existing.round = 1;
+      existing.nextReview = calculateNextReview(1);
+      existing.wrongCount = (existing.wrongCount || 0) + 1;
+      await saveCustomWords(customData);
+    } else {
+      customData.words.push({ text, type: 'word', round: 1, nextReview: calculateNextReview(1), wrongCount: 1, history: [] });
+      await saveCustomWords(customData);
+    }
+    updateWordProgress('custom', 'CUSTOM', text, 1, 1);
+    wordInput.value = '';
+    alert(`✅ "${text}" 已添加到自定义词库（R1 复习中）`);
+    const activeFilter = document.querySelector('.filter-btn.active');
+    const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+    renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
+    return;
+  }
+
   const cacheKey = `${subject}/${lessonId}`;
   const data = AppState.wordData[cacheKey];
   if (!data || !data.words || !data.words.find(w => w.text === text)) {
@@ -1688,7 +1830,7 @@ function manualAddWordR1() {
   renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
 }
 
-function manualAddWordWithRound() {
+async function manualAddWordWithRound() {
   const wordInput = document.getElementById('manual-word-input');
   const lessonSelect = document.getElementById('manual-lesson-select');
   const roundSelect = document.getElementById('manual-round-select');
@@ -1698,6 +1840,30 @@ function manualAddWordWithRound() {
   const [subject, lessonId] = lessonSelect.value.split('|');
   const text = wordInput.value.trim();
   const round = parseInt(roundSelect.value, 10);
+
+  // 自定义词语：直接入库，不弹确认
+  if (subject === 'custom') {
+    let customData = await loadCustomWords();
+    if (!customData) customData = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
+    if (!customData.words) customData.words = [];
+    // 检查是否已存在
+    const existing = customData.words.find(w => w.text === text);
+    if (existing) {
+      alert(`⚠️ "${text}" 已在自定义词库中`);
+      return;
+    }
+    customData.words.push({ text, type: 'word', round, nextReview: round >= 6 ? null : calculateNextReview(round), wrongCount: 0, history: [] });
+    await saveCustomWords(customData);
+    updateWordProgress('custom', 'CUSTOM', text, round);
+    const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+    wordInput.value = '';
+    alert(`✅ "${text}" 已添加到自定义词库（${roundName}）`);
+    const activeFilter = document.querySelector('.filter-btn.active');
+    const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
+    renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
+    return;
+  }
+
   const cacheKey = `${subject}/${lessonId}`;
   const data = AppState.wordData[cacheKey];
   if (!data || !data.words || !data.words.find(w => w.text === text)) {
