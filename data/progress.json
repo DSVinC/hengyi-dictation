@@ -1420,5 +1420,23 @@
     "lessonId": "CUSTOM",
     "subject": "custom",
     "updatedAt": "2026-04-22T10:21:28.580Z"
+  },
+  "custom|CUSTOM|e790b4e6a38be4b9a6e794bb": {
+    "round": 1,
+    "nextReview": "2026-04-24",
+    "wrongCount": 0,
+    "text": "\u7434\u68cb\u4e66\u753b",
+    "lessonId": "CUSTOM",
+    "subject": "custom",
+    "updatedAt": "2026-04-22T10:21:45.361Z"
+  },
+  "custom|CUSTOM|e4b8ade58cbbe59b9be8af8a": {
+    "round": 1,
+    "nextReview": "2026-04-24",
+    "wrongCount": 0,
+    "text": "\u4e2d\u533b\u56db\u8bca",
+    "lessonId": "CUSTOM",
+    "subject": "custom",
+    "updatedAt": "2026-04-22T10:22:18.718Z"
   }
 }
