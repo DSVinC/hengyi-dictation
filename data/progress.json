@@ -1411,5 +1411,14 @@
     "lessonId": "CUSTOM",
     "subject": "custom",
     "updatedAt": "2026-04-22T10:20:42.187Z"
+  },
+  "custom|CUSTOM|e99b85e4babae59b9be5a5bd": {
+    "round": 1,
+    "nextReview": "2026-04-24",
+    "wrongCount": 0,
+    "text": "\u96c5\u4eba\u56db\u597d",
+    "lessonId": "CUSTOM",
+    "subject": "custom",
+    "updatedAt": "2026-04-22T10:21:28.580Z"
   }
 }
