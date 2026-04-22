@@ -1402,5 +1402,14 @@
     "nextReview": "2026-04-22",
     "wrongCount": 0,
     "updatedAt": "2026-04-21T12:19:05.319Z"
+  },
+  "custom|CUSTOM|e7ac94e5a2a8e7bab8e7a09a": {
+    "round": 1,
+    "nextReview": "2026-04-24",
+    "wrongCount": 0,
+    "text": "\u7b14\u58a8\u7eb8\u781a",
+    "lessonId": "CUSTOM",
+    "subject": "custom",
+    "updatedAt": "2026-04-22T10:20:42.187Z"
   }
 }
