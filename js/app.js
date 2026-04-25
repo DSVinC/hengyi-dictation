@@ -567,7 +567,8 @@ function speakWord(word) {
   if (!word || !('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(word);
-  u.lang = 'en-US';
+  // 自动检测语言：中文字符用 zh-CN，否则用 en-US
+  u.lang = /[\u4e00-\u9fff]/.test(word) ? 'zh-CN' : 'en-US';
   u.rate = 0.85;
   window.speechSynthesis.speak(u);
 }
@@ -1395,7 +1396,7 @@ function startDictationGrading() {
       // 直接用 item.phonetic 而非从 HTML 正则提取，修复英语重听丢失音标
       const phonetic = item ? (item.phonetic || '') : '';
       const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
-      const speakHtml = trimmedWordText ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
+      const speakHtml = (subject === 'english' && trimmedWordText) ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
       const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
       return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
     }
@@ -1806,8 +1807,9 @@ async function renderProgressPage(filter = 'all') {
           const name = word.lessonName || word.unitName || '';
           const phonetic = word.phonetic ? '/' + escapeHtml(word.phonetic) + '/ ' : '';
           const safeId = escapeHtml(word.text).replace(/'/g, "\\'");
+          const speakBtn = word.subject === 'english' ? `<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>` : '';
           return `<div class="manual-word-item">
-            <span class="manual-word-text">${escapeHtml(word.text)} ${phonetic}<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>${word.meaning ? escapeHtml(word.meaning) : ''}</span>
+            <span class="manual-word-text">${escapeHtml(word.text)} ${phonetic}${speakBtn}${word.meaning ? escapeHtml(word.meaning) : ''}</span>
             <div class="manual-word-info">
               <span class="manual-word-lesson">${escapeHtml(name)}</span>
               <span class="error-round">R${word.round}</span>
@@ -1870,8 +1872,9 @@ async function renderProgressPage(filter = 'all') {
         ${errorWords.map(word => {
           const phonetic = word.phonetic ? '/' + escapeHtml(word.phonetic) + '/ ' : '';
           const safeWordText = escapeHtml(word.text).replace(/'/g, "\\'");
+          const errorSpeakBtn = word.subject === 'english' ? `<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>` : '';
           return `<div class="error-item">
-            <span class="error-word">${escapeHtml(word.text)} ${phonetic}<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>${word.meaning ? escapeHtml(word.meaning) : ''}</span>
+            <span class="error-word">${escapeHtml(word.text)} ${phonetic}${errorSpeakBtn}${word.meaning ? escapeHtml(word.meaning) : ''}</span>
             <div class="error-info">
               <span class="error-count">❌ ${word.wrongCount}次</span>
               <span class="error-round">R${word.round}</span>
