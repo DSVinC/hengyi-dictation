@@ -1596,10 +1596,10 @@
     "text": "breakfast",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-26",
+    "round": 2,
+    "nextReview": "2026-04-28",
     "wrongCount": 6,
-    "updatedAt": "2026-04-25T14:15:04.011Z"
+    "updatedAt": "2026-04-25T14:29:45.659Z"
   },
   "english|U4|time": {
     "text": "time",
@@ -1752,6 +1752,6 @@
     "round": 1,
     "nextReview": "2026-04-26",
     "wrongCount": 4,
-    "updatedAt": "2026-04-25T14:15:04.011Z"
+    "updatedAt": "2026-04-25T14:29:45.659Z"
   }
 }
