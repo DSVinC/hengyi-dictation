@@ -1,10 +1,16 @@
 /**
- * 恒一听写系统 - 主逻辑 (v0.8.0)
+ * 恒一听写系统 - 主逻辑 (v0.8.4)
  *
  * 功能：
  * 1. 三级导航：科目 → 课/单元 → 词勾选
  * 2. 艾宾浩斯轮次计算
  * 3. 生成听写清单（新课词 + 复习词）
+ *
+ * v0.8.4 改动：
+ * - 修复 P2-5 XSS 防护不完整问题
+ * - 全面转义 innerHTML 拼接的用户可控字段
+ * - word.text、word.meaning、word.phonetic 使用 escapeHtml
+ * - data-word 属性使用 encodeURIComponent
  *
  * v0.6.0 改动：
  * - 接入 progress-store.js v2 ASCII 主键 schema
@@ -30,7 +36,8 @@ const AppState = {
   isLoading: false,           // 全局加载状态
   currentDictationList: [],   // 当前听写清单（用于批改）
   originalDictationHtml: '',  // 原始清单 HTML（用于取消批改）
-  reviewWordsPage: 1          // 复习中的词分页页码
+  reviewWordsPage: 1,         // 复习中的词分页页码
+  retryWordsMode: false       // 重听错词模式
 };
 
 // ============================================
@@ -43,7 +50,7 @@ const FETCH_TIMEOUT = 10000; // 10秒超时
 // 第0轮: 新学 → 第1轮: 1天后 → 第2轮: 2天后
 // 第3轮: 4天后 → 第4轮: 7天后 → 第5轮: 15天后
 // ============================================
-const EBINGHAUS_INTERVALS = [1, 2, 4, 7, 15];
+const EBINGHAUS_INTERVALS = [1, 1, 2, 4, 7, 15];
 
 /**
  * 获取本地日期字符串（YYYY-MM-DD）
@@ -53,6 +60,56 @@ const EBINGHAUS_INTERVALS = [1, 2, 4, 7, 15];
 function getLocalDate(d) {
   if (!d) d = new Date();
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// ============================================
+// HTML 转义（防 XSS）
+// ============================================
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ============================================
+// 当日错词重听（localStorage 持久化）
+// ============================================
+const RETRY_STORAGE_KEY = 'hengyi-retry-words';
+
+function saveRetryWords(words) {
+  try {
+    localStorage.setItem(RETRY_STORAGE_KEY, JSON.stringify({
+      date: getLocalDate(),
+      words: words
+    }));
+    console.log(`[重听] 已保存 ${words.length} 个错词`);
+  } catch (e) {
+    console.error('[重听] 保存错词失败:', e);
+  }
+}
+
+function getRetryWords() {
+  try {
+    const raw = localStorage.getItem(RETRY_STORAGE_KEY);
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    if (data.date !== getLocalDate()) {
+      localStorage.removeItem(RETRY_STORAGE_KEY); // 清理过期数据
+      return []; // 过期数据
+    }
+    return Array.isArray(data.words) ? data.words : [];
+  } catch (e) {
+    console.error('[重听] 读取错词失败:', e);
+    localStorage.removeItem(RETRY_STORAGE_KEY); // 自愈损坏数据
+    return [];
+  }
+}
+
+function clearRetryWords() {
+  try {
+    localStorage.removeItem(RETRY_STORAGE_KEY);
+    console.log('[重听] 已清除错词');
+  } catch (e) {
+    console.error('[重听] 清除错词失败:', e);
+  }
 }
 
 // ============================================
@@ -562,7 +619,7 @@ function hideError() {
  * @returns {string|null} 下次复习日期 (本地日期格式) 或 null
  */
 function calculateNextReview(round) {
-  if (round >= 5) return null; // 第5轮后视为完全掌握
+  if (round >= 6) return null; // 第6轮后视为完全掌握
   const days = EBINGHAUS_INTERVALS[round];
   const nextDate = new Date();
   nextDate.setDate(nextDate.getDate() + days);
@@ -577,7 +634,7 @@ function calculateNextReview(round) {
  * @returns {string|null}
  */
 function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
-  if (round >= 5) return null;
+  if (round >= 6) return null;
   const baseDays = EBINGHAUS_INTERVALS[round];
   const spread = Math.max(1, Math.floor(totalInBatch / 6));
   const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread * 2) - spread : 0;
@@ -746,8 +803,24 @@ function renderContent(html) {
 async function renderDictationPage() {
   AppState.isGrading = false;
   AppState.originalDictationHtml = null;
+  AppState.retryWordsMode = false;
+
+  const retryWords = getRetryWords();
+  const retryButtonHtml = retryWords.length > 0
+    ? `<button class="retry-btn" onclick="startRetryDictation()">
+        <span class="retry-icon">🔄</span>
+        <span>重听错词</span>
+        <span class="retry-badge">${retryWords.length}</span>
+       </button>
+       <button class="retry-btn clear-btn" onclick="handleClearRetryWords()">
+        <span class="retry-icon">🗑️</span>
+        <span>清除错词</span>
+       </button>`
+    : '';
+
   const html = `
     <h2 class="page-title">选择科目</h2>
+    ${retryButtonHtml}
     <div class="subject-select">
       <button class="subject-btn chinese" onclick="selectSubject('chinese')">
         <span class="subject-icon">📖</span>
@@ -921,11 +994,12 @@ function renderWordSelectionPage(data, title, isChinese) {
     const typeHtml = isChinese && word.type
       ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
+    const encodedWordText = encodeURIComponent(word.text);
     return `
-      <label class="word-item" data-word="${word.text}">
+      <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(lessonId)}" data-subject="${encodeURIComponent(subject)}">
         <input type="checkbox" class="word-checkbox"
-          onchange="toggleWordSelection('${word.text}')">
-        <span class="word-text">${word.text}</span>
+          onchange="toggleWordSelection(decodeURIComponent('${encodedWordText}'))">
+        <span class="word-text">${escapeHtml(word.text)}</span>
         ${typeHtml}
       </label>
     `;
@@ -978,10 +1052,10 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
         <p class="limit-hint">${r1DueWords.length} 个词已到期，自动加入听写清单</p>
         <div class="word-list review-list">
           ${r1DueWords.map(word => `
-            <label class="word-item disabled-item" data-word="${word.text}">
+            <label class="word-item disabled-item" data-word="${encodeURIComponent(word.text)}" data-lesson="${encodeURIComponent(word.lessonId)}" data-subject="${encodeURIComponent(word.subject)}">
               <input type="checkbox" class="word-checkbox" checked disabled>
-              <span class="word-text">${word.text}<span class="review-tag review-tag-r1">R1</span></span>
-              ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span><span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
+              <span class="word-text">${escapeHtml(word.text)}<span class="review-tag review-tag-r1">R1</span></span>
+              ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + escapeHtml(word.phonetic) + '/' : ''}</span><span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>${word.meaning ? `<span class="word-meaning">${escapeHtml(word.meaning)}</span>` : ''}</span>` : ''}
             </label>
           `).join('')}
         </div>
@@ -996,13 +1070,14 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
         <div class="word-list review-list">
           ${r2PlusDueWords.map(word => {
             const isSelected = AppState.selectedWords.has(word.text);
+            const encodedWordText = encodeURIComponent(word.text);
             return `
-              <label class="word-item" data-word="${word.text}">
+              <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(word.lessonId)}" data-subject="${encodeURIComponent(word.subject)}">
                 <input type="checkbox" class="word-checkbox"
-                  onchange="toggleWordSelection('${word.text}')"
+                  onchange="toggleWordSelection(decodeURIComponent('${encodedWordText}'))"
                   ${isSelected ? 'checked' : ''}>
-                <span class="word-text">${word.text}<span class="review-tag round-${word.round}">R${word.round}</span></span>
-                ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span><span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
+                <span class="word-text">${escapeHtml(word.text)}<span class="review-tag round-${word.round}">R${word.round}</span></span>
+                ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + escapeHtml(word.phonetic) + '/' : ''}</span><span class="speak-btn" data-word="${encodedWordText}">🔊</span>${word.meaning ? `<span class="word-meaning">${escapeHtml(word.meaning)}</span>` : ''}</span>` : ''}
               </label>
             `;
           }).join('')}
@@ -1127,9 +1202,9 @@ async function generateDictationList() {
   const formatWordExtra = (w) => {
     if (w.subject === 'english') {
       let extra = '';
-      if (w.phonetic) extra += `<span class="word-phonetic">/${w.phonetic}/</span>`;
-      if (w.text) extra += `<span class="speak-btn" data-word="${w.text}">🔊</span>`;
-      if (w.meaning) extra += `<span class="word-meaning">${w.meaning}</span>`;
+      if (w.phonetic) extra += `<span class="word-phonetic">/${escapeHtml(w.phonetic)}/</span>`;
+      if (w.text) extra += `<span class="speak-btn" data-word="${encodeURIComponent(w.text)}">🔊</span>`;
+      if (w.meaning) extra += `<span class="word-meaning">${escapeHtml(w.meaning)}</span>`;
       return extra ? `<span class="word-extra">${extra}</span>` : '';
     }
     return '';
@@ -1142,7 +1217,7 @@ async function generateDictationList() {
       <div class="dictation-section">
         <h3 class="section-title new">📝 新课词语 (${finalR0.length})</h3>
         <div class="dictation-words">
-          ${finalR0.map(w => `<span class="dictation-word new" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)}</span>`).join('')}
+          ${finalR0.map(w => `<span class="dictation-word new" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)}</span>`).join('')}
         </div>
       </div>
     `;
@@ -1154,7 +1229,7 @@ async function generateDictationList() {
       <div class="dictation-section">
         <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})${r1CappedNote}</h3>
         <div class="dictation-words">
-          ${finalR1.map(w => `<span class="dictation-word review-r1" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)}</span>`).join('')}
+          ${finalR1.map(w => `<span class="dictation-word review-r1" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(w.lessonId || lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)}</span>`).join('')}
         </div>
       </div>
     `;
@@ -1168,7 +1243,7 @@ async function generateDictationList() {
         <div class="dictation-words">
           ${allReviewWords.map(w => {
             const roundTag = w.round >= 5 ? '✅' : `R${w.round}`;
-            return `<span class="dictation-word review" data-meaning="${encodeURIComponent(w.meaning || '')}">${w.text}${formatWordExtra(w)} <small>${roundTag}</small></span>`;
+            return `<span class="dictation-word review" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(w.lessonId || lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)} <small>${roundTag}</small></span>`;
           }).join('')}
         </div>
       </div>
@@ -1202,9 +1277,9 @@ async function generateDictationList() {
   document.getElementById('dictation-result').innerHTML = resultHtml;
 
   AppState.currentDictationList = [];
-  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId, round: w.round || 0, subject, meaning: w.meaning || '' }));
-  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '' }));
-  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '' }));
+  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId, round: w.round || 0, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
+  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
+  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
 }
 
 function goBack() {
@@ -1215,12 +1290,69 @@ function goBack() {
   renderDictationPage();
 }
 
+// ============================================
+// 重听错词模式
+// ============================================
+
+function startRetryDictation() {
+  const retryWords = getRetryWords();
+  if (retryWords.length === 0) return;
+
+  AppState.retryWordsMode = true;
+  AppState.currentSubject = retryWords[0].subject;
+  AppState.currentLesson = 'retry';
+  AppState.currentDictationList = retryWords;
+  AppState.selectedWords.clear();
+
+  // 渲染重听清单（只显示错词，不混入正常词表）
+  const wordsHtml = retryWords.map(item => {
+    const isChinese = item.subject === 'chinese';
+    if (isChinese) {
+      return `<span class="dictation-word retry-word" data-meaning="" data-lesson="${escapeHtml(item.lessonId || '')}" data-subject="${escapeHtml(item.subject || '')}">${escapeHtml(item.text)}</span>`;
+    } else {
+      const meaning = item.meaning || '';
+      const phonetic = item.phonetic || '';
+      const phoneticHtml = phonetic ? `<span class="word-extra">/${phonetic}/</span>` : '';
+      return `<span class="dictation-word retry-word" data-meaning="${encodeURIComponent(meaning)}" data-lesson="${escapeHtml(item.lessonId || '')}" data-subject="${escapeHtml(item.subject || '')}">${escapeHtml(item.text)}${phoneticHtml}</span>`;
+    }
+  }).join(' ');
+
+  const html = `
+    <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
+    <h2 class="page-title">🔄 重听错词</h2>
+    <p class="dictation-count">共 <strong>${retryWords.length}</strong> 个词语</p>
+    <div class="word-list" id="dictation-result">
+      ${wordsHtml}
+    </div>
+    <div class="action-bar grading-action-bar">
+      <button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">📝 听写完毕</button>
+    </div>
+  `;
+
+  renderContent(html);
+}
+
+function handleClearRetryWords() {
+  if (!confirm('确定要清除今日错词记录吗？')) return;
+  clearRetryWords();
+  renderDictationPage();
+}
+
+// ============================================
+// 返回选课
+// ============================================
+
 function goBackToLessons() {
   AppState.currentLesson = null;
   AppState.selectedWords.clear();
   AppState.isGrading = false;
   AppState.originalDictationHtml = null;
-  selectSubject(AppState.currentSubject);
+  AppState.retryWordsMode = false;
+  if (AppState.currentSubject) {
+    selectSubject(AppState.currentSubject);
+  } else {
+    renderDictationPage();
+  }
 }
 
 // ============================================
@@ -1251,18 +1383,21 @@ function startDictationGrading() {
   `;
 
   html = html.replace(
-    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)">([^<]+?)\s*(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
-    function(match, className, meaningEncoded, wordText, extraHtml) {
+    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)" data-lesson="([^"]*)" data-subject="([^"]*)">([^<]+?)\s*(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
+    function(match, className, meaningEncoded, lessonIdEncoded, subjectEncoded, wordText, extraHtml) {
       const meaning = decodeURIComponent(meaningEncoded);
       const trimmedWordText = wordText.trim();
-      const item = AppState.currentDictationList.find(w => w.text === trimmedWordText);
-      const lessonId = item ? item.lessonId : '';
+      // 用三元组查找，避免同词面跨课串扰
+      const item = AppState.currentDictationList.find(w => w.subject === subjectEncoded && w.lessonId === lessonIdEncoded && w.text === trimmedWordText);
+      const lessonId = lessonIdEncoded;
       const round = item ? item.round : 0;
-      const phoneticMatch = extraHtml ? extraHtml.match(/\/([^/]+)\//) : null;
-      const phoneticHtml = phoneticMatch ? `<span class="grading-phonetic">/${phoneticMatch[1]}/</span>` : '';
-      const speakHtml = trimmedWordText ? `<span class="speak-btn" data-word="${trimmedWordText}">🔊</span>` : '';
-      const meaningHtml = meaning ? `<span class="grading-meaning">${meaning}</span>` : '';
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${trimmedWordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${trimmedWordText}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
+      const subject = subjectEncoded;
+      // 直接用 item.phonetic 而非从 HTML 正则提取，修复英语重听丢失音标
+      const phonetic = item ? (item.phonetic || '') : '';
+      const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
+      const speakHtml = trimmedWordText ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
+      const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
     }
   );
 
@@ -1309,7 +1444,7 @@ function finishDictationGrading() {
   if (cancelBtn) cancelBtn.disabled = true;
 
   const wrongWords = new Set();
-  document.querySelectorAll('.wrong-cb:checked').forEach(cb => wrongWords.add(cb.dataset.word));
+  document.querySelectorAll('.wrong-cb:checked').forEach(cb => wrongWords.add(cb.dataset.subject + '|' + cb.dataset.lesson + '|' + cb.dataset.word));
 
   const wordUpdates = [];
   let correctCount = 0;
@@ -1317,7 +1452,7 @@ function finishDictationGrading() {
   const totalWords = AppState.currentDictationList.length;
 
   AppState.currentDictationList.forEach((item, idx) => {
-    const isWrong = wrongWords.has(item.text);
+    const isWrong = wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text);
     const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
     const nextReview = isWrong
       ? calculateNextReview(1)
@@ -1338,18 +1473,39 @@ function finishDictationGrading() {
 
   saveProgress(wordUpdates);
 
+  // 保存错词用于当日重听
+  const wrongWordsList = AppState.currentDictationList
+    .filter(item => wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text))
+    .map(item => ({ ...item }));
+  if (wrongWordsList.length > 0) {
+    saveRetryWords(wrongWordsList);
+  } else {
+    clearRetryWords(); // 全对时清除错词，按钮消失
+  }
+
   const earliestNext = wordUpdates
     .filter(w => w.nextReview)
     .sort((a, b) => a.nextReview.localeCompare(b.nextReview))[0];
   const earliestDate = earliestNext ? formatDate(earliestNext.nextReview) : '-';
 
+  const isRetryMode = AppState.retryWordsMode;
+  const summaryTitle = isRetryMode
+    ? (wrongCount === 0 ? '🎉 重听全过关！' : '🔄 重听完成')
+    : '✅ 听写完成！';
+  const summaryExtra = isRetryMode
+    ? (wrongCount === 0
+        ? '<p>今日错词全部过关，太棒了！</p>'
+        : '<p>已更新错词列表，可随时再次重听</p>')
+    : '';
+
   const summaryHtml = `
     <div class="result-summary">
-      <h3>✅ 听写完成！</h3>
+      <h3>${summaryTitle}</h3>
       <div class="stats">
         <span class="stat correct">✅ ${correctCount} 正确</span>
         <span class="stat wrong">❌ ${wrongCount} 错误</span>
       </div>
+      ${summaryExtra}
       <p>📅 下次复习：<strong>${earliestDate}</strong></p>
       <div class="action-bar" style="margin-top:16px;">
         <button class="btn btn-primary" onclick="goBackToLessons()">返回选课</button>
@@ -1499,12 +1655,12 @@ async function selectVocabLesson(lessonId) {
 
   const wordsHtml = sortedWords.map(word => {
     const status = getWordStatus(word.round);
-    const meaningHtml = !isChinese && word.meaning ? `<span class="vocab-word-meaning">${word.meaning}</span>` : '';
+    const meaningHtml = !isChinese && word.meaning ? `<span class="vocab-word-meaning">${escapeHtml(word.meaning)}</span>` : '';
     const typeHtml = isChinese && word.type ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>` : '';
     return `
       <div class="vocab-word-item">
         <div class="vocab-word-main">
-          <span class="vocab-word-text">${word.text}</span>${typeHtml}${meaningHtml}
+          <span class="vocab-word-text">${escapeHtml(word.text)}</span>${typeHtml}${meaningHtml}
         </div>
         <div class="vocab-word-meta">
           <span class="vocab-status ${status.className}">${status.icon} ${status.text}</span>
@@ -1648,12 +1804,12 @@ async function renderProgressPage(filter = 'all') {
       <div class="manual-word-list">
         ${pagedReviewWords.map(word => {
           const name = word.lessonName || word.unitName || '';
-          const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
-          const safeId = word.text.replace(/'/g, "\\'");
+          const phonetic = word.phonetic ? '/' + escapeHtml(word.phonetic) + '/ ' : '';
+          const safeId = escapeHtml(word.text).replace(/'/g, "\\'");
           return `<div class="manual-word-item">
-            <span class="manual-word-text">${word.text} ${phonetic}<span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning || ''}</span>
+            <span class="manual-word-text">${escapeHtml(word.text)} ${phonetic}<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>${word.meaning ? escapeHtml(word.meaning) : ''}</span>
             <div class="manual-word-info">
-              <span class="manual-word-lesson">${name}</span>
+              <span class="manual-word-lesson">${escapeHtml(name)}</span>
               <span class="error-round">R${word.round}</span>
               <span class="manual-btn-group">
                 <select class="manual-round-select" id="round-select-${safeId}">
@@ -1712,13 +1868,14 @@ async function renderProgressPage(filter = 'all') {
       <h3 class="error-title">⚠️ 高频错词排行 (前10)</h3>
       <div class="error-list">
         ${errorWords.map(word => {
-          const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
+          const phonetic = word.phonetic ? '/' + escapeHtml(word.phonetic) + '/ ' : '';
+          const safeWordText = escapeHtml(word.text).replace(/'/g, "\\'");
           return `<div class="error-item">
-            <span class="error-word">${word.text} ${phonetic}<span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning || ''}</span>
+            <span class="error-word">${escapeHtml(word.text)} ${phonetic}<span class="speak-btn" data-word="${encodeURIComponent(word.text)}">🔊</span>${word.meaning ? escapeHtml(word.meaning) : ''}</span>
             <div class="error-info">
               <span class="error-count">❌ ${word.wrongCount}次</span>
               <span class="error-round">R${word.round}</span>
-              <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId || word.unitId}','${word.text.replace(/'/g, "\\'")}',1)">设为R1</button>
+              <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId || word.unitId}','${safeWordText}',1)">设为R1</button>
             </div>
           </div>`;
         }).join('')}
