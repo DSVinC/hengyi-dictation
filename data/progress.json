@@ -246,10 +246,10 @@
     "text": "slow",
     "lessonId": "U2",
     "subject": "english",
-    "round": 1,
+    "round": 2,
     "nextReview": "2026-04-26",
     "wrongCount": 3,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U2|love": {
     "text": "love",
@@ -1227,10 +1227,10 @@
     "text": "nose",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
+    "round": 2,
     "nextReview": "2026-04-26",
     "wrongCount": 5,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U3|class": {
     "text": "class",
@@ -1254,10 +1254,10 @@
     "text": "learn",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-26",
+    "round": 2,
+    "nextReview": "2026-04-27",
     "wrongCount": 5,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "chinese|L12|e799bbe9ab98": {
     "text": "\u767b\u9ad8",
@@ -1598,8 +1598,8 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 4,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "wrongCount": 5,
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U4|time": {
     "text": "time",
@@ -1607,8 +1607,8 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 4,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "wrongCount": 5,
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U4|bread": {
     "text": "bread",
@@ -1677,10 +1677,10 @@
     "text": "noodle",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-26",
+    "round": 2,
+    "nextReview": "2026-04-27",
     "wrongCount": 3,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U4|juice": {
     "text": "juice",
@@ -1688,8 +1688,8 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 3,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "wrongCount": 4,
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U4|rice": {
     "text": "rice",
@@ -1743,7 +1743,7 @@
     "round": 1,
     "nextReview": "2026-04-26",
     "wrongCount": 2,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   },
   "english|U4|healthy": {
     "text": "healthy",
@@ -1751,7 +1751,7 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-25T13:56:51.059Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-04-25T14:10:57.952Z"
   }
 }
