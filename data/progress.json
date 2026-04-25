@@ -1598,17 +1598,17 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 5,
-    "updatedAt": "2026-04-25T14:10:57.952Z"
+    "wrongCount": 6,
+    "updatedAt": "2026-04-25T14:15:04.011Z"
   },
   "english|U4|time": {
     "text": "time",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-26",
+    "round": 2,
+    "nextReview": "2026-04-27",
     "wrongCount": 5,
-    "updatedAt": "2026-04-25T14:10:57.952Z"
+    "updatedAt": "2026-04-25T14:15:04.011Z"
   },
   "english|U4|bread": {
     "text": "bread",
@@ -1686,10 +1686,10 @@
     "text": "juice",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-26",
+    "round": 2,
+    "nextReview": "2026-04-28",
     "wrongCount": 4,
-    "updatedAt": "2026-04-25T14:10:57.952Z"
+    "updatedAt": "2026-04-25T14:15:04.011Z"
   },
   "english|U4|rice": {
     "text": "rice",
@@ -1751,7 +1751,7 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-26",
-    "wrongCount": 3,
-    "updatedAt": "2026-04-25T14:10:57.952Z"
+    "wrongCount": 4,
+    "updatedAt": "2026-04-25T14:15:04.011Z"
   }
 }
