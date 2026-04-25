@@ -628,6 +628,18 @@ function calculateNextReview(round) {
 }
 
 /**
+ * 统一 round -> nextReview 的写入规则。
+ * R1 代表“已进入今天的复习队列”，不能再额外顺延一天，
+ * 否则会与批改错词路径（错词直接今天复习）产生冲突。
+ */
+function getNextReviewForRound(round) {
+  if (round >= 6) return null;
+  if (round <= 0) return getLocalDate();
+  if (round === 1) return getLocalDate();
+  return calculateNextReview(round);
+}
+
+/**
  * 计算下一次复习日期（带错开逻辑，避免同批词同一天到期堆积）
  * @param {number} round - 目标轮次
  * @param {number} index - 在同批词中的索引
@@ -1306,18 +1318,23 @@ function startRetryDictation() {
   AppState.currentDictationList = retryWords;
   AppState.selectedWords.clear();
 
-  // 渲染重听清单（只显示错词，不混入正常词表）
+  // 渲染重听清单（使用 grading-word-item 卡片结构，与正常听写一致）
   const wordsHtml = retryWords.map(item => {
     const isChinese = item.subject === 'chinese';
-    if (isChinese) {
-      return `<span class="dictation-word retry-word" data-meaning="" data-lesson="${escapeHtml(item.lessonId || '')}" data-subject="${escapeHtml(item.subject || '')}">${escapeHtml(item.text)}</span>`;
-    } else {
-      const meaning = item.meaning || '';
-      const phonetic = item.phonetic || '';
-      const phoneticHtml = phonetic ? `<span class="word-extra">/${phonetic}/</span>` : '';
-      return `<span class="dictation-word retry-word" data-meaning="${encodeURIComponent(meaning)}" data-lesson="${escapeHtml(item.lessonId || '')}" data-subject="${escapeHtml(item.subject || '')}">${escapeHtml(item.text)}${phoneticHtml}</span>`;
-    }
-  }).join(' ');
+    const wordText = item.text || '';
+    const phonetic = item.phonetic || '';
+    const meaning = item.meaning || '';
+    const lessonId = item.lessonId || '';
+    const subject = item.subject || '';
+
+    const phoneticHtml = phonetic ? `<span class="word-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
+    const speakHtml = !isChinese ? `<button class="word-speak" onclick="event.stopPropagation();speakWord('${encodeURIComponent(wordText)}','${subject}')">🔊</button>` : '';
+    const meaningHtml = meaning ? `<span class="word-meaning">${escapeHtml(meaning)}</span>` : '';
+
+    return `<label class="grading-word-item retry-word" data-lesson="${escapeHtml(lessonId)}" data-subject="${escapeHtml(subject)}">
+      <span class="word-text">${escapeHtml(wordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}
+    </label>`;
+  }).join('');
 
   const html = `
     <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
@@ -1457,7 +1474,7 @@ function finishDictationGrading() {
     const isWrong = wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text);
     const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
     const nextReview = isWrong
-      ? calculateNextReview(1)
+      ? getLocalDate()
       : calculateStaggeredNextReview(newRound, idx, totalWords);
 
     if (isWrong) wrongCount++;
@@ -1927,7 +1944,7 @@ async function renderProgressPage(filter = 'all') {
 // ============================================
 
 function updateWordProgress(subject, lessonId, text, round, wrongCountIncrement = 0) {
-  const nextReview = round >= 6 ? null : calculateNextReview(round);
+  const nextReview = getNextReviewForRound(round);
   const existing = ProgressStore.get(subject, lessonId, text) || {};
   ProgressStore.set(subject, lessonId, text, {
     round,
@@ -1976,11 +1993,11 @@ async function manualAddWordR1() {
     if (existing) {
       // 已存在，更新轮次和错词次数
       existing.round = 1;
-      existing.nextReview = calculateNextReview(1);
+      existing.nextReview = getLocalDate();
       existing.wrongCount = (existing.wrongCount || 0) + 1;
       await saveCustomWords(customData);
     } else {
-      customData.words.push({ text, type: 'word', round: 1, nextReview: calculateNextReview(1), wrongCount: 1, history: [] });
+      customData.words.push({ text, type: 'word', round: 1, nextReview: getLocalDate(), wrongCount: 1, history: [] });
       await saveCustomWords(customData);
     }
     updateWordProgress('custom', 'CUSTOM', text, 1, 1);
@@ -2028,7 +2045,7 @@ async function manualAddWordWithRound() {
       alert(`⚠️ "${text}" 已在自定义词库中`);
       return;
     }
-    customData.words.push({ text, type: 'word', round, nextReview: round >= 6 ? null : calculateNextReview(round), wrongCount: 0, history: [] });
+    customData.words.push({ text, type: 'word', round, nextReview: getNextReviewForRound(round), wrongCount: 0, history: [] });
     await saveCustomWords(customData);
     updateWordProgress('custom', 'CUSTOM', text, round);
     const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
