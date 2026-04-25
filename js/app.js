@@ -503,6 +503,18 @@ async function parseJsonSafe(response) {
 /**
  * 显示全局加载状态
  */
+/**
+ * 英语单词读音：用 Web Speech API 点击发音（仅英语科目）
+ */
+function speakWord(word) {
+  if (!word || !('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US';
+  u.rate = 0.85;
+  window.speechSynthesis.speak(u);
+}
+
 function showLoading() {
   AppState.isLoading = true;
   const loadingEl = document.getElementById('global-loading');
@@ -969,7 +981,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
             <label class="word-item disabled-item" data-word="${word.text}">
               <input type="checkbox" class="word-checkbox" checked disabled>
               <span class="word-text">${word.text}<span class="review-tag review-tag-r1">R1</span></span>
-              ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
+              ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span><span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
             </label>
           `).join('')}
         </div>
@@ -990,7 +1002,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
                   onchange="toggleWordSelection('${word.text}')"
                   ${isSelected ? 'checked' : ''}>
                 <span class="word-text">${word.text}<span class="review-tag round-${word.round}">R${word.round}</span></span>
-                ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
+                ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + word.phonetic + '/' : ''}</span><span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning ? `<span class="word-meaning">${word.meaning}</span>` : ''}</span>` : ''}
               </label>
             `;
           }).join('')}
@@ -1116,6 +1128,7 @@ async function generateDictationList() {
     if (w.subject === 'english') {
       let extra = '';
       if (w.phonetic) extra += `<span class="word-phonetic">/${w.phonetic}/</span>`;
+      if (w.text) extra += `<span class="speak-btn" data-word="${w.text}">🔊</span>`;
       if (w.meaning) extra += `<span class="word-meaning">${w.meaning}</span>`;
       return extra ? `<span class="word-extra">${extra}</span>` : '';
     }
@@ -1247,8 +1260,9 @@ function startDictationGrading() {
       const round = item ? item.round : 0;
       const phoneticMatch = extraHtml ? extraHtml.match(/\/([^/]+)\//) : null;
       const phoneticHtml = phoneticMatch ? `<span class="grading-phonetic">/${phoneticMatch[1]}/</span>` : '';
+      const speakHtml = trimmedWordText ? `<span class="speak-btn" data-word="${trimmedWordText}">🔊</span>` : '';
       const meaningHtml = meaning ? `<span class="grading-meaning">${meaning}</span>` : '';
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${trimmedWordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${trimmedWordText}</span>${phoneticHtml}${meaningHtml}</label>`;
+      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${trimmedWordText}" data-lesson="${lessonId}" data-round="${round}"><span class="word-text">${trimmedWordText}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
     }
   );
 
@@ -1637,7 +1651,7 @@ async function renderProgressPage(filter = 'all') {
           const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
           const safeId = word.text.replace(/'/g, "\\'");
           return `<div class="manual-word-item">
-            <span class="manual-word-text">${word.text} ${phonetic}${word.meaning || ''}</span>
+            <span class="manual-word-text">${word.text} ${phonetic}<span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning || ''}</span>
             <div class="manual-word-info">
               <span class="manual-word-lesson">${name}</span>
               <span class="error-round">R${word.round}</span>
@@ -1700,7 +1714,7 @@ async function renderProgressPage(filter = 'all') {
         ${errorWords.map(word => {
           const phonetic = word.phonetic ? '/' + word.phonetic + '/ ' : '';
           return `<div class="error-item">
-            <span class="error-word">${word.text} ${phonetic}${word.meaning || ''}</span>
+            <span class="error-word">${word.text} ${phonetic}<span class="speak-btn" data-word="${word.text}">🔊</span>${word.meaning || ''}</span>
             <div class="error-info">
               <span class="error-count">❌ ${word.wrongCount}次</span>
               <span class="error-round">R${word.round}</span>
@@ -1904,6 +1918,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => switchPage(btn.dataset.page));
+  });
+
+  // 事件委托：点击喇叭按钮播放英语读音（动态生成的元素也能响应）
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.speak-btn');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      speakWord(btn.dataset.word);
+    }
   });
 
   renderDictationPage();
