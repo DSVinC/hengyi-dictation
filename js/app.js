@@ -1,5 +1,5 @@
 /**
- * 恒一听写系统 - 主逻辑 (v0.8.4)
+ * 恒一听写系统 - 主逻辑 (v0.8.5)
  *
  * 功能：
  * 1. 三级导航：科目 → 课/单元 → 词勾选
@@ -894,7 +894,7 @@ async function selectCustomWords() {
     data = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
   }
   data = mergeProgressToWords(data, 'custom', 'CUSTOM');
-  await renderWordSelectionPage(data, '自定义词语', true);
+  await renderWordSelectionPage(data, '自定义词语', true, 'CUSTOM');
   loadAndRenderDueReviewWords('custom', true);
 }
 
@@ -983,12 +983,13 @@ async function selectLesson(lessonId) {
   const isChinese = subject === 'chinese';
   const title = isChinese ? data.lessonName : data.unitName;
 
-  await renderWordSelectionPage(data, title, isChinese);
+  await renderWordSelectionPage(data, title, isChinese, lessonId);
   loadAndRenderDueReviewWords(subject, isChinese);
 }
 
-function renderWordSelectionPage(data, title, isChinese) {
+function renderWordSelectionPage(data, title, isChinese, lessonId) {
   const subject = AppState.currentSubject;
+  const lid = lessonId || data.lessonId || data.unitId || AppState.currentLesson;
   const currentLessonWords = data.words.filter(w => w.round === 0);
 
   const newWordsHtml = currentLessonWords.map(word => {
@@ -997,7 +998,7 @@ function renderWordSelectionPage(data, title, isChinese) {
       : '';
     const encodedWordText = encodeURIComponent(word.text);
     return `
-      <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(lessonId)}" data-subject="${encodeURIComponent(subject)}">
+      <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(lid)}" data-subject="${encodeURIComponent(subject)}">
         <input type="checkbox" class="word-checkbox"
           onchange="toggleWordSelection(decodeURIComponent('${encodedWordText}'))">
         <span class="word-text">${escapeHtml(word.text)}</span>
