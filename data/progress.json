@@ -392,8 +392,8 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-27",
-    "wrongCount": 4,
-    "updatedAt": "2026-04-26T03:56:05.801Z"
+    "wrongCount": 5,
+    "updatedAt": "2026-04-26T03:58:32.523Z"
   },
   "english|U1|teacher": {
     "text": "teacher",
@@ -1833,7 +1833,7 @@
     "round": 1,
     "nextReview": "2026-04-27",
     "wrongCount": 2,
-    "updatedAt": "2026-04-26T03:56:05.801Z"
+    "updatedAt": "2026-04-26T03:58:32.523Z"
   },
   "english|U4|candy": {
     "text": "candy",
@@ -1841,7 +1841,7 @@
     "subject": "english",
     "round": 1,
     "nextReview": "2026-04-27",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-26T03:56:05.801Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-04-26T03:58:32.523Z"
   }
 }
