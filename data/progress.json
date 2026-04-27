@@ -390,10 +390,10 @@
     "text": "today",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 2,
+    "nextReview": "2026-04-28",
     "wrongCount": 6,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "english|U1|teacher": {
     "text": "teacher",
@@ -1236,10 +1236,10 @@
     "text": "class",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 3,
+    "nextReview": "2026-05-01",
     "wrongCount": 5,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "english|U3|computer": {
     "text": "computer",
@@ -1749,10 +1749,10 @@
     "text": "healthy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 3,
+    "nextReview": "2026-05-02",
     "wrongCount": 5,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "chinese|L02|e78795e5ad90": {
     "text": "\u71d5\u5b50",
@@ -1821,28 +1821,28 @@
     "text": "soup",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 2,
+    "nextReview": "2026-04-28",
     "wrongCount": 2,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "english|U4|fruit": {
     "text": "fruit",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 2,
+    "nextReview": "2026-04-28",
     "wrongCount": 3,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "english|U4|candy": {
     "text": "candy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-04-27",
+    "round": 2,
+    "nextReview": "2026-04-29",
     "wrongCount": 4,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-04-27T11:53:15.653Z"
   },
   "chinese|L02|e58589e5bda9e5a4bae79bae": {
     "text": "\u5149\u5f69\u593a\u76ee",
