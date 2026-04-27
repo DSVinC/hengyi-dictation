@@ -1328,7 +1328,7 @@ function startRetryDictation() {
     const subject = item.subject || '';
 
     const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
-    const speakHtml = `<span class="speak-btn" onclick="event.stopPropagation();speakWord('${encodeURIComponent(wordText)}','${subject}')">🔊</span>`;
+    const speakHtml = !isChinese ? `<span class="speak-btn" onclick="event.stopPropagation();speakWord('${encodeURIComponent(wordText)}','${subject}')">🔊</span>` : '';
     const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
 
     return `<label class="grading-word-item retry-word" data-lesson="${escapeHtml(lessonId)}" data-subject="${escapeHtml(subject)}">
@@ -1414,7 +1414,7 @@ function startDictationGrading() {
       // 直接用 item.phonetic 而非从 HTML 正则提取，修复英语重听丢失音标
       const phonetic = item ? (item.phonetic || '') : '';
       const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
-      const speakHtml = trimmedWordText ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
+      const speakHtml = (subject === 'english' && trimmedWordText) ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
       const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
       return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
     }
