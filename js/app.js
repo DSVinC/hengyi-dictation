@@ -1327,9 +1327,9 @@ function startRetryDictation() {
     const lessonId = item.lessonId || '';
     const subject = item.subject || '';
 
-    const phoneticHtml = phonetic ? `<span class="word-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
-    const speakHtml = !isChinese ? `<button class="word-speak" onclick="event.stopPropagation();speakWord('${encodeURIComponent(wordText)}','${subject}')">🔊</button>` : '';
-    const meaningHtml = meaning ? `<span class="word-meaning">${escapeHtml(meaning)}</span>` : '';
+    const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
+    const speakHtml = !isChinese ? `<span class="speak-btn" onclick="event.stopPropagation();speakWord('${encodeURIComponent(wordText)}','${subject}')">🔊</span>` : '';
+    const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
 
     return `<label class="grading-word-item retry-word" data-lesson="${escapeHtml(lessonId)}" data-subject="${escapeHtml(subject)}">
       <span class="word-text">${escapeHtml(wordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}
