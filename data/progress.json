@@ -1897,5 +1897,14 @@
     "nextReview": "2026-04-28",
     "wrongCount": 0,
     "updatedAt": "2026-04-27T11:29:34.574Z"
+  },
+  "chinese|L02|e89e8d": {
+    "text": "\u878d",
+    "lessonId": "L02",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-04-28",
+    "wrongCount": 0,
+    "updatedAt": "2026-04-27T15:20:27.680Z"
   }
 }
