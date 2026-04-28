@@ -390,28 +390,28 @@
     "text": "today",
     "lessonId": "U1",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-04-30",
     "wrongCount": 6,
-    "updatedAt": "2026-04-27T11:53:15.653Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U1|teacher": {
     "text": "teacher",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-04-28",
+    "round": 4,
+    "nextReview": "2026-05-06",
     "wrongCount": 1,
-    "updatedAt": "2026-04-22T13:05:53.329Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U1|student": {
     "text": "student",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
+    "round": 1,
     "nextReview": "2026-04-28",
-    "wrongCount": 1,
-    "updatedAt": "2026-04-22T13:05:53.329Z"
+    "wrongCount": 2,
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U1|after": {
     "text": "after",
@@ -498,10 +498,10 @@
     "text": "UK",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-04-28",
+    "round": 4,
+    "nextReview": "2026-05-07",
     "wrongCount": 0,
-    "updatedAt": "2026-04-20T10:04:35.845Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U1|China": {
     "text": "China",
@@ -1596,10 +1596,10 @@
     "text": "breakfast",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
+    "round": 1,
     "nextReview": "2026-04-28",
-    "wrongCount": 6,
-    "updatedAt": "2026-04-25T14:29:45.659Z"
+    "wrongCount": 7,
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|time": {
     "text": "time",
@@ -1614,10 +1614,10 @@
     "text": "bread",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-04-30",
     "wrongCount": 2,
-    "updatedAt": "2026-04-25T13:31:53.213Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|egg": {
     "text": "egg",
@@ -1668,10 +1668,10 @@
     "text": "milk",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-05-01",
     "wrongCount": 1,
-    "updatedAt": "2026-04-25T13:31:53.213Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|noodle": {
     "text": "noodle",
@@ -1686,10 +1686,10 @@
     "text": "juice",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-05-01",
     "wrongCount": 4,
-    "updatedAt": "2026-04-25T14:15:04.011Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|rice": {
     "text": "rice",
@@ -1731,19 +1731,19 @@
     "text": "meat",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-05-01",
     "wrongCount": 2,
-    "updatedAt": "2026-04-26T03:56:05.801Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|vegetable": {
     "text": "vegetable",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-05-02",
     "wrongCount": 3,
-    "updatedAt": "2026-04-26T03:56:05.801Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|healthy": {
     "text": "healthy",
@@ -1821,19 +1821,19 @@
     "text": "soup",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-04-28",
+    "round": 3,
+    "nextReview": "2026-05-02",
     "wrongCount": 2,
-    "updatedAt": "2026-04-27T11:53:15.653Z"
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|fruit": {
     "text": "fruit",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
+    "round": 1,
     "nextReview": "2026-04-28",
-    "wrongCount": 3,
-    "updatedAt": "2026-04-27T11:53:15.653Z"
+    "wrongCount": 4,
+    "updatedAt": "2026-04-28T13:37:04.519Z"
   },
   "english|U4|candy": {
     "text": "candy",
