@@ -69,6 +69,15 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function decodeWordToken(wordToken) {
+  if (typeof wordToken !== 'string') return '';
+  try {
+    return decodeURIComponent(wordToken);
+  } catch {
+    return wordToken;
+  }
+}
+
 // ============================================
 // 当日错词重听（localStorage 持久化）
 // ============================================
@@ -1463,23 +1472,34 @@ function finishDictationGrading() {
   if (cancelBtn) cancelBtn.disabled = true;
 
   const wrongWords = new Set();
-  document.querySelectorAll('.wrong-cb:checked').forEach(cb => wrongWords.add(cb.dataset.subject + '|' + cb.dataset.lesson + '|' + cb.dataset.word));
+  document.querySelectorAll('.wrong-cb:checked').forEach(cb => {
+    const wordText = decodeWordToken(cb.dataset.word);
+    wrongWords.add(cb.dataset.subject + '|' + cb.dataset.lesson + '|' + wordText);
+  });
 
-  const wordUpdates = [];
   let correctCount = 0;
   let wrongCount = 0;
   const totalWords = AppState.currentDictationList.length;
+  const isRetryMode = AppState.retryWordsMode;
+  const wordUpdates = [];
+  const wrongWordsList = [];
 
   AppState.currentDictationList.forEach((item, idx) => {
     const isWrong = wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text);
+
+    if (isWrong) {
+      wrongCount++;
+      wrongWordsList.push({ ...item });
+    } else {
+      correctCount++;
+    }
+
+    if (isRetryMode) return;
+
     const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
     const nextReview = isWrong
       ? getLocalDate()
       : calculateStaggeredNextReview(newRound, idx, totalWords);
-
-    if (isWrong) wrongCount++;
-    else correctCount++;
-
     const existing = findWordProgress(item.subject, item.lessonId, item.text);
     const existingWrongCount = existing ? (existing.wrongCount || 0) : 0;
 
@@ -1490,32 +1510,36 @@ function finishDictationGrading() {
     });
   });
 
-  saveProgress(wordUpdates);
+  if (!isRetryMode) {
+    saveProgress(wordUpdates);
+  }
 
-  // 保存错词用于当日重听
-  const wrongWordsList = AppState.currentDictationList
-    .filter(item => wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text))
-    .map(item => ({ ...item }));
   if (wrongWordsList.length > 0) {
     saveRetryWords(wrongWordsList);
   } else {
     clearRetryWords(); // 全对时清除错词，按钮消失
   }
 
-  const earliestNext = wordUpdates
-    .filter(w => w.nextReview)
-    .sort((a, b) => a.nextReview.localeCompare(b.nextReview))[0];
+  const earliestNext = isRetryMode
+    ? null
+    : wordUpdates
+        .filter(w => w.nextReview)
+        .sort((a, b) => a.nextReview.localeCompare(b.nextReview))[0];
   const earliestDate = earliestNext ? formatDate(earliestNext.nextReview) : '-';
 
-  const isRetryMode = AppState.retryWordsMode;
   const summaryTitle = isRetryMode
     ? (wrongCount === 0 ? '🎉 重听全过关！' : '🔄 重听完成')
     : '✅ 听写完成！';
   const summaryExtra = isRetryMode
     ? (wrongCount === 0
-        ? '<p>今日错词全部过关，太棒了！</p>'
-        : '<p>已更新错词列表，可随时再次重听</p>')
+        ? '<p>今日错词全部过关，太棒了！</p><p>本次重听不影响复习轮次。</p>'
+        : '<p>已更新错词列表，可随时再次重听。</p><p>本次重听不影响复习轮次。</p>')
     : '';
+  const nextReviewHtml = isRetryMode
+    ? ''
+    : `<p>📅 下次复习：<strong>${earliestDate}</strong></p>`;
+  const summaryAction = isRetryMode ? 'goBackToLessons()' : 'renderDictationPage()';
+  const summaryActionLabel = isRetryMode ? '返回选课' : '返回首页';
 
   const summaryHtml = `
     <div class="result-summary">
@@ -1525,9 +1549,9 @@ function finishDictationGrading() {
         <span class="stat wrong">❌ ${wrongCount} 错误</span>
       </div>
       ${summaryExtra}
-      <p>📅 下次复习：<strong>${earliestDate}</strong></p>
+      ${nextReviewHtml}
       <div class="action-bar" style="margin-top:16px;">
-        <button class="btn btn-primary" onclick="goBackToLessons()">返回选课</button>
+        <button class="btn btn-primary" onclick="${summaryAction}">${summaryActionLabel}</button>
       </div>
     </div>
   `;
