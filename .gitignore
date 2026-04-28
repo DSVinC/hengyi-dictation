@@ -3,3 +3,4 @@ node_modules/
 *.bak
 js/config.js
 .env
+data/progress.json
