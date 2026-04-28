@@ -37,13 +37,19 @@ const AppState = {
   currentDictationList: [],   // 当前听写清单（用于批改）
   originalDictationHtml: '',  // 原始清单 HTML（用于取消批改）
   reviewWordsPage: 1,         // 复习中的词分页页码
-  retryWordsMode: false       // 重听错词模式
+  retryWordsMode: false,      // 重听错词模式
+  dueReviewWords: [],         // 当前页面的到期复习词
+  debtMode: false,            // 清债模式
+  currentAudio: null,         // 当前播放的固定音频
+  englishAudioManifest: null, // 英语固定音频清单
+  englishAudioManifestPromise: null
 };
 
 // ============================================
 // 请求超时配置
 // ============================================
 const FETCH_TIMEOUT = 10000; // 10秒超时
+const WORD_LIMIT = 30;
 
 // ============================================
 // 艾宾浩斯复习间隔（天）
@@ -76,6 +82,83 @@ function decodeWordToken(wordToken) {
   } catch {
     return wordToken;
   }
+}
+
+function getEnglishAudioFilename(word) {
+  return encodeURIComponent(word).replace(/%/g, '_') + '.mp3';
+}
+
+async function loadEnglishAudioManifest() {
+  if (AppState.englishAudioManifest) return AppState.englishAudioManifest;
+  if (AppState.englishAudioManifestPromise) return AppState.englishAudioManifestPromise;
+
+  AppState.englishAudioManifestPromise = fetchWithTimeout('data/audio/english/manifest.json')
+    .then(response => {
+      if (!response.ok) throw new Error('manifest missing');
+      return parseJsonSafe(response);
+    })
+    .then(data => {
+      const files = Array.isArray(data.files) ? data.files : [];
+      AppState.englishAudioManifest = {
+        voice: data.voice || '',
+        files: new Set(files)
+      };
+      return AppState.englishAudioManifest;
+    })
+    .catch(() => {
+      AppState.englishAudioManifest = { voice: '', files: new Set() };
+      return AppState.englishAudioManifest;
+    })
+    .finally(() => {
+      AppState.englishAudioManifestPromise = null;
+    });
+
+  return AppState.englishAudioManifestPromise;
+}
+
+function stopCurrentAudio() {
+  if (!AppState.currentAudio) return;
+  AppState.currentAudio.pause();
+  AppState.currentAudio.currentTime = 0;
+  AppState.currentAudio = null;
+}
+
+async function playFixedEnglishAudio(word) {
+  const manifest = await loadEnglishAudioManifest();
+  const filename = getEnglishAudioFilename(word);
+  if (!manifest.files.has(filename)) return false;
+
+  return new Promise(resolve => {
+    stopCurrentAudio();
+    window.speechSynthesis.cancel();
+
+    const audio = new Audio(`data/audio/english/${filename}`);
+    AppState.currentAudio = audio;
+
+    const cleanup = () => {
+      audio.onended = null;
+      audio.onerror = null;
+      if (AppState.currentAudio === audio) {
+        AppState.currentAudio = null;
+      }
+    };
+
+    audio.onended = () => {
+      cleanup();
+      resolve(true);
+    };
+    audio.onerror = () => {
+      cleanup();
+      resolve(false);
+    };
+
+    audio.play()
+      .then(() => resolve(true))
+      .catch(() => {
+        cleanup();
+        resolve(false);
+      });
+  });
 }
 
 // ============================================
@@ -137,7 +220,15 @@ const GITHUB_CONFIG = {
   get token() { return this._tk1 + this._tk2; }
 };
 
-const isGitHubConfigured = true;
+function isLocalDebugEnvironment() {
+  const hostname = window.location.hostname;
+  return window.location.protocol === 'file:'
+    || hostname === 'localhost'
+    || hostname === '127.0.0.1'
+    || hostname === '::1';
+}
+
+const isGitHubConfigured = !isLocalDebugEnvironment();
 
 function getGitHubContentUrl() {
   return `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
@@ -451,6 +542,18 @@ async function mergeGitHubProgress() {
   }
 }
 
+async function loadLocalDebugProgress() {
+  try {
+    const response = await fetchWithTimeout('data/progress.json');
+    if (!response.ok) return;
+    const localDebugProgress = await parseJsonSafe(response);
+    ProgressStore.mergeFromRemote(localDebugProgress);
+    console.log('[Local Debug] 已加载 data/progress.json');
+  } catch (error) {
+    console.warn('[Local Debug] 加载 progress.json 失败:', error.message);
+  }
+}
+
 /**
  * 后台刷新：从 GitHub 拉取最新数据并合并到 v2 存储
  */
@@ -500,6 +603,12 @@ function startBackgroundSync() {
 function updateSyncIndicator() {
   const el = document.getElementById('sync-status');
   if (!el) return;
+
+  if (!isGitHubConfigured) {
+    el.textContent = '🧪 本地调试';
+    el.className = 'sync-status idle';
+    return;
+  }
 
   switch (SyncState.status) {
     case 'syncing':
@@ -570,16 +679,173 @@ async function parseJsonSafe(response) {
  * 显示全局加载状态
  */
 /**
- * 英语单词读音：用 Web Speech API 点击发音（仅英语科目）
+ * 英语优先播放固定音频，缺失时回退 Web Speech API
  */
-function speakWord(word) {
-  if (!word || !('speechSynthesis' in window)) return;
+async function speakWord(word) {
+  const decodedWord = decodeWordToken(word);
+  if (!decodedWord) return;
+
+  const isChinese = /[\u4e00-\u9fff]/.test(decodedWord);
+  if (!isChinese) {
+    const played = await playFixedEnglishAudio(decodedWord);
+    if (played) return;
+  }
+
+  stopCurrentAudio();
+  if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(word);
+  const u = new SpeechSynthesisUtterance(decodedWord);
   // 自动检测语言：中文字符用 zh-CN，否则用 en-US
-  u.lang = /[\u4e00-\u9fff]/.test(word) ? 'zh-CN' : 'en-US';
+  u.lang = isChinese ? 'zh-CN' : 'en-US';
   u.rate = 0.85;
   window.speechSynthesis.speak(u);
+}
+
+function scrollToElementInView(target, offset = 76) {
+  if (!target) return;
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+  const scrollingEl = document.scrollingElement || document.documentElement;
+  const currentTop = typeof scrollingEl.scrollTop === 'number' ? scrollingEl.scrollTop : window.scrollY;
+  const top = Math.max(0, currentTop + target.getBoundingClientRect().top - offset);
+  window.scrollTo({ top, behavior });
+}
+
+function getCurrentLessonData() {
+  const subject = AppState.currentSubject;
+  const lessonId = AppState.currentLesson;
+  if (!subject || !lessonId) return null;
+  return AppState.wordData[`${subject}/${lessonId}`] || null;
+}
+
+function getSelectedNewWords() {
+  const data = getCurrentLessonData();
+  if (!data || !Array.isArray(data.words)) return [];
+  return data.words.filter(word => word.round === 0 && AppState.selectedWords.has(word.text));
+}
+
+function getDueReviewBreakdown() {
+  const dueWords = Array.isArray(AppState.dueReviewWords) ? AppState.dueReviewWords : [];
+  return {
+    total: dueWords.length,
+    r1: dueWords.filter(word => word.round === 1).length,
+    r2Plus: dueWords.filter(word => word.round >= 2).length
+  };
+}
+
+function updateSelectionSummary() {
+  const hintEl = document.getElementById('limit-hint');
+  if (!hintEl) return;
+  const newSelectedCount = getSelectedNewWords().length;
+  const dueBreakdown = getDueReviewBreakdown();
+  const totalPlanned = newSelectedCount + dueBreakdown.total;
+  hintEl.textContent = `已选新词 ${newSelectedCount} 词 / 到期复习 ${dueBreakdown.total} 词（R1 ${dueBreakdown.r1} / R2+ ${dueBreakdown.r2Plus}）/ 预计今日 ${totalPlanned} 词`;
+}
+
+function renderDebtModeOption() {
+  const container = document.getElementById('debt-mode-container');
+  if (!container) return;
+
+  const newSelectedCount = getSelectedNewWords().length;
+  const dueBreakdown = getDueReviewBreakdown();
+  const totalPlanned = newSelectedCount + dueBreakdown.total;
+
+  if (totalPlanned <= WORD_LIMIT || dueBreakdown.total === 0) {
+    container.innerHTML = '';
+    AppState.debtMode = false;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="debt-mode-card">
+      <label class="debt-mode-label">
+        <input type="checkbox" class="debt-mode-checkbox" ${AppState.debtMode ? 'checked' : ''} onchange="toggleDebtMode(this.checked)">
+        <span class="debt-mode-title">🧹 清债模式</span>
+      </label>
+      <p class="debt-mode-text">当前新词 + 到期复习共 ${totalPlanned} 个，已超过今日建议上限 ${WORD_LIMIT} 个。</p>
+      <p class="debt-mode-text">勾选后：默认听写所有到期复习词语。</p>
+      <p class="debt-mode-text">不勾选：优先安排错误次数更多的到期复习词，其余到期复习词顺延到明天。</p>
+    </div>
+  `;
+}
+
+function refreshSelectionUi() {
+  updateSelectionSummary();
+  renderDebtModeOption();
+}
+
+function toggleDebtMode(checked) {
+  AppState.debtMode = Boolean(checked);
+  renderDebtModeOption();
+}
+
+function prioritizeDueReviewWords(words) {
+  return [...words].sort((a, b) => {
+    const wrongDiff = (b.wrongCount || 0) - (a.wrongCount || 0);
+    if (wrongDiff !== 0) return wrongDiff;
+    const roundDiff = (a.round || 0) - (b.round || 0);
+    if (roundDiff !== 0) return roundDiff;
+    const dateA = a.nextReview || '';
+    const dateB = b.nextReview || '';
+    if (dateA !== dateB) return dateA.localeCompare(dateB);
+    return String(a.text || '').localeCompare(String(b.text || ''), 'zh-Hans-CN');
+  });
+}
+
+function proportionalSelectDueWords(words, limit) {
+  if (limit <= 0 || words.length === 0) {
+    return { selected: [], postponed: words.map(word => ({ ...word, nextReview: getTomorrowDate() })) };
+  }
+
+  if (words.length <= limit) {
+    return { selected: [...words], postponed: [] };
+  }
+
+  const buckets = [
+    { key: 'r1', words: prioritizeDueReviewWords(words.filter(word => word.round === 1)) },
+    { key: 'r2plus', words: prioritizeDueReviewWords(words.filter(word => word.round >= 2)) }
+  ].filter(bucket => bucket.words.length > 0);
+
+  const totalCount = buckets.reduce((sum, bucket) => sum + bucket.words.length, 0);
+  let assigned = 0;
+
+  buckets.forEach(bucket => {
+    const exact = (bucket.words.length / totalCount) * limit;
+    bucket.baseCount = Math.min(bucket.words.length, Math.floor(exact));
+    bucket.remainder = exact - bucket.baseCount;
+    assigned += bucket.baseCount;
+  });
+
+  let remainingSlots = Math.max(0, limit - assigned);
+  while (remainingSlots > 0) {
+    const candidate = buckets
+      .filter(bucket => bucket.baseCount < bucket.words.length)
+      .sort((a, b) => {
+        if (b.remainder !== a.remainder) return b.remainder - a.remainder;
+        return b.words.length - a.words.length;
+      })[0];
+
+    if (!candidate) break;
+    candidate.baseCount += 1;
+    candidate.remainder = 0;
+    remainingSlots--;
+  }
+
+  const selected = [];
+  const postponed = [];
+
+  buckets.forEach(bucket => {
+    selected.push(...bucket.words.slice(0, bucket.baseCount));
+    postponed.push(...bucket.words.slice(bucket.baseCount).map(word => ({
+      ...word,
+      nextReview: getTomorrowDate()
+    })));
+  });
+
+  return {
+    selected: prioritizeDueReviewWords(selected),
+    postponed
+  };
 }
 
 function showLoading() {
@@ -985,6 +1251,8 @@ async function selectLesson(lessonId) {
   AppState.originalDictationHtml = null;
   AppState.currentLesson = lessonId;
   AppState.selectedWords.clear();
+  AppState.dueReviewWords = [];
+  AppState.debtMode = false;
 
   const subject = AppState.currentSubject;
   let data = await loadWordData(subject, lessonId);
@@ -1028,13 +1296,11 @@ function renderWordSelectionPage(data, title, isChinese, lessonId) {
     `;
   }).join('');
 
-  const selectedCount = AppState.selectedWords.size;
-  const R1_SOFT_CAP = 30;
-
   renderContent(`
     <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
     <h2 class="page-title">${title}</h2>
-    <p id="limit-hint" class="limit-hint">已选 ${selectedCount} 词 / R1 到期 0 词 / 新词+R1 ≤ ${R1_SOFT_CAP}</p>
+    <p id="limit-hint" class="limit-hint">已选新词 0 词 / 到期复习 0 词 / 预计今日 0 词</p>
+    <div id="debt-mode-container"></div>
     <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
     <div class="word-list">${newWordsHtml}</div>
     <div id="due-review-container"></div>
@@ -1048,23 +1314,19 @@ function renderWordSelectionPage(data, title, isChinese, lessonId) {
 
 async function loadAndRenderDueReviewWords(subject, isChinese) {
   const dueReviewWords = await getAllDueReviewWords(subject);
+  AppState.dueReviewWords = dueReviewWords;
   const r1DueWords = dueReviewWords.filter(w => w.round === 1);
   const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2);
 
-  if (dueReviewWords.length === 0) return;
-
-  r1DueWords.forEach(word => AppState.selectedWords.add(word.text));
-
-  const selectedCount = AppState.selectedWords.size;
-  const R1_SOFT_CAP = 30;
-
-  const hintEl = document.getElementById('limit-hint');
-  if (hintEl) {
-    hintEl.textContent = `已选 ${selectedCount} 词 / R1 到期 ${r1DueWords.length} 词 / 新词+R1 ≤ ${R1_SOFT_CAP}`;
-  }
+  refreshSelectionUi();
 
   const container = document.getElementById('due-review-container');
   if (!container) return;
+
+  if (dueReviewWords.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
 
   let html = '';
 
@@ -1092,13 +1354,10 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
         <h3 class="section-title review">🔄 到期复习-R2+（建议复习）</h3>
         <div class="word-list review-list">
           ${r2PlusDueWords.map(word => {
-            const isSelected = AppState.selectedWords.has(word.text);
             const encodedWordText = encodeURIComponent(word.text);
             return `
-              <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(word.lessonId)}" data-subject="${encodeURIComponent(word.subject)}">
-                <input type="checkbox" class="word-checkbox"
-                  onchange="toggleWordSelection(decodeURIComponent('${encodedWordText}'))"
-                  ${isSelected ? 'checked' : ''}>
+              <label class="word-item disabled-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(word.lessonId)}" data-subject="${encodeURIComponent(word.subject)}">
+                <input type="checkbox" class="word-checkbox" checked disabled>
                 <span class="word-text">${escapeHtml(word.text)}<span class="review-tag round-${word.round}">R${word.round}</span></span>
                 ${!isChinese ? `<span class="word-extra"><span class="word-phonetic">${word.phonetic ? '/' + escapeHtml(word.phonetic) + '/' : ''}</span><span class="speak-btn" data-word="${encodedWordText}">🔊</span>${word.meaning ? `<span class="word-meaning">${escapeHtml(word.meaning)}</span>` : ''}</span>` : ''}
               </label>
@@ -1118,6 +1377,7 @@ function toggleWordSelection(wordText) {
   } else {
     AppState.selectedWords.add(wordText);
   }
+  refreshSelectionUi();
 }
 
 function selectAllWords() {
@@ -1137,6 +1397,8 @@ function selectAllWords() {
       const wordData = data.words.find(w => w.text === wordText);
       if (wordData && wordData.round === 0) cb.checked = true;
     });
+
+    refreshSelectionUi();
   }
 }
 
@@ -1149,7 +1411,7 @@ async function generateDictationList() {
 
   const manualSelected = [];
   data.words.forEach(word => {
-    if (AppState.selectedWords.has(word.text)) {
+    if (word.round === 0 && AppState.selectedWords.has(word.text)) {
       manualSelected.push({
         ...word,
         subject, lessonId,
@@ -1167,60 +1429,38 @@ async function generateDictationList() {
     }
   }
 
-  const allDueWords = await getAllDueReviewWords(subject);
-  const manualTexts = new Set(manualSelected.map(w => w.text));
-  const autoDueWords = allDueWords.filter(w => !manualTexts.has(w.text));
-
-  const r1DueWords = autoDueWords.filter(w => w.round === 1);
-  const r2PlusDueWords = autoDueWords.filter(w => w.round >= 2);
+  const allDueWords = AppState.dueReviewWords.length > 0 ? [...AppState.dueReviewWords] : await getAllDueReviewWords(subject);
   const manualR0Words = manualSelected.filter(w => w.round === 0);
-  const manualReviewWords = manualSelected.filter(w => w.round >= 1);
+  const finalR0 = manualR0Words.slice(0, WORD_LIMIT);
+  const postponedR0 = manualR0Words.slice(WORD_LIMIT);
+  const remainingSlotsForDue = Math.max(0, WORD_LIMIT - finalR0.length);
 
-  const WORD_LIMIT = 20;
-  const R1_SOFT_CAP = 30;
-  const DAILY_DEBT_LIMIT = 30;
-  const isDebtMode = r1DueWords.length > R1_SOFT_CAP;
+  let finalDueWords = [];
+  let postponedDueWords = [];
 
-  const cappedR1 = r1DueWords.slice(0, R1_SOFT_CAP);
-  const postponedR1 = r1DueWords.slice(R1_SOFT_CAP);
-  const finalR1 = cappedR1;
-
-  const debtSchedule = [];
-  if (isDebtMode && postponedR1.length > 0) {
-    const remaining = postponedR1;
-    let dayOffset = 1;
-    let idx = 0;
-    while (idx < remaining.length) {
-      const batchSize = Math.min(DAILY_DEBT_LIMIT, remaining.length - idx);
-      for (let i = 0; i < batchSize; i++) {
-        const word = remaining[idx + i];
-        const nextDate = new Date();
-        nextDate.setDate(nextDate.getDate() + dayOffset);
-        debtSchedule.push({ ...word, nextReview: getLocalDate(nextDate) });
-      }
-      idx += batchSize;
-      dayOffset++;
-    }
+  if (AppState.debtMode) {
+    finalDueWords = allDueWords;
+  } else {
+    const proportionalResult = proportionalSelectDueWords(allDueWords, remainingSlotsForDue);
+    finalDueWords = proportionalResult.selected;
+    postponedDueWords = proportionalResult.postponed;
   }
 
-  const remainingSlotsForR0 = Math.max(0, R1_SOFT_CAP - finalR1.length);
-  const finalR0 = manualR0Words.slice(0, remainingSlotsForR0);
-  const postponedR0 = manualR0Words.slice(remainingSlotsForR0);
-  const slotsAfterR0 = Math.max(0, remainingSlotsForR0 - finalR0.length);
-  const finalManualReview = manualReviewWords.slice(0, slotsAfterR0);
-  const postponedManualReview = manualReviewWords.slice(slotsAfterR0);
-  const slotsAfterManualReview = Math.max(0, slotsAfterR0 - finalManualReview.length);
-  // R2+ 词不限制数量，全部加入听写清单
-  const finalR2Plus = r2PlusDueWords;
-  const postponedR2Plus = [];
-  const postponedWords = [...postponedR0, ...postponedManualReview, ...postponedR2Plus];
-
-  if (isDebtMode && debtSchedule.length > 0) {
-    saveProgress(debtSchedule.map(w => ({
-      text: w.text, lessonId: w.lessonId, subject: w.subject,
-      round: 1, nextReview: w.nextReview, wrongCount: w.wrongCount || 0
+  if (postponedDueWords.length > 0) {
+    saveProgress(postponedDueWords.map(word => ({
+      text: word.text,
+      lessonId: word.lessonId,
+      subject: word.subject,
+      round: word.round,
+      nextReview: word.nextReview,
+      wrongCount: word.wrongCount || 0
     })));
   }
+
+  const finalR1 = finalDueWords.filter(word => word.round === 1);
+  const finalR2Plus = finalDueWords.filter(word => word.round >= 2);
+  const postponedWords = [...postponedR0, ...postponedDueWords];
+  const postponedR1Count = postponedDueWords.filter(word => word.round === 1).length;
 
   const formatWordExtra = (w) => {
     if (w.subject === 'english') {
@@ -1247,7 +1487,7 @@ async function generateDictationList() {
   }
 
   if (finalR1.length > 0) {
-    const r1CappedNote = postponedR1.length > 0 ? `（含 ${finalR1.length}/${finalR1.length + postponedR1.length} 个，其余延期）` : '';
+    const r1CappedNote = postponedR1Count > 0 ? `（含 ${finalR1.length}/${finalR1.length + postponedR1Count} 个，其余延期）` : '';
     resultHtml += `
       <div class="dictation-section">
         <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})${r1CappedNote}</h3>
@@ -1258,13 +1498,12 @@ async function generateDictationList() {
     `;
   }
 
-  const allReviewWords = [...finalManualReview, ...finalR2Plus];
-  if (allReviewWords.length > 0) {
+  if (finalR2Plus.length > 0) {
     resultHtml += `
       <div class="dictation-section">
-        <h3 class="section-title review">🔄 到期复习-R2+ (${allReviewWords.length})</h3>
+        <h3 class="section-title review">🔄 到期复习-R2+ (${finalR2Plus.length})</h3>
         <div class="dictation-words">
-          ${allReviewWords.map(w => {
+          ${finalR2Plus.map(w => {
             const roundTag = w.round >= 5 ? '✅' : `R${w.round}`;
             return `<span class="dictation-word review" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(w.lessonId || lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)} <small>${roundTag}</small></span>`;
           }).join('')}
@@ -1275,22 +1514,24 @@ async function generateDictationList() {
 
   resultHtml += '</div>';
 
-  if (isDebtMode) {
-    const days = debtSchedule.length > 0 ? Math.ceil(debtSchedule.length / DAILY_DEBT_LIMIT) : 0;
+  if (AppState.debtMode && allDueWords.length > 0) {
     resultHtml += `
       <div class="postponed-notice debt-mode">
-        🧹 <strong>清债模式</strong>：${postponedR1.length} 个 R1 词已分摊到未来 ${days} 天（每天最多 ${DAILY_DEBT_LIMIT} 个）<br>
-        <small>明天到期: ${debtSchedule.filter(w => w.nextReview === getTomorrowDate()).length} 个</small>
+        🧹 <strong>清债模式</strong>：今日已纳入全部 ${allDueWords.length} 个到期复习词语。
       </div>
     `;
   }
 
-  if (postponedWords.length > 0) {
-    resultHtml += `<div class="postponed-notice">⏸️ 延期词语: ${postponedWords.length} 个（明天再复习）</div>`;
+  if (!AppState.debtMode && postponedDueWords.length > 0) {
+    resultHtml += `<div class="postponed-notice">⏸️ 已优先安排错误次数更多的到期复习词，另有 ${postponedDueWords.length} 个到期复习词顺延到明天。</div>`;
   }
 
-  const totalIncluded = finalR0.length + finalR1.length + allReviewWords.length;
-  resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词（${postponedWords.length} 个延期到明天）</p>`;
+  if (postponedR0.length > 0) {
+    resultHtml += `<div class="postponed-notice">📝 已选新词中有 ${postponedR0.length} 个未纳入今日清单，请明天继续听写。</div>`;
+  }
+
+  const totalIncluded = finalR0.length + finalR1.length + finalR2Plus.length;
+  resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词（${postponedWords.length} 个未纳入今日清单）</p>`;
   resultHtml += `
     <div class="action-bar grading-action-bar">
       <button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">📝 听写完毕</button>
@@ -1302,7 +1543,12 @@ async function generateDictationList() {
   AppState.currentDictationList = [];
   finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId, round: w.round || 0, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
   finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
-  allReviewWords.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
+  finalR2Plus.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
+
+  const resultEl = document.getElementById('dictation-result');
+  if (resultEl) {
+    window.setTimeout(() => scrollToElementInView(resultEl), 60);
+  }
 }
 
 function goBack() {
@@ -1430,6 +1676,8 @@ function startDictationGrading() {
   );
 
   resultEl.innerHTML = gradingNotice + html;
+  const finishBtn = document.getElementById('btn-finish-grading');
+  window.setTimeout(() => scrollToElementInView(finishBtn || resultEl), 60);
 }
 
 function cancelDictationGrading() {
@@ -2133,8 +2381,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   renderDictationPage();
-  mergeGitHubProgress().then(() => { renderDictationPage(); updateSyncIndicator(); });
-  startBackgroundSync();
+  updateSyncIndicator();
+  if (isGitHubConfigured) {
+    mergeGitHubProgress().then(() => { renderDictationPage(); updateSyncIndicator(); });
+    startBackgroundSync();
+  } else {
+    loadLocalDebugProgress().then(() => {
+      renderDictationPage();
+      updateSyncIndicator();
+    });
+  }
 });
 
 /**
@@ -2143,6 +2399,6 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const syncEl = document.getElementById('sync-status');
   if (syncEl) {
-    syncEl.title = 'GitHub 同步状态';
+    syncEl.title = isGitHubConfigured ? 'GitHub 同步状态' : '本地调试模式：不与 GitHub 同步';
   }
 });

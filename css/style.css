@@ -1293,6 +1293,43 @@ body {
   color: #1890ff;
 }
 
+.debt-mode-card {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+  border-radius: 12px;
+}
+
+.debt-mode-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ad4e00;
+  cursor: pointer;
+}
+
+.debt-mode-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #fa8c16;
+  cursor: pointer;
+}
+
+.debt-mode-title {
+  color: #ad4e00;
+}
+
+.debt-mode-text {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #8c4a00;
+}
+
 /* 延期提示 */
 .postponed-notice {
   background: #fff7e6;
