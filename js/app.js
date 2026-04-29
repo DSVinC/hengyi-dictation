@@ -1633,6 +1633,22 @@ function goBackToLessons() {
 // 批改反馈闭环
 // ============================================
 
+function renderGradingCheckboxItem(item, className = '') {
+  const trimmedWordText = String(item?.text || '').trim();
+  const lessonId = String(item?.lessonId || '');
+  const round = Number(item?.round || 0);
+  const subject = String(item?.subject || '');
+  const phonetic = String(item?.phonetic || '');
+  const meaning = String(item?.meaning || '');
+  const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
+  const speakHtml = (subject === 'english' && trimmedWordText)
+    ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>`
+    : '';
+  const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
+
+  return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
+}
+
 function startDictationGrading() {
   if (AppState.isGrading) return;
   AppState.isGrading = true;
@@ -1656,24 +1672,27 @@ function startDictationGrading() {
     </div>
   `;
 
-  html = html.replace(
-    /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)" data-lesson="([^"]*)" data-subject="([^"]*)">([^<]+?)\s*(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
-    function(match, className, meaningEncoded, lessonIdEncoded, subjectEncoded, wordText, extraHtml) {
-      const meaning = decodeURIComponent(meaningEncoded);
-      const trimmedWordText = wordText.trim();
-      // 用三元组查找，避免同词面跨课串扰
-      const item = AppState.currentDictationList.find(w => w.subject === subjectEncoded && w.lessonId === lessonIdEncoded && w.text === trimmedWordText);
-      const lessonId = lessonIdEncoded;
-      const round = item ? item.round : 0;
-      const subject = subjectEncoded;
-      // 直接用 item.phonetic 而非从 HTML 正则提取，修复英语重听丢失音标
-      const phonetic = item ? (item.phonetic || '') : '';
-      const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
-      const speakHtml = (subject === 'english' && trimmedWordText) ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>` : '';
-      const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
-      return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
-    }
-  );
+  if (AppState.retryWordsMode) {
+    html = AppState.currentDictationList.map((item) => renderGradingCheckboxItem(item, 'retry-word')).join('');
+  } else {
+    html = html.replace(
+      /<span class="dictation-word ([^"]*)" data-meaning="([^"]*)" data-lesson="([^"]*)" data-subject="([^"]*)">([^<]+?)\s*(<span class="word-extra">[\s\S]*?<\/span>)?(?:\s*<small>[^<]*<\/small>)?<\/span>/g,
+      function(match, className, meaningEncoded, lessonIdEncoded, subjectEncoded, wordText, extraHtml) {
+        const meaning = decodeURIComponent(meaningEncoded);
+        const trimmedWordText = wordText.trim();
+        // 用三元组查找，避免同词面跨课串扰
+        const item = AppState.currentDictationList.find(w => w.subject === subjectEncoded && w.lessonId === lessonIdEncoded && w.text === trimmedWordText);
+        return renderGradingCheckboxItem({
+          text: trimmedWordText,
+          lessonId: lessonIdEncoded,
+          subject: subjectEncoded,
+          round: item ? item.round : 0,
+          phonetic: item ? (item.phonetic || '') : '',
+          meaning,
+        }, className);
+      }
+    );
+  }
 
   resultEl.innerHTML = gradingNotice + html;
   const finishBtn = document.getElementById('btn-finish-grading');
