@@ -792,6 +792,70 @@ function prioritizeDueReviewWords(words) {
   });
 }
 
+function compareDueWordPriority(a, b) {
+  const wrongDiff = (b.wrongCount || 0) - (a.wrongCount || 0);
+  if (wrongDiff !== 0) return wrongDiff;
+  const roundDiff = (a.round || 0) - (b.round || 0);
+  if (roundDiff !== 0) return roundDiff;
+  const dateA = a.nextReview || '';
+  const dateB = b.nextReview || '';
+  if (dateA !== dateB) return dateA.localeCompare(dateB);
+  return String(a.text || '').localeCompare(String(b.text || ''), 'zh-Hans-CN');
+}
+
+function getWordSourceEntries(word) {
+  if (Array.isArray(word.sourceEntries) && word.sourceEntries.length > 0) {
+    return word.sourceEntries.map(source => ({
+      lessonId: source.lessonId,
+      lessonName: source.lessonName || '',
+      round: source.round || 0,
+      nextReview: source.nextReview || null,
+      wrongCount: source.wrongCount || 0
+    }));
+  }
+
+  return [{
+    lessonId: word.lessonId,
+    lessonName: word.lessonName || '',
+    round: word.round || 0,
+    nextReview: word.nextReview || null,
+    wrongCount: word.wrongCount || 0
+  }];
+}
+
+function mergeDuplicateDueReviewWords(words) {
+  const merged = new Map();
+
+  words.forEach(word => {
+    const key = `${word.subject}|${word.text}`;
+    const sourceEntries = getWordSourceEntries(word);
+    const normalized = { ...word, sourceEntries };
+    const existing = merged.get(key);
+
+    if (!existing) {
+      merged.set(key, normalized);
+      return;
+    }
+
+    const combinedSources = [...existing.sourceEntries];
+    sourceEntries.forEach(source => {
+      const alreadyExists = combinedSources.some(item => item.lessonId === source.lessonId);
+      if (!alreadyExists) combinedSources.push(source);
+    });
+
+    const preferred = compareDueWordPriority(normalized, existing) < 0 ? normalized : existing;
+    merged.set(key, {
+      ...preferred,
+      round: Math.min(existing.round || 0, normalized.round || 0),
+      nextReview: [existing.nextReview, normalized.nextReview].filter(Boolean).sort()[0] || null,
+      wrongCount: Math.max(existing.wrongCount || 0, normalized.wrongCount || 0),
+      sourceEntries: combinedSources
+    });
+  });
+
+  return prioritizeDueReviewWords(Array.from(merged.values()));
+}
+
 function proportionalSelectDueWords(words, limit) {
   if (limit <= 0 || words.length === 0) {
     return { selected: [], postponed: words.map(word => ({ ...word, nextReview: getTomorrowDate() })) };
@@ -972,13 +1036,19 @@ async function getAllDueReviewWords(subject) {
             ...word,
             subject: 'custom',
             lessonId: 'CUSTOM',
-            lessonName: '自定义词语'
+            lessonName: '自定义词语',
+            sourceEntries: [{
+              lessonId: 'CUSTOM',
+              lessonName: '自定义词语',
+              round: word.round || 0,
+              nextReview: word.nextReview || null,
+              wrongCount: word.wrongCount || 0
+            }]
           });
         }
       });
     }
-    dueWords.sort((a, b) => a.round - b.round);
-    return dueWords;
+    return mergeDuplicateDueReviewWords(dueWords);
   }
 
   const isChinese = subject === 'chinese';
@@ -1000,15 +1070,21 @@ async function getAllDueReviewWords(subject) {
             ...word,
             subject: subject,
             lessonId: item.id,
-            lessonName: lessonName
+            lessonName: lessonName,
+            sourceEntries: [{
+              lessonId: item.id,
+              lessonName: lessonName,
+              round: word.round || 0,
+              nextReview: word.nextReview || null,
+              wrongCount: word.wrongCount || 0
+            }]
           });
         }
       });
     }
   }
 
-  dueWords.sort((a, b) => a.round - b.round);
-  return dueWords;
+  return mergeDuplicateDueReviewWords(dueWords);
 }
 
 // ============================================
@@ -1447,14 +1523,16 @@ async function generateDictationList() {
   }
 
   if (postponedDueWords.length > 0) {
-    saveProgress(postponedDueWords.map(word => ({
-      text: word.text,
-      lessonId: word.lessonId,
-      subject: word.subject,
-      round: word.round,
-      nextReview: word.nextReview,
-      wrongCount: word.wrongCount || 0
-    })));
+    saveProgress(postponedDueWords.flatMap(word =>
+      getWordSourceEntries(word).map(source => ({
+        text: word.text,
+        lessonId: source.lessonId,
+        subject: word.subject,
+        round: source.round,
+        nextReview: word.nextReview,
+        wrongCount: source.wrongCount || 0
+      }))
+    ));
   }
 
   const finalR1 = finalDueWords.filter(word => word.round === 1);
@@ -1541,9 +1619,39 @@ async function generateDictationList() {
   document.getElementById('dictation-result').innerHTML = resultHtml;
 
   AppState.currentDictationList = [];
-  finalR0.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId, round: w.round || 0, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
-  finalR1.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
-  finalR2Plus.forEach(w => AppState.currentDictationList.push({ text: w.text, lessonId: w.lessonId || lessonId, round: w.round || 1, subject, meaning: w.meaning || '', phonetic: w.phonetic || '' }));
+  finalR0.forEach(w => AppState.currentDictationList.push({
+    text: w.text,
+    lessonId,
+    round: w.round || 0,
+    subject,
+    meaning: w.meaning || '',
+    phonetic: w.phonetic || '',
+    sourceEntries: [{
+      lessonId,
+      lessonName: '',
+      round: w.round || 0,
+      nextReview: w.nextReview || null,
+      wrongCount: w.wrongCount || 0
+    }]
+  }));
+  finalR1.forEach(w => AppState.currentDictationList.push({
+    text: w.text,
+    lessonId: w.lessonId || lessonId,
+    round: w.round || 1,
+    subject,
+    meaning: w.meaning || '',
+    phonetic: w.phonetic || '',
+    sourceEntries: getWordSourceEntries(w)
+  }));
+  finalR2Plus.forEach(w => AppState.currentDictationList.push({
+    text: w.text,
+    lessonId: w.lessonId || lessonId,
+    round: w.round || 1,
+    subject,
+    meaning: w.meaning || '',
+    phonetic: w.phonetic || '',
+    sourceEntries: getWordSourceEntries(w)
+  }));
 
   const resultEl = document.getElementById('dictation-result');
   if (resultEl) {
@@ -1767,13 +1875,20 @@ function finishDictationGrading() {
     const nextReview = isWrong
       ? getLocalDate()
       : calculateStaggeredNextReview(newRound, idx, totalWords);
-    const existing = findWordProgress(item.subject, item.lessonId, item.text);
-    const existingWrongCount = existing ? (existing.wrongCount || 0) : 0;
+    const sourceEntries = getWordSourceEntries(item);
 
-    wordUpdates.push({
-      text: item.text, lessonId: item.lessonId, subject: item.subject,
-      round: newRound, nextReview,
-      wrongCount: isWrong ? existingWrongCount + 1 : existingWrongCount
+    sourceEntries.forEach(source => {
+      const existing = findWordProgress(item.subject, source.lessonId, item.text);
+      const existingWrongCount = existing ? (existing.wrongCount || 0) : (source.wrongCount || 0);
+
+      wordUpdates.push({
+        text: item.text,
+        lessonId: source.lessonId,
+        subject: item.subject,
+        round: newRound,
+        nextReview,
+        wrongCount: isWrong ? existingWrongCount + 1 : existingWrongCount
+      });
     });
   });
 
