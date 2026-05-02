@@ -42,7 +42,9 @@ const AppState = {
   debtMode: false,            // 清债模式
   currentAudio: null,         // 当前播放的固定音频
   englishAudioManifest: null, // 英语固定音频清单
-  englishAudioManifestPromise: null
+  englishAudioManifestPromise: null,
+  audioUnlockAttempted: false,
+  audioFailureNotified: false
 };
 
 // ============================================
@@ -88,6 +90,25 @@ function getEnglishAudioFilename(word) {
   return encodeURIComponent(word).replace(/%/g, '_') + '.mp3';
 }
 
+function warmUpAudioPlayback() {
+  if (AppState.audioUnlockAttempted) return;
+  AppState.audioUnlockAttempted = true;
+
+  try {
+    const audio = new Audio();
+    audio.preload = 'none';
+    audio.muted = true;
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
+    audio.pause();
+    audio.currentTime = 0;
+  } catch (error) {
+    console.warn('[Audio] 预热播放能力失败:', error);
+  }
+}
+
 async function loadEnglishAudioManifest() {
   if (AppState.englishAudioManifest) return AppState.englishAudioManifest;
   if (AppState.englishAudioManifestPromise) return AppState.englishAudioManifestPromise;
@@ -123,16 +144,45 @@ function stopCurrentAudio() {
   AppState.currentAudio = null;
 }
 
+function notifyAudioPlaybackFailure() {
+  if (AppState.audioFailureNotified) return;
+  AppState.audioFailureNotified = true;
+  showError('当前浏览器限制了声音播放。建议改用 Chrome 或 Safari，或刷新后先点一次单词喇叭。');
+  setTimeout(() => {
+    AppState.audioFailureNotified = false;
+  }, 4000);
+}
+
+function playSpeechSynthesis(word, isChinese) {
+  if (!('speechSynthesis' in window)) return false;
+
+  try {
+    stopCurrentAudio();
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = isChinese ? 'zh-CN' : 'en-US';
+    u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+    return true;
+  } catch (error) {
+    console.warn('[Audio] speechSynthesis 播放失败:', error);
+    return false;
+  }
+}
+
 async function playFixedEnglishAudio(word) {
-  const manifest = await loadEnglishAudioManifest();
   const filename = getEnglishAudioFilename(word);
-  if (!manifest.files.has(filename)) return false;
+  const manifest = AppState.englishAudioManifest;
+  if (manifest && !manifest.files.has(filename)) return false;
 
   return new Promise(resolve => {
     stopCurrentAudio();
-    window.speechSynthesis.cancel();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
 
     const audio = new Audio(`data/audio/english/${filename}`);
+    audio.preload = 'auto';
     AppState.currentAudio = audio;
 
     const cleanup = () => {
@@ -691,14 +741,8 @@ async function speakWord(word) {
     if (played) return;
   }
 
-  stopCurrentAudio();
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(decodedWord);
-  // 自动检测语言：中文字符用 zh-CN，否则用 en-US
-  u.lang = isChinese ? 'zh-CN' : 'en-US';
-  u.rate = 0.85;
-  window.speechSynthesis.speak(u);
+  if (playSpeechSynthesis(decodedWord, isChinese)) return;
+  notifyAudioPlaybackFailure();
 }
 
 function scrollToElementInView(target, offset = 76) {
@@ -2499,6 +2543,12 @@ function manualAddWordMastered() {
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
   ProgressStore.init();
+  loadEnglishAudioManifest().catch(error => {
+    console.warn('[Audio] 固定音频清单预加载失败:', error);
+  });
+
+  document.addEventListener('pointerdown', warmUpAudioPlayback, { once: true, passive: true });
+  document.addEventListener('touchstart', warmUpAudioPlayback, { once: true, passive: true });
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => switchPage(btn.dataset.page));
