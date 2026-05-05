@@ -174,10 +174,10 @@
     "text": "find",
     "lessonId": "U3",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-11",
     "wrongCount": 3,
-    "updatedAt": "2026-04-24T12:18:32.168Z"
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U3|ruler": {
     "text": "ruler",
@@ -354,10 +354,10 @@
     "text": "much",
     "lessonId": "U2",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-12",
     "wrongCount": 3,
-    "updatedAt": "2026-04-24T12:18:32.168Z"
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U1|where": {
     "text": "where",
@@ -372,19 +372,19 @@
     "text": "from",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-05",
-    "wrongCount": 0,
-    "updatedAt": "2026-04-26T03:49:06.952Z"
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U1|about": {
     "text": "about",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-05",
-    "wrongCount": 2,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U1|today": {
     "text": "today",
@@ -444,10 +444,10 @@
     "text": "boy",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-20",
     "wrongCount": 0,
-    "updatedAt": "2026-04-27T11:45:42.590Z"
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U1|woman": {
     "text": "woman",
@@ -1236,10 +1236,10 @@
     "text": "computer",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-04",
+    "round": 2,
+    "nextReview": "2026-05-06",
     "wrongCount": 7,
-    "updatedAt": "2026-05-04T03:00:36.336Z"
+    "updatedAt": "2026-05-05T02:28:53.006Z"
   },
   "english|U3|learn": {
     "text": "learn",
@@ -1821,10 +1821,10 @@
     "text": "fruit",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
+    "round": 1,
     "nextReview": "2026-05-05",
-    "wrongCount": 4,
-    "updatedAt": "2026-05-04T03:00:36.336Z"
+    "wrongCount": 5,
+    "updatedAt": "2026-05-05T02:28:53.009Z"
   },
   "english|U4|candy": {
     "text": "candy",
