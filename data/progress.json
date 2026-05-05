@@ -165,10 +165,10 @@
     "text": "\u793e\u4f1a",
     "lessonId": "L13",
     "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-05",
+    "round": 3,
+    "nextReview": "2026-05-08",
     "wrongCount": 1,
-    "updatedAt": "2026-05-04T02:54:24.890Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "english|U3|find": {
     "text": "find",
@@ -750,10 +750,10 @@
     "text": "\u65e0\u8bef",
     "lessonId": "L10",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-11",
     "wrongCount": 1,
-    "updatedAt": "2026-05-03T01:50:38.086Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L10|e98086e9a38e": {
     "text": "\u9006\u98ce",
@@ -849,10 +849,10 @@
     "text": "\u808c\u8089",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-21",
     "wrongCount": 0,
-    "updatedAt": "2026-04-27T11:29:34.574Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L09|e694bbe587bb": {
     "text": "\u653b\u51fb",
@@ -867,28 +867,28 @@
     "text": "\u5229\u7528",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-21",
     "wrongCount": 0,
-    "updatedAt": "2026-04-25T11:12:39.435Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L09|e5908ee98080": {
     "text": "\u540e\u9000",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-21",
     "wrongCount": 0,
-    "updatedAt": "2026-04-26T03:26:43.775Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L09|e5858de8b4b9": {
     "text": "\u514d\u8d39",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-22",
     "wrongCount": 0,
-    "updatedAt": "2026-04-26T03:26:43.775Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L09|e5b7aee5bc82": {
     "text": "\u5dee\u5f02",
@@ -1002,19 +1002,19 @@
     "text": "\u7f8e\u89c2",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-12",
     "wrongCount": 0,
-    "updatedAt": "2026-04-22T12:47:41.880Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L14|e4bd93e78eb0": {
     "text": "\u4f53\u73b0",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-13",
     "wrongCount": 0,
-    "updatedAt": "2026-04-22T12:47:41.880Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L14|e6898de5b9b2": {
     "text": "\u624d\u5e72",
@@ -1083,10 +1083,10 @@
     "text": "\u6d4e",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-18",
     "wrongCount": 2,
-    "updatedAt": "2026-05-02T06:36:57.303Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L14|e6a08f": {
     "text": "\u680f",
@@ -1299,28 +1299,28 @@
     "text": "\u53d1\u6101",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 3,
+    "round": 1,
     "nextReview": "2026-05-05",
-    "wrongCount": 0,
-    "updatedAt": "2026-04-24T11:30:10.349Z"
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L16|e6b593e5af86": {
     "text": "\u6d53\u5bc6",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-12",
     "wrongCount": 0,
-    "updatedAt": "2026-04-24T11:30:10.349Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L16|e99da2e58c85": {
     "text": "\u9762\u5305",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-12",
     "wrongCount": 0,
-    "updatedAt": "2026-04-24T11:30:10.349Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L16|e5ae8ce585a8": {
     "text": "\u5b8c\u5168",
@@ -1497,10 +1497,10 @@
     "text": "\u4e01\u96f6",
     "lessonId": "L17",
     "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-05",
+    "round": 3,
+    "nextReview": "2026-05-07",
     "wrongCount": 3,
-    "updatedAt": "2026-05-04T02:54:24.890Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L17|e5a4b1e69c9b": {
     "text": "\u5931\u671b",
@@ -1560,10 +1560,10 @@
     "text": "\u60f3\u5ff5",
     "lessonId": "L17",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-05",
+    "round": 5,
+    "nextReview": "2026-05-19",
     "wrongCount": 2,
-    "updatedAt": "2026-05-02T06:36:57.303Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L17|e9a5ade88f9c": {
     "text": "\u996d\u83dc",
@@ -1641,10 +1641,10 @@
     "text": "\u79d8\u5bc6",
     "lessonId": "L17",
     "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-05",
+    "round": 3,
+    "nextReview": "2026-05-07",
     "wrongCount": 2,
-    "updatedAt": "2026-05-04T02:54:24.890Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L17|e99c87": {
     "text": "\u9707",
@@ -1848,10 +1848,10 @@
     "text": "\u6625\u5149",
     "lessonId": "L02",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-05",
+    "round": 4,
+    "nextReview": "2026-05-11",
     "wrongCount": 0,
-    "updatedAt": "2026-04-29T12:22:00.374Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L02|e581b6e5b094": {
     "text": "\u5076\u5c14",
@@ -1893,10 +1893,10 @@
     "text": "\u878d",
     "lessonId": "L02",
     "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-04",
+    "round": 2,
+    "nextReview": "2026-05-06",
     "wrongCount": 2,
-    "updatedAt": "2026-05-04T02:54:24.890Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L02|e9b8b3": {
     "text": "\u9e33",
