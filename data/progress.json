@@ -1301,8 +1301,8 @@
     "subject": "chinese",
     "round": 1,
     "nextReview": "2026-05-05",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-05T01:18:30.908Z"
+    "wrongCount": 2,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
   },
   "chinese|L16|e6b593e5af86": {
     "text": "\u6d53\u5bc6",
@@ -2077,5 +2077,149 @@
     "nextReview": "2026-05-11",
     "wrongCount": 0,
     "updatedAt": "2026-05-01T02:49:32.256Z"
+  },
+  "chinese|L03|e88db7e88ab1": {
+    "text": "\u8377\u82b1",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e585ace59bad": {
+    "text": "\u516c\u56ed",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e6b885e9a699": {
+    "text": "\u6e05\u9999",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e8b5b6e7b4a7": {
+    "text": "\u8d76\u7d27",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e88db7e58fb6": {
+    "text": "\u8377\u53f6",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e88eb2e893ac": {
+    "text": "\u83b2\u84ec",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e7a0b4e8a382": {
+    "text": "\u7834\u88c2",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-05",
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e5a7bfe58abf": {
+    "text": "\u59ff\u52bf",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e794bbe5aeb6": {
+    "text": "\u753b\u5bb6",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e69cace9a286": {
+    "text": "\u672c\u9886",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-06",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e4ba86e4b88de8b5b7": {
+    "text": "\u4e86\u4e0d\u8d77",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-05",
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e5beaee9a38e": {
+    "text": "\u5fae\u98ce",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-05",
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e5819ce6ada2": {
+    "text": "\u505c\u6b62",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-07",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e68ca8": {
+    "text": "\u6328",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-07",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e88380": {
+    "text": "\u80c0",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-07",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
+  },
+  "chinese|L03|e8aeb0": {
+    "text": "\u8bb0",
+    "lessonId": "L03",
+    "subject": "chinese",
+    "round": 1,
+    "nextReview": "2026-05-05",
+    "wrongCount": 1,
+    "updatedAt": "2026-05-05T01:27:07.713Z"
   }
 }
