@@ -1406,9 +1406,11 @@ function renderWordSelectionPage(data, title, isChinese, lessonId) {
       ? `<span class="word-type">${word.type === 'char' ? '字' : '词'}</span>`
       : '';
     const encodedWordText = encodeURIComponent(word.text);
+    const isChecked = AppState.selectedWords.has(word.text) ? 'checked' : '';
     return `
       <label class="word-item" data-word="${encodedWordText}" data-lesson="${encodeURIComponent(lid)}" data-subject="${encodeURIComponent(subject)}">
         <input type="checkbox" class="word-checkbox"
+          ${isChecked}
           onchange="toggleWordSelection(decodeURIComponent('${encodedWordText}'))">
         <span class="word-text">${escapeHtml(word.text)}</span>
         ${typeHtml}
@@ -1513,7 +1515,7 @@ function selectAllWords() {
 
     document.querySelectorAll('.word-list:not(.review-list) .word-checkbox').forEach(cb => {
       const wordItem = cb.closest('.word-item');
-      const wordText = wordItem.dataset.word;
+      const wordText = decodeWordToken(wordItem?.dataset.word || '');
       const wordData = data.words.find(w => w.text === wordText);
       if (wordData && wordData.round === 0) cb.checked = true;
     });
