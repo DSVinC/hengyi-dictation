@@ -1511,6 +1511,20 @@ body {
   color: #C62828;
 }
 
+/* 正确率显示样式（根据正确率百分比变色） */
+.result-summary .stat.accuracy {
+  font-size: 22px;
+}
+.result-summary .stat.accuracy.accuracy-high {
+  color: #52c41a; /* 正确率 >80% 绿色 */
+}
+.result-summary .stat.accuracy.accuracy-medium {
+  color: #fa8c16; /* 正确率 60-80% 橙色 */
+}
+.result-summary .stat.accuracy.accuracy-low {
+  color: #ff4d4f; /* 正确率 <60% 红色 */
+}
+
 .result-summary p {
   margin: 8px 0;
   font-size: 16px;
@@ -1720,4 +1734,121 @@ body {
 .speak-btn:active {
   transform: scale(0.9);
   background-color: rgba(24, 165, 255, 0.25);
+}
+
+/* ============================================
+   统计页表格样式
+   ============================================ */
+
+.stats-table-wrapper {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-table th {
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.stats-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.stats-table td:first-child {
+  font-weight: 500;
+  color: #666;
+}
+
+.stats-table .rate-high {
+  color: #52c41a;
+  font-weight: 600;
+}
+
+.stats-table .rate-low {
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+/* ============================================
+   掌握词样式
+   ============================================ */
+
+/* 科目选择页的掌握词标签 */
+.mastered-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fffbe6;
+  color: #d48806;
+  border: 1px solid #ffd666;
+  border-radius: 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* 批改模式的掌握词标签 */
+.mastered-badge.grading {
+  margin-left: 4px;
+  margin-right: 8px;
+  padding: 3px 10px;
+  font-size: 11px;
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border-color: #faad14;
+  box-shadow: 0 1px 2px rgba(250, 173, 20, 0.2);
+}
+
+/* 批改模式的掌握词卡片样式 */
+.grading-word-item.mastered-word {
+  background: linear-gradient(135deg, #fffbe6 0%, #fff7e6 100%);
+  border: 1px solid #ffd666;
+  border-left: 3px solid #faad14;
+}
+
+.grading-word-item.mastered-word:hover {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border-color: #faad14;
+}
+
+.grading-word-item.mastered-word .word-text {
+  color: #d48806;
+}
+
+/* 统计页的掌握词数项 */
+.stat-item.mastered-words {
+  background: linear-gradient(135deg, #fffbe6 0%, #fff7e6 100%);
+  border: 1px solid #ffd666;
+}
+
+.stat-item.mastered-words .stat-value {
+  color: #d48806;
+}
+
+/* 科目选择页的课程信息容器 */
+.lesson-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.lesson-item .mastered-badge {
+  margin-left: 4px;
+  flex-shrink: 0;
 }

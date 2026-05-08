@@ -21,7 +21,8 @@ import path from 'node:path';
 const GITHUB_CONFIG = {
   owner: 'DSVinC',
   repo: 'hengyi-dictation',
-  filePath: 'data/progress.json',
+  // progress.json 已排除 — 此设备为测试设备，进度数据不同步到 GitHub
+  filePath: 'data/daily-stats.json', // 每日统计同步到 GitHub
   branch: 'main'
 };
 

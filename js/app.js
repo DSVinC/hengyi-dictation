@@ -1,41 +1,41 @@
 /**
  * 恒一听写系统 - 主逻辑 (v0.8.5)
  *
- * 功能：
- * 1. 三级导航：科目 → 课/单元 → 词勾选
+ * 功能:
+ * 1. 三级导航:科目 → 课/单元 → 词勾选
  * 2. 艾宾浩斯轮次计算
- * 3. 生成听写清单（新课词 + 复习词）
+ * 3. 生成听写清单(新课词 + 复习词)
  *
- * v0.8.4 改动：
+ * v0.8.4 改动:
  * - 修复 P2-5 XSS 防护不完整问题
  * - 全面转义 innerHTML 拼接的用户可控字段
  * - word.text、word.meaning、word.phonetic 使用 escapeHtml
  * - data-word 属性使用 encodeURIComponent
  *
- * v0.6.0 改动：
+ * v0.6.0 改动:
  * - 接入 progress-store.js v2 ASCII 主键 schema
  * - localStorage 读写全面替换为 ProgressStore API
- * - 页面加载自动执行 v1→v2 迁移（保留 v1 数据作为备份）
+ * - 页面加载自动执行 v1→v2 迁移(保留 v1 数据作为备份)
  *
- * v0.5.3 改动：
- * - 移除前端硬编码 GitHub PAT（P0 安全改造）
- * - 同步改为调用 scripts/sync-to-github.mjs（通过 Node.js 脚本执行）
+ * v0.5.3 改动:
+ * - 移除前端硬编码 GitHub PAT(P0 安全改造)
+ * - 同步改为调用 scripts/sync-to-github.mjs(通过 Node.js 脚本执行)
  */
 
 // ============================================
 // 应用状态
 // ============================================
 const AppState = {
-  currentPage: 'dictation',  // 当前页面：dictation, vocabulary, progress
-  currentSubject: null,       // 当前科目：chinese, english
+  currentPage: 'dictation',  // 当前页面:dictation, vocabulary, progress, stats
+  currentSubject: null,       // 当前科目:chinese, english
   currentLesson: null,       // 当前课/单元
   selectedWords: new Set(),   // 已勾选的词语
   lessons: [],                // 语文课列表
   units: [],                  // 英语单元列表
   wordData: {},               // 缓存的词语数据
   isLoading: false,           // 全局加载状态
-  currentDictationList: [],   // 当前听写清单（用于批改）
-  originalDictationHtml: '',  // 原始清单 HTML（用于取消批改）
+  currentDictationList: [],   // 当前听写清单(用于批改)
+  originalDictationHtml: '',  // 原始清单 HTML(用于取消批改)
   reviewWordsPage: 1,         // 复习中的词分页页码
   retryWordsMode: false,      // 重听错词模式
   dueReviewWords: [],         // 当前页面的到期复习词
@@ -54,16 +54,15 @@ const FETCH_TIMEOUT = 10000; // 10秒超时
 const WORD_LIMIT = 30;
 
 // ============================================
-// 艾宾浩斯复习间隔（天）
-// 第0轮: 新学 → 第1轮: 1天后 → 第2轮: 2天后
-// 第3轮: 4天后 → 第4轮: 7天后 → 第5轮: 15天后
+// 艾宾浩斯复习间隔(天)
+// 第0轮→第1轮: 1天后 → 第2轮: 2天后 → 第3轮: 3天后 → 第4轮: 5天后 → 第5轮: 12天后 → 第6轮: 20天后 → 第7轮: 掌握
 // ============================================
-const EBINGHAUS_INTERVALS = [1, 1, 2, 4, 7, 15];
+const EBINGHAUS_INTERVALS = [1, 1, 2, 3, 5, 12, 20];
 
 /**
- * 获取本地日期字符串（YYYY-MM-DD）
- * 使用本地时区而非 UTC，修复 UTC+8 时区在 00:00-07:59
- * 返回前一天日期的 bug（导致错词第二天早上不出现）
+ * 获取本地日期字符串(YYYY-MM-DD)
+ * 使用本地时区而非 UTC,修复 UTC+8 时区在 00:00-07:59
+ * 返回前一天日期的 bug(导致错词第二天早上不出现)
  */
 function getLocalDate(d) {
   if (!d) d = new Date();
@@ -71,7 +70,7 @@ function getLocalDate(d) {
 }
 
 // ============================================
-// HTML 转义（防 XSS）
+// HTML 转义(防 XSS)
 // ============================================
 function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -147,7 +146,7 @@ function stopCurrentAudio() {
 function notifyAudioPlaybackFailure() {
   if (AppState.audioFailureNotified) return;
   AppState.audioFailureNotified = true;
-  showError('当前浏览器限制了声音播放。建议改用 Chrome 或 Safari，或刷新后先点一次单词喇叭。');
+  showError('当前浏览器限制了声音播放。建议改用 Chrome 或 Safari,或刷新后先点一次单词喇叭。');
   setTimeout(() => {
     AppState.audioFailureNotified = false;
   }, 4000);
@@ -212,7 +211,7 @@ async function playFixedEnglishAudio(word) {
 }
 
 // ============================================
-// 当日错词重听（localStorage 持久化）
+// 当日错词重听(localStorage 持久化)
 // ============================================
 const RETRY_STORAGE_KEY = 'hengyi-retry-words';
 
@@ -264,7 +263,7 @@ const GITHUB_CONFIG = {
   path: 'data/progress.json',
   branch: 'main',
   apiUrl: 'https://api.github.com',
-  // Token 分段存储，避免被 GitHub secret scanning 误拦截
+  // Token 分段存储,避免被 GitHub secret scanning 误拦截
   _tk1: 'github_pat_11ADDZ7DI0aptxJVT8AmDR_',
   _tk2: 'iUn5bqaIRcuDWr44l1QmAiQ0g8H547JmYH3IRzvEl0dNU3EHFYCFvuoLEdv',
   get token() { return this._tk1 + this._tk2; }
@@ -353,7 +352,7 @@ function loadLocalProgress() {
 }
 
 /**
- * 合并两个进度对象，取每个词条更新时间较新的
+ * 合并两个进度对象,取每个词条更新时间较新的
  * @param {object} remote - 远程数据
  * @param {object} local - 本地数据
  * @returns {object} 合并后的数据
@@ -367,13 +366,13 @@ function mergeProgress(remote, local) {
     } else if (localItem.updatedAt >= remoteItem.updatedAt) {
       merged[key] = localItem;
     }
-    // 否则保留远程的（更新）
+    // 否则保留远程的(更新)
   }
   return merged;
 }
 
 /**
- * 清洗进度数据：修复所有被编码损坏的 key 和 text 字段
+ * 清洗进度数据:修复所有被编码损坏的 key 和 text 字段
  */
 function sanitizeProgress(progress) {
   if (!progress) return progress;
@@ -399,7 +398,7 @@ function sanitizeProgress(progress) {
 
 /**
  * 尝试解码被双重/三重 UTF-8 编码损坏的中文字符串
- * 例如: "Ã¥Â®ÂÃ©ÂªÂ" → "实验"
+ * 例如: "Ã¥Â®ÂÃ©ÂaÂ" → "实验"
  */
 function fixDoubleEncoded(str) {
   if (typeof str !== 'string' || !str) return str;
@@ -436,7 +435,7 @@ const SyncState = {
 let syncDebounceTimer = null;
 const SYNC_DEBOUNCE_MS = 2000; // 2秒防抖
 
-// 后台定时刷新（多设备同步）
+// 后台定时刷新(多设备同步)
 let syncRefreshTimer = null;
 const SYNC_REFRESH_MS = 30000; // 30秒刷新远程
 
@@ -536,7 +535,7 @@ async function saveProgressToGitHub(localProgress) {
 }
 
 /**
- * 防抖同步：延迟保存避免频繁请求
+ * 防抖同步:延迟保存避免频繁请求
  */
 function debouncedSyncToGitHub() {
   if (!isGitHubConfigured) return;
@@ -556,7 +555,7 @@ function debouncedSyncToGitHub() {
 }
 
 /**
- * 立即同步（用于用户手动触发）
+ * 立即同步(用于用户手动触发)
  */
 async function forceSyncToGitHub() {
   if (!isGitHubConfigured) return false;
@@ -572,13 +571,13 @@ async function forceSyncToGitHub() {
 }
 
 /**
- * 合并 GitHub 进度到 v2 存储（页面加载时调用）
+ * 合并 GitHub 进度到 v2 存储(页面加载时调用)
  */
 async function mergeGitHubProgress() {
   try {
     const remoteProgress = await loadProgressFromGitHub();
     if (!remoteProgress) {
-      console.log('[GitHub Sync] 未找到远程进度，使用本地数据');
+      console.log('[GitHub Sync] 未找到远程进度,使用本地数据');
       return;
     }
 
@@ -605,7 +604,7 @@ async function loadLocalDebugProgress() {
 }
 
 /**
- * 后台刷新：从 GitHub 拉取最新数据并合并到 v2 存储
+ * 后台刷新:从 GitHub 拉取最新数据并合并到 v2 存储
  */
 async function backgroundSyncRefresh() {
   if (!isGitHubConfigured) return;
@@ -644,7 +643,7 @@ function startBackgroundSync() {
       backgroundSyncRefresh();
     }
   });
-  console.log('[GitHub Sync] 后台定时刷新已启动（30秒）');
+  console.log('[GitHub Sync] 后台定时刷新已启动(30秒)');
 }
 
 /**
@@ -662,7 +661,7 @@ function updateSyncIndicator() {
 
   switch (SyncState.status) {
     case 'syncing':
-      el.textContent = '☁️ 同步中…';
+      el.textContent = '☁️ 同步中...';
       el.className = 'sync-status syncing';
       break;
     case 'synced':
@@ -706,7 +705,7 @@ async function fetchWithTimeout(url, options = {}) {
   } catch (error) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
-      throw new Error('请求超时，请检查网络连接后刷新页面');
+      throw new Error('请求超时,请检查网络连接后刷新页面');
     }
     throw error;
   }
@@ -721,7 +720,7 @@ async function parseJsonSafe(response) {
   try {
     return await response.json();
   } catch (error) {
-    throw new Error('数据格式错误，请刷新页面重试');
+    throw new Error('数据格式错误,请刷新页面重试');
   }
 }
 
@@ -729,7 +728,7 @@ async function parseJsonSafe(response) {
  * 显示全局加载状态
  */
 /**
- * 英语优先播放固定音频，缺失时回退 Web Speech API
+ * 英语优先播放固定音频,缺失时回退 Web Speech API
  */
 async function speakWord(word) {
   const decodedWord = decodeWordToken(word);
@@ -783,7 +782,7 @@ function updateSelectionSummary() {
   const newSelectedCount = getSelectedNewWords().length;
   const dueBreakdown = getDueReviewBreakdown();
   const totalPlanned = newSelectedCount + dueBreakdown.total;
-  hintEl.textContent = `已选新词 ${newSelectedCount} 词 / 到期复习 ${dueBreakdown.total} 词（R1 ${dueBreakdown.r1} / R2+ ${dueBreakdown.r2Plus}）/ 预计今日 ${totalPlanned} 词`;
+  hintEl.textContent = `已选新词 ${newSelectedCount} 词 / 到期复习 ${dueBreakdown.total} 词(R1 ${dueBreakdown.r1} / R2+ ${dueBreakdown.r2Plus})/ 预计今日 ${totalPlanned} 词`;
 }
 
 function renderDebtModeOption() {
@@ -806,9 +805,9 @@ function renderDebtModeOption() {
         <input type="checkbox" class="debt-mode-checkbox" ${AppState.debtMode ? 'checked' : ''} onchange="toggleDebtMode(this.checked)">
         <span class="debt-mode-title">🧹 清债模式</span>
       </label>
-      <p class="debt-mode-text">当前新词 + 到期复习共 ${totalPlanned} 个，已超过今日建议上限 ${WORD_LIMIT} 个。</p>
-      <p class="debt-mode-text">勾选后：默认听写所有到期复习词语。</p>
-      <p class="debt-mode-text">不勾选：优先安排错误次数更多的到期复习词，其余到期复习词顺延到明天。</p>
+      <p class="debt-mode-text">当前新词 + 到期复习共 ${totalPlanned} 个,已超过今日建议上限 ${WORD_LIMIT} 个。</p>
+      <p class="debt-mode-text">勾选后:默认听写所有到期复习词语。</p>
+      <p class="debt-mode-text">不勾选:优先安排错误次数更多的到期复习词,其余到期复习词顺延到明天。</p>
     </div>
   `;
 }
@@ -999,11 +998,11 @@ function hideError() {
 
 /**
  * 计算下一次复习日期
- * @param {number} round - 当前轮次 (0-5)
+ * @param {number} round - 当前轮次 (0-6)
  * @returns {string|null} 下次复习日期 (本地日期格式) 或 null
  */
 function calculateNextReview(round) {
-  if (round >= 6) return null; // 第6轮后视为完全掌握
+  if (round >= 7) return null; // 第7轮后视为完全掌握
   const days = EBINGHAUS_INTERVALS[round];
   const nextDate = new Date();
   nextDate.setDate(nextDate.getDate() + days);
@@ -1012,25 +1011,25 @@ function calculateNextReview(round) {
 
 /**
  * 统一 round -> nextReview 的写入规则。
- * R1 代表“已进入今天的复习队列”，不能再额外顺延一天，
- * 否则会与批改错词路径（错词直接今天复习）产生冲突。
+ * R1 代表"已进入今天的复习队列",不能再额外顺延一天,
+ * 否则会与批改错词路径(错词直接今天复习)产生冲突。
  */
 function getNextReviewForRound(round) {
-  if (round >= 6) return null;
+  if (round >= 7) return null;
   if (round <= 0) return getLocalDate();
   if (round === 1) return getLocalDate();
   return calculateNextReview(round);
 }
 
 /**
- * 计算下一次复习日期（带错开逻辑，避免同批词同一天到期堆积）
+ * 计算下一次复习日期(带错开逻辑,避免同批词同一天到期堆积)
  * @param {number} round - 目标轮次
  * @param {number} index - 在同批词中的索引
  * @param {number} totalInBatch - 同批词总数
  * @returns {string|null}
  */
 function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
-  if (round >= 6) return null;
+  if (round >= 7) return null;
   const baseDays = EBINGHAUS_INTERVALS[round];
   const spread = Math.max(1, Math.floor(totalInBatch / 6));
   const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread * 2) - spread : 0;
@@ -1041,7 +1040,7 @@ function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
 }
 
 /**
- * 获取明天日期字符串（本地时区）
+ * 获取明天日期字符串(本地时区)
  */
 function getTomorrowDate() {
   const d = new Date();
@@ -1050,7 +1049,7 @@ function getTomorrowDate() {
 }
 
 /**
- * 判断词语是否需要复习（已到期）
+ * 判断词语是否需要复习(已到期)
  * @param {object} word - 词语对象
  * @returns {boolean}
  */
@@ -1140,13 +1139,13 @@ async function loadChineseLessons() {
     showLoading();
     hideError();
     const response = await fetchWithTimeout('data/chinese/lessons.json');
-    if (!response.ok) throw new Error('加载失败，请刷新页面重试');
+    if (!response.ok) throw new Error('加载失败,请刷新页面重试');
     const data = await parseJsonSafe(response);
     AppState.lessons = data.lessons;
     return data.lessons;
   } catch (error) {
     console.error('加载语文课列表失败:', error);
-    showError(error.message || '加载失败，请刷新页面重试');
+    showError(error.message || '加载失败,请刷新页面重试');
     return [];
   } finally {
     hideLoading();
@@ -1158,13 +1157,13 @@ async function loadEnglishUnits() {
     showLoading();
     hideError();
     const response = await fetchWithTimeout('data/english/units.json');
-    if (!response.ok) throw new Error('加载失败，请刷新页面重试');
+    if (!response.ok) throw new Error('加载失败,请刷新页面重试');
     const data = await parseJsonSafe(response);
     AppState.units = data.units;
     return data.units;
   } catch (error) {
     console.error('加载英语单元列表失败:', error);
-    showError(error.message || '加载失败，请刷新页面重试');
+    showError(error.message || '加载失败,请刷新页面重试');
     return [];
   } finally {
     hideLoading();
@@ -1182,13 +1181,13 @@ async function loadWordData(subject, lessonId, silent = false) {
       ? `data/chinese/${lessonId}.json`
       : `data/english/${lessonId}.json`;
     const response = await fetchWithTimeout(path);
-    if (!response.ok) throw new Error('加载失败，请刷新页面重试');
+    if (!response.ok) throw new Error('加载失败,请刷新页面重试');
     const data = await parseJsonSafe(response);
     AppState.wordData[cacheKey] = data;
     return data;
   } catch (error) {
     console.error(`加载词语数据失败 [${lessonId}]:`, error);
-    if (!silent) showError(error.message || '加载失败，请刷新页面重试');
+    if (!silent) showError(error.message || '加载失败,请刷新页面重试');
     return null;
   } finally {
     if (!silent) hideLoading();
@@ -1263,19 +1262,36 @@ async function selectSubject(subject) {
       <button class="back-btn" onclick="goBack()">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">还没有${itemName}数据，请先添加课程内容</p>
-        <p class="empty-hint">提示：在 data/${subject} 目录下创建 lessons.json 或 units.json</p>
+        <p class="empty-text">还没有${itemName}数据,请先添加课程内容</p>
+        <p class="empty-hint">提示:在 data/${subject} 目录下创建 lessons.json 或 units.json</p>
       </div>
     `);
     return;
   }
 
-  const listHtml = items.map(item => `
+  // 加载每个课程的掌握词统计
+  const itemsWithStats = await Promise.all(items.map(async (item) => {
+    const data = await loadWordData(subject, item.id, true);
+    if (!data || !data.words) return { ...item, masteredCount: 0, newCount: 0, reviewCount: 0 };
+    mergeProgressToWords(data, subject, item.id);
+    return {
+      ...item,
+      masteredCount: data.words.filter(w => w.round >= 7).length,
+      newCount: data.words.filter(w => w.round === 0).length,
+      reviewCount: data.words.filter(w => w.round >= 1 && w.round <= 6).length
+    };
+  }));
+
+  const listHtml = itemsWithStats.map(item => {
+    const masteredBadge = item.masteredCount > 0 ? `<span class="mastered-badge">🏆 ${item.masteredCount}</span>` : '';
+    return `
     <div class="lesson-item" onclick="selectLesson('${item.id}')">
-      <span class="lesson-name">${item.name}</span>
+      <div class="lesson-info">
+        <span class="lesson-name">${item.name}${masteredBadge}</span>
+      </div>
       <span class="lesson-arrow">›</span>
     </div>
-  `).join('');
+  `;}).join('');
 
   renderContent(`
     <button class="back-btn" onclick="goBack()">← 返回</button>
@@ -1312,7 +1328,7 @@ async function loadCustomWords() {
     const response = await fetchWithTimeout('data/custom.json');
     if (!response.ok) return null;
     const data = await parseJsonSafe(response);
-    // 合并 localStorage 中的最新进度（本地优先）
+    // 合并 localStorage 中的最新进度(本地优先)
     const local = localStorage.getItem('hengyi_custom_words');
     if (local) {
       try {
@@ -1324,7 +1340,7 @@ async function loadCustomWords() {
           localData.words.forEach(w => {
             const existing = map.get(w.text);
             if (existing) {
-              // 合并：取较新的进度
+              // 合并:取较新的进度
               if (w.round > existing.round) Object.assign(existing, w);
             } else {
               map.set(w.text, { ...w });
@@ -1344,13 +1360,13 @@ async function loadCustomWords() {
 async function saveCustomWords(data) {
   const cacheKey = 'custom/CUSTOM';
   AppState.wordData[cacheKey] = data;
-  // 保存到 localStorage（静态服务器不支持 PUT）
+  // 保存到 localStorage(静态服务器不支持 PUT)
   try {
     localStorage.setItem('hengyi_custom_words', JSON.stringify(data));
   } catch (e) {
     console.error('保存自定义词语失败:', e);
   }
-  // 同时尝试写入文件（如果服务器支持）
+  // 同时尝试写入文件(如果服务器支持)
   try {
     const response = await fetch('data/custom.json', {
       method: 'PUT',
@@ -1358,11 +1374,11 @@ async function saveCustomWords(data) {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      // PUT 不可用时静默忽略，以 localStorage 为准
-      console.log('data/custom.json PUT 不可用，已保存到 localStorage');
+      // PUT 不可用时静默忽略,以 localStorage 为准
+      console.log('data/custom.json PUT 不可用,已保存到 localStorage');
     }
   } catch {
-    // 静默忽略，以 localStorage 为准
+    // 静默忽略,以 localStorage 为准
   }
 }
 
@@ -1382,7 +1398,7 @@ async function selectLesson(lessonId) {
       <button class="back-btn" onclick="goBackToLessons()">← 返回</button>
       <div class="empty-state">
         <p class="empty-icon">📭</p>
-        <p class="empty-text">还没有词语数据，请先添加词语内容</p>
+        <p class="empty-text">还没有词语数据,请先添加词语内容</p>
       </div>
     `);
     return;
@@ -1423,7 +1439,7 @@ function renderWordSelectionPage(data, title, isChinese, lessonId) {
     <h2 class="page-title">${title}</h2>
     <p id="limit-hint" class="limit-hint">已选新词 0 词 / 到期复习 0 词 / 预计今日 0 词</p>
     <div id="debt-mode-container"></div>
-    <h3 class="section-title new">🆕 新课词语（${currentLessonWords.length}）</h3>
+    <h3 class="section-title new">🆕 新课词语(${currentLessonWords.length})</h3>
     <div class="word-list">${newWordsHtml}</div>
     <div id="due-review-container"></div>
     <div class="action-bar">
@@ -1455,8 +1471,8 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
   if (r1DueWords.length > 0) {
     html += `
       <div class="due-review-section">
-        <h3 class="section-title review-r1">🔴 到期复习-R1（必听写，≤30）</h3>
-        <p class="limit-hint">${r1DueWords.length} 个词已到期，自动加入听写清单</p>
+        <h3 class="section-title review-r1">🔴 到期复习-R1(必听写,≤30)</h3>
+        <p class="limit-hint">${r1DueWords.length} 个词已到期,自动加入听写清单</p>
         <div class="word-list review-list">
           ${r1DueWords.map(word => `
             <label class="word-item disabled-item" data-word="${encodeURIComponent(word.text)}" data-lesson="${encodeURIComponent(word.lessonId)}" data-subject="${encodeURIComponent(word.subject)}">
@@ -1473,7 +1489,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
   if (r2PlusDueWords.length > 0) {
     html += `
       <div class="due-review-section">
-        <h3 class="section-title review">🔄 到期复习-R2+（建议复习）</h3>
+        <h3 class="section-title review">🔄 到期复习-R2+(建议复习)</h3>
         <div class="word-list review-list">
           ${r2PlusDueWords.map(word => {
             const encodedWordText = encodeURIComponent(word.text);
@@ -1583,6 +1599,49 @@ async function generateDictationList() {
 
   const finalR1 = finalDueWords.filter(word => word.round === 1);
   const finalR2Plus = finalDueWords.filter(word => word.round >= 2);
+
+  // 掌握词随机选择(round >= 7)
+  const allMasteredWords = [];
+  const items = isChinese ? AppState.lessons : AppState.units;
+
+  // 先加载所有课程的 wordData(确保掌握词池完整)
+  for (const item of items) {
+    const cacheKey = `${subject}/${item.id}`;
+    if (!AppState.wordData[cacheKey]) {
+      await loadWordData(subject, item.id, true); // silent = true,避免加载提示
+    }
+  }
+
+  // 然后获取所有掌握词
+  for (const item of items) {
+    const cacheKey = `${subject}/${item.id}`;
+    const data = AppState.wordData[cacheKey];
+    if (data && data.words) {
+      // 合并进度到词语数据
+      mergeProgressToWords(data, subject, item.id);
+      const lessonName = isChinese ? data.lessonName : data.unitName;
+      data.words.forEach(word => {
+        if (word.round >= 7) {
+          allMasteredWords.push({
+            ...word,
+            subject,
+            lessonId: item.id,
+            lessonName,
+            type: 'mastered'
+          });
+        }
+      });
+    }
+  }
+
+  // 调用 MasteredPool.selectRandom 获取 3 个随机词
+  const finalMastered = MasteredPool.selectRandom(allMasteredWords, 3);
+
+  // 标记已随机到的词
+  finalMastered.forEach(word => {
+    MasteredPool.markReviewed(word.text);
+  });
+
   const postponedWords = [...postponedR0, ...postponedDueWords];
   const postponedR1Count = postponedDueWords.filter(word => word.round === 1).length;
 
@@ -1611,7 +1670,7 @@ async function generateDictationList() {
   }
 
   if (finalR1.length > 0) {
-    const r1CappedNote = postponedR1Count > 0 ? `（含 ${finalR1.length}/${finalR1.length + postponedR1Count} 个，其余延期）` : '';
+    const r1CappedNote = postponedR1Count > 0 ? `(含 ${finalR1.length}/${finalR1.length + postponedR1Count} 个,其余延期)` : '';
     resultHtml += `
       <div class="dictation-section">
         <h3 class="section-title review-r1">🔴 到期复习-R1 (${finalR1.length})${r1CappedNote}</h3>
@@ -1636,26 +1695,37 @@ async function generateDictationList() {
     `;
   }
 
+  if (finalMastered.length > 0) {
+    resultHtml += `
+      <div class="dictation-section">
+        <h3 class="section-title mastered">✅ 掌握词抽查 (${finalMastered.length})</h3>
+        <div class="dictation-words">
+          ${finalMastered.map(w => `<span class="dictation-word mastered" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(w.lessonId || lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)} <small>✅</small></span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   resultHtml += '</div>';
 
   if (AppState.debtMode && allDueWords.length > 0) {
     resultHtml += `
       <div class="postponed-notice debt-mode">
-        🧹 <strong>清债模式</strong>：今日已纳入全部 ${allDueWords.length} 个到期复习词语。
+        🧹 <strong>清债模式</strong>:今日已纳入全部 ${allDueWords.length} 个到期复习词语。
       </div>
     `;
   }
 
   if (!AppState.debtMode && postponedDueWords.length > 0) {
-    resultHtml += `<div class="postponed-notice">⏸️ 已优先安排错误次数更多的到期复习词，另有 ${postponedDueWords.length} 个到期复习词顺延到明天。</div>`;
+    resultHtml += `<div class="postponed-notice">⏸️ 已优先安排错误次数更多的到期复习词,另有 ${postponedDueWords.length} 个到期复习词顺延到明天。</div>`;
   }
 
   if (postponedR0.length > 0) {
-    resultHtml += `<div class="postponed-notice">📝 已选新词中有 ${postponedR0.length} 个未纳入今日清单，请明天继续听写。</div>`;
+    resultHtml += `<div class="postponed-notice">📝 已选新词中有 ${postponedR0.length} 个未纳入今日清单,请明天继续听写。</div>`;
   }
 
   const totalIncluded = finalR0.length + finalR1.length + finalR2Plus.length;
-  resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词（${postponedWords.length} 个未纳入今日清单）</p>`;
+  resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词(${postponedWords.length} 个未纳入今日清单)</p>`;
   resultHtml += `
     <div class="action-bar grading-action-bar">
       <button class="btn btn-primary btn-lg" id="btn-start-grading" onclick="startDictationGrading()">📝 听写完毕</button>
@@ -1699,6 +1769,17 @@ async function generateDictationList() {
     sourceEntries: getWordSourceEntries(w)
   }));
 
+  finalMastered.forEach(w => AppState.currentDictationList.push({
+    text: w.text,
+    lessonId: w.lessonId || lessonId,
+    round: w.round || 7,
+    subject,
+    meaning: w.meaning || '',
+    phonetic: w.phonetic || '',
+    type: 'mastered',
+    sourceEntries: getWordSourceEntries(w)
+  }));
+
   const resultEl = document.getElementById('dictation-result');
   if (resultEl) {
     window.setTimeout(() => scrollToElementInView(resultEl), 60);
@@ -1727,7 +1808,7 @@ function startRetryDictation() {
   AppState.currentDictationList = retryWords;
   AppState.selectedWords.clear();
 
-  // 渲染重听清单（使用 grading-word-item 卡片结构，与正常听写一致）
+  // 渲染重听清单(使用 grading-word-item 卡片结构,与正常听写一致)
   const wordsHtml = retryWords.map(item => {
     const isChinese = item.subject === 'chinese';
     const wordText = item.text || '';
@@ -1761,7 +1842,7 @@ function startRetryDictation() {
 }
 
 function handleClearRetryWords() {
-  if (!confirm('确定要清除今日错词记录吗？')) return;
+  if (!confirm('确定要清除今日错词记录吗?')) return;
   clearRetryWords();
   renderDictationPage();
 }
@@ -1794,13 +1875,15 @@ function renderGradingCheckboxItem(item, className = '') {
   const subject = String(item?.subject || '');
   const phonetic = String(item?.phonetic || '');
   const meaning = String(item?.meaning || '');
-  const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : '';
+  const isMastered = item?.type === 'mastered' || round >= 7;
+  const phoneticHtml = phonetic ? `<span class="grading-phonetic">/${escapeHtml(phonetic)}/</span>` : ''; 
   const speakHtml = (subject === 'english' && trimmedWordText)
     ? `<span class="speak-btn" data-word="${encodeURIComponent(trimmedWordText)}">🔊</span>`
-    : '';
-  const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : '';
+    : ''; 
+  const meaningHtml = meaning ? `<span class="grading-meaning">${escapeHtml(meaning)}</span>` : ''; 
+  const masteredBadgeHtml = isMastered ? '<span class="mastered-badge grading">🏆 掌握</span>' : ''; 
 
-  return `<label class="grading-word-item ${className}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
+  return `<label class="grading-word-item ${className}${isMastered ? ' mastered-word' : ''}"><input type="checkbox" class="wrong-cb" data-word="${encodeURIComponent(trimmedWordText)}" data-lesson="${lessonId}" data-subject="${subject}" data-round="${round}"><span class="word-text">${escapeHtml(trimmedWordText)}</span>${masteredBadgeHtml}${phoneticHtml}${speakHtml}${meaningHtml}</label>`;
 }
 
 function startDictationGrading() {
@@ -1818,7 +1901,7 @@ function startDictationGrading() {
 
   const gradingNotice = `
     <div class="grading-notice">
-      <p>📌 请在清单中勾选写错的字词（不勾选表示写对）</p>
+      <p>📌 请在清单中勾选写错的字词(不勾选表示写对)</p>
       <div class="grading-action-bar">
         <button class="btn btn-success" id="btn-finish-grading" onclick="confirmFinishGrading()">✅ 错字词勾选完毕</button>
         <button class="btn btn-secondary" id="btn-cancel-grading" onclick="cancelDictationGrading()">取消</button>
@@ -1834,7 +1917,7 @@ function startDictationGrading() {
       function(match, className, meaningEncoded, lessonIdEncoded, subjectEncoded, wordText, extraHtml) {
         const meaning = decodeURIComponent(meaningEncoded);
         const trimmedWordText = wordText.trim();
-        // 用三元组查找，避免同词面跨课串扰
+        // 用三元组查找,避免同词面跨课串扰
         const item = AppState.currentDictationList.find(w => w.subject === subjectEncoded && w.lessonId === lessonIdEncoded && w.text === trimmedWordText);
         return renderGradingCheckboxItem({
           text: trimmedWordText,
@@ -1868,7 +1951,7 @@ function cancelDictationGrading() {
 }
 
 function confirmFinishGrading() {
-  // 移动端修复：显式检查 checked 属性而非依赖 :checked 伪选择器
+  // 移动端修复:显式检查 checked 属性而非依赖 :checked 伪选择器
   // 避免移动端 touch/click 事件与 DOM 更新的竞态条件
   const allCheckboxes = document.querySelectorAll('.wrong-cb');
   const totalCount = allCheckboxes.length;
@@ -1877,7 +1960,7 @@ function confirmFinishGrading() {
     if (cb.checked) wrongCount++;
   });
   const correctCount = totalCount - wrongCount;
-  const msg = `共 ${totalCount} 个词，确认 ${wrongCount} 个写错、${correctCount} 个写对？\n确认后将更新复习轮次。`;
+  const msg = `共 ${totalCount} 个词,确认 ${wrongCount} 个写错、${correctCount} 个写对?\n确认后将更新复习轮次。`;
   if (!confirm(msg)) return;
   finishDictationGrading();
 }
@@ -1887,7 +1970,7 @@ function finishDictationGrading() {
   const cancelBtn = document.getElementById('btn-cancel-grading');
   if (finishBtn) {
     finishBtn.disabled = true;
-    finishBtn.textContent = '⏳ 保存中…';
+    finishBtn.textContent = '⏳ 保存中...';
     finishBtn.style.opacity = '0.5';
   }
   if (cancelBtn) cancelBtn.disabled = true;
@@ -1900,6 +1983,8 @@ function finishDictationGrading() {
 
   let correctCount = 0;
   let wrongCount = 0;
+  let masteredCorrectCount = 0;
+  let masteredTotalCount = 0;
   const totalWords = AppState.currentDictationList.length;
   const isRetryMode = AppState.retryWordsMode;
   const wordUpdates = [];
@@ -1907,17 +1992,31 @@ function finishDictationGrading() {
 
   AppState.currentDictationList.forEach((item, idx) => {
     const isWrong = wrongWords.has(item.subject + '|' + item.lessonId + '|' + item.text);
+    const isMastered = item.type === 'mastered';
+
+    if (isMastered) {
+      masteredTotalCount++;
+    }
 
     if (isWrong) {
       wrongCount++;
       wrongWordsList.push({ ...item });
     } else {
       correctCount++;
+      if (isMastered) {
+        masteredCorrectCount++;
+      }
     }
 
     if (isRetryMode) return;
 
-    const newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
+    // 掌握词特殊处理:答错降级到 R5,答对保持 R7
+    let newRound;
+    if (isMastered) {
+      newRound = isWrong ? 5 : 7;
+    } else {
+      newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
+    }
     const nextReview = isWrong
       ? getLocalDate()
       : calculateStaggeredNextReview(newRound, idx, totalWords);
@@ -1940,12 +2039,14 @@ function finishDictationGrading() {
 
   if (!isRetryMode) {
     saveProgress(wordUpdates);
+    // 记录当日统计数据
+    DailyStats.record(AppState.currentSubject, correctCount, totalWords);
   }
 
   if (wrongWordsList.length > 0) {
     saveRetryWords(wrongWordsList);
   } else {
-    clearRetryWords(); // 全对时清除错词，按钮消失
+    clearRetryWords(); // 全对时清除错词,按钮消失
   }
 
   const earliestNext = isRetryMode
@@ -1955,17 +2056,33 @@ function finishDictationGrading() {
         .sort((a, b) => a.nextReview.localeCompare(b.nextReview))[0];
   const earliestDate = earliestNext ? formatDate(earliestNext.nextReview) : '-';
 
+  // 计算正确率百分比
+  const accuracyPercent = totalWords > 0 ? Math.round((correctCount / totalWords) * 100) : 0;
+  // 根据正确率设置颜色样式(>80% 绿色,60-80% 橙色,<60% 红色)
+  const accuracyColorClass = accuracyPercent > 80 ? 'accuracy-high' : accuracyPercent >= 60 ? 'accuracy-medium' : 'accuracy-low';
+  // 根据正确率档位选择激励话术
+  const encouragementMsg = accuracyPercent === 100 ? '太棒了,全对!💪' :
+                           accuracyPercent >= 80 ? '不错,继续加油!👍' :
+                           accuracyPercent >= 60 ? '还有进步空间,下次会更好!📈' :
+                           '别灰心,多练几次就熟了!🔥';
+
+  // 掌握词正确率统计
+  const masteredAccuracyPercent = masteredTotalCount > 0 ? Math.round((masteredCorrectCount / masteredTotalCount) * 100) : 0;
+  const masteredAccuracyHtml = masteredTotalCount > 0
+    ? `<span class="stat mastered">✅ 掌握词:${masteredAccuracyPercent}%(${masteredCorrectCount}/${masteredTotalCount})</span>`
+    : '';
+
   const summaryTitle = isRetryMode
-    ? (wrongCount === 0 ? '🎉 重听全过关！' : '🔄 重听完成')
-    : '✅ 听写完成！';
+    ? (wrongCount === 0 ? '🎉 重听全过关!' : '🔄 重听完成')
+    : '✅ 听写完成!';
   const summaryExtra = isRetryMode
     ? (wrongCount === 0
-        ? '<p>今日错词全部过关，太棒了！</p><p>本次重听不影响复习轮次。</p>'
-        : '<p>已更新错词列表，可随时再次重听。</p><p>本次重听不影响复习轮次。</p>')
+        ? '<p>今日错词全部过关,太棒了!</p><p>本次重听不影响复习轮次。</p>'
+        : '<p>已更新错词列表,可随时再次重听。</p><p>本次重听不影响复习轮次。</p>')
     : '';
   const nextReviewHtml = isRetryMode
     ? ''
-    : `<p>📅 下次复习：<strong>${earliestDate}</strong></p>`;
+    : `<p>📅 下次复习:<strong>${earliestDate}</strong></p>`;
   const summaryAction = isRetryMode ? 'goBackToLessons()' : 'renderDictationPage()';
   const summaryActionLabel = isRetryMode ? '返回选课' : '返回首页';
 
@@ -1975,6 +2092,9 @@ function finishDictationGrading() {
       <div class="stats">
         <span class="stat correct">✅ ${correctCount} 正确</span>
         <span class="stat wrong">❌ ${wrongCount} 错误</span>
+        <span class="stat accuracy ${accuracyColorClass}">🎯 正确率:${accuracyPercent}%(${correctCount}/${totalWords})</span>
+        ${masteredAccuracyHtml}
+        <span class="stat encouragement">${encouragementMsg}</span>
       </div>
       ${summaryExtra}
       ${nextReviewHtml}
@@ -1989,7 +2109,7 @@ function finishDictationGrading() {
 }
 
 /**
- * 保存进度到 ProgressStore（v2）
+ * 保存进度到 ProgressStore(v2)
  */
 function saveProgress(wordUpdates) {
   ProgressStore.setBatch(wordUpdates);
@@ -1997,14 +2117,14 @@ function saveProgress(wordUpdates) {
 }
 
 /**
- * 查找某个词的进度记录（v2）
+ * 查找某个词的进度记录(v2)
  */
 function findWordProgress(subject, lessonId, text) {
   return ProgressStore.get(subject, lessonId, text);
 }
 
 /**
- * 从 ProgressStore 合并进度到词数据（v2）
+ * 从 ProgressStore 合并进度到词数据(v2)
  */
 function mergeProgressToWords(data, subject, lessonId) {
   return ProgressStore.mergeToWords(data, subject, lessonId);
@@ -2170,7 +2290,325 @@ function switchPage(page) {
     case 'dictation': renderDictationPage(); break;
     case 'vocabulary': renderVocabularyPage(); break;
     case 'progress': renderProgressPage('all'); break;
+    case 'stats': renderStatsPage(); break;
   }
+}
+
+// ============================================
+// 统计页面
+// ============================================
+
+/**
+ * 获取所有科目中掌握词的总数(round >= 7)
+ * @returns {Promise<number>} 掌握词总数
+ */
+async function getTotalMasteredCount() {
+  try {
+    const chineseLessons = await loadChineseLessons();
+    const englishUnits = await loadEnglishUnits();
+    let masteredCount = 0;
+
+    // 统计语文掌握词
+    for (const lesson of chineseLessons) {
+      const data = await loadWordData('chinese', lesson.id, true);
+      if (data && data.words) {
+        mergeProgressToWords(data, 'chinese', lesson.id);
+        masteredCount += data.words.filter(w => w.round >= 7).length;
+      }
+    }
+
+    // 统计英语掌握词
+    for (const unit of englishUnits) {
+      const data = await loadWordData('english', unit.id, true);
+      if (data && data.words) {
+        mergeProgressToWords(data, 'english', unit.id);
+        masteredCount += data.words.filter(w => w.round >= 7).length;
+      }
+    }
+
+    // 统计自定义词语中的掌握词
+    const customData = await loadCustomWords();
+    if (customData && customData.words) {
+      mergeProgressToWords(customData, 'custom', 'CUSTOM');
+      masteredCount += customData.words.filter(w => w.round >= 7).length;
+    }
+
+    return masteredCount;
+  } catch (error) {
+    console.warn('[Stats] 获取掌握词数失败:', error);
+    return 0;
+  }
+}
+
+async function renderStatsPage() {
+  const stats = DailyStats.getAll() || {};
+  const dates = Object.keys(stats).sort((a, b) => b.localeCompare(a)); // 按日期降序
+
+  if (dates.length === 0) {
+    // 尝试加载词数据统计掌握词数
+    const masteredCount = await getTotalMasteredCount();
+    const masteredHint = masteredCount > 0 ? `<p class="empty-hint">不过,你已经有 <strong>${masteredCount}</strong> 个词语达到掌握水平!继续加油 🎉</p>` : '';
+    renderContent(`
+      <h2 class="page-title">📊 学习统计</h2>
+      <div class="empty-state">
+        <p class="empty-icon">📈</p>
+        <p class="empty-text">暂无听写数据,完成第一次听写后这里会出现你的学习趋势 📈</p>
+        ${masteredHint}
+      </div>
+    `);
+    return;
+  }
+
+  // 计算总体统计
+  let totalCorrect = 0;
+  let totalTotal = 0;
+  let chineseCorrect = 0;
+  let chineseTotal = 0;
+  let englishCorrect = 0;
+  let englishTotal = 0;
+
+  dates.forEach(date => {
+    const dayStats = stats[date];
+    if (dayStats.chinese) {
+      chineseCorrect += dayStats.chinese.correct;
+      chineseTotal += dayStats.chinese.total;
+    }
+    if (dayStats.english) {
+      englishCorrect += dayStats.english.correct;
+      englishTotal += dayStats.english.total;
+    }
+  });
+
+  totalCorrect = chineseCorrect + englishCorrect;
+  totalTotal = chineseTotal + englishTotal;
+
+  const totalPercent = totalTotal > 0 ? Math.round((totalCorrect / totalTotal) * 100) : 0;
+  const chinesePercent = chineseTotal > 0 ? Math.round((chineseCorrect / chineseTotal) * 100) : 0;
+  const englishPercent = englishTotal > 0 ? Math.round((englishCorrect / englishTotal) * 100) : 0;
+
+  // 获取总掌握词数
+  const masteredCount = await getTotalMasteredCount();
+
+  // SVG 折线图渲染
+  const svgChartHtml = renderStatsSvgChart(stats);
+
+  renderContent(`
+    <h2 class="page-title">📊 学习统计</h2>
+    <div class="stats-card">
+      <h3 class="stats-title">总体概览</h3>
+      <div class="stats-grid">
+        <div class="stat-item total"><span class="stat-value">${totalTotal}</span><span class="stat-label">听写总数</span></div>
+        <div class="stat-item correct"><span class="stat-value">${totalCorrect}</span><span class="stat-label">正确数</span></div>
+        <div class="stat-item mastered"><span class="stat-value">${totalPercent}%</span><span class="stat-label">正确率</span></div>
+        <div class="stat-item mastered-words"><span class="stat-value">${masteredCount}</span><span class="stat-label">🏆 掌握词数</span></div>
+      </div>
+    </div>
+    <div class="stats-card">
+      <h3 class="stats-title">科目统计</h3>
+      <div class="stats-grid">
+        <div class="stat-item chinese"><span class="stat-value">${chinesePercent}%</span><span class="stat-label">语文正确率</span></div>
+        <div class="stat-item english"><span class="stat-value">${englishPercent}%</span><span class="stat-label">英语正确率</span></div>
+      </div>
+    </div>
+    ${svgChartHtml}
+    <div class="stats-card">
+      <h3 class="stats-title">📅 每日数据明细</h3>
+      <div class="stats-table-wrapper">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>语文正确率</th>
+              <th>英语正确率</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${dates.map(date => {
+              const dayStats = stats[date] || {};
+              const chinese = dayStats.chinese;
+              const english = dayStats.english;
+              const chinesePercent = chinese && chinese.total > 0
+                ? Math.round((chinese.correct / chinese.total) * 100) + '%'
+                : '-';
+              const englishPercent = english && english.total > 0
+                ? Math.round((english.correct / english.total) * 100) + '%'
+                : '-';
+              return `<tr>
+                <td>${formatDateLabel(date)}</td>
+                <td class="${chinesePercent !== '-' && parseInt(chinesePercent) >= 80 ? 'rate-high' : chinesePercent !== '-' && parseInt(chinesePercent) < 60 ? 'rate-low' : ''}">${chinesePercent}</td>
+                <td class="${englishPercent !== '-' && parseInt(englishPercent) >= 80 ? 'rate-high' : englishPercent !== '-' && parseInt(englishPercent) < 60 ? 'rate-low' : ''}">${englishPercent}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `);
+}
+
+/**
+ * 渲染统计页 SVG 折线图
+ * @param {Object} stats - DailyStats.getAll() 返回的数据
+ * @returns {string} SVG HTML 字符串
+ */
+function renderStatsSvgChart(stats) {
+  // 取近 30 天数据,按日期升序排序
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setDate(today.getDate() - 30);
+
+  const allDates = Object.keys(stats)
+    .filter(date => {
+      const d = new Date(date);
+      return d >= thirtyDaysAgo && d <= today;
+    })
+    .sort((a, b) => a.localeCompare(b)); // 升序
+
+  if (allDates.length === 0) {
+    return '<div class="stats-card"><p class="stats-hint">近 30 天暂无数据</p></div>';
+  }
+
+  // 构建数据点数组
+  const dataPoints = allDates.map(date => {
+    const dayStats = stats[date] || {};
+    const chinese = dayStats.chinese || null;
+    const english = dayStats.english || null;
+
+    const chinesePercent = chinese && chinese.total > 0
+      ? Math.round((chinese.correct / chinese.total) * 100)
+      : null;
+    const englishPercent = english && english.total > 0
+      ? Math.round((english.correct / english.total) * 100)
+      : null;
+
+    return {
+      date,
+      label: formatDateLabel(date),
+      chinese: chinesePercent,
+      english: englishPercent
+    };
+  });
+
+  // 检查是否有数据
+  const hasChineseData = dataPoints.some(p => p.chinese !== null);
+  const hasEnglishData = dataPoints.some(p => p.english !== null);
+
+  if (!hasChineseData && !hasEnglishData) {
+    return '<div class="stats-card"><p class="stats-hint">近 30 天暂无数据</p></div>';
+  }
+
+  // SVG 参数
+  const width = 600;
+  const height = 300;
+  const padding = { top: 40, right: 100, bottom: 40, left: 50 }; // right 留给图例
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+
+  // Y 轴范围:0-100%
+  const yMin = 0;
+  const yMax = 100;
+
+  // 计算坐标
+  const xScale = (index) => padding.left + (index / Math.max(1, dataPoints.length - 1)) * chartWidth;
+  const yScale = (value) => padding.top + chartHeight - ((value - yMin) / (yMax - yMin)) * chartHeight;
+
+  // 构建路径点(只包含有效数据点)
+  const chinesePoints = dataPoints.filter(p => p.chinese !== null);
+  const englishPoints = dataPoints.filter(p => p.english !== null);
+
+  // 生成折线路径
+  function generateLinePath(points, getValue) {
+    if (points.length < 2) return ''; // 数据点 < 2 不画折线
+
+    const pathParts = [];
+    points.forEach((p, i) => {
+      const originalIndex = dataPoints.findIndex(dp => dp.date === p.date);
+      const x = xScale(originalIndex);
+      const y = yScale(getValue(p));
+      if (i === 0) {
+        pathParts.push(`M ${x} ${y}`);
+      } else {
+        pathParts.push(`L ${x} ${y}`);
+      }
+    });
+    return pathParts.join(' ');
+  }
+
+  // 生成数据点圆点
+  function generateCircles(points, getValue, color) {
+    return points.map(p => {
+      const originalIndex = dataPoints.findIndex(dp => dp.date === p.date);
+      const x = xScale(originalIndex);
+      const y = yScale(getValue(p));
+      return `<circle cx="${x}" cy="${y}" r="4" fill="${color}" stroke="white" stroke-width="1.5"/>`;
+    }).join('');
+  }
+
+  // Y 轴刻度(0, 25, 50, 75, 100)
+  const yTicks = [0, 25, 50, 75, 100];
+  const yTicksHtml = yTicks.map(value => {
+    const y = yScale(value);
+    return `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>
+            <text x="${padding.left - 8}" y="${y + 4}" fill="#6b7280" font-size="12" text-anchor="end">${value}%</text>`;
+  }).join('');
+
+  // X 轴日期标签(最多显示 6 个,避免拥挤)
+  const maxLabels = 6;
+  const labelInterval = Math.ceil(dataPoints.length / maxLabels);
+  const xLabelsHtml = dataPoints.map((p, i) => {
+    if (i % labelInterval !== 0 && i !== dataPoints.length - 1) return '';
+    const x = xScale(i);
+    return `<text x="${x}" y="${height - padding.bottom + 16}" fill="#6b7280" font-size="11" text-anchor="middle">${p.label}</text>`;
+  }).join('');
+
+  // 图例
+  const legendHtml = `
+    <g transform="translate(${width - padding.right + 10}, ${padding.top})">
+      ${hasChineseData ? `<rect x="0" y="0" width="16" height="16" fill="#3b82f6" rx="2"/><text x="22" y="12" fill="#374151" font-size="13">语文</text>` : ''}
+      ${hasEnglishData ? `<rect x="0" y="${hasChineseData ? '22' : '0'}" width="16" height="16" fill="#10b981" rx="2"/><text x="22" y="${hasChineseData ? '34' : '12'}" fill="#374151" font-size="13">英语</text>` : ''}
+    </g>
+  `;
+
+  // 组装 SVG
+  const svgContent = `
+    <!-- 坐标轴 -->
+    <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="#9ca3af" stroke-width="1.5"/>
+    <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="#9ca3af" stroke-width="1.5"/>
+
+    <!-- Y 轴刻度线 + 标签 -->
+    ${yTicksHtml}
+
+    <!-- X 轴标签 -->
+    ${xLabelsHtml}
+
+    <!-- 语文折线 -->
+    ${hasChineseData && chinesePoints.length >= 2 ? `<path d="${generateLinePath(chinesePoints, p => p.chinese)}" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+
+    <!-- 英语折线 -->
+    ${hasEnglishData && englishPoints.length >= 2 ? `<path d="${generateLinePath(englishPoints, p => p.english)}" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+
+    <!-- 语文数据点 -->
+    ${hasChineseData ? generateCircles(chinesePoints, p => p.chinese, '#3b82f6') : ''}
+
+    <!-- 英语数据点 -->
+    ${hasEnglishData ? generateCircles(englishPoints, p => p.english, '#10b981') : ''}
+
+    <!-- 图例 -->
+    ${legendHtml}
+  `;
+
+  return `<div class="stats-card"><h3 class="stats-title">📈 近 30 天正确率趋势</h3><svg viewBox="0 0 ${width} ${height}" style="width:100%;max-width:${width}px;height:auto;">${svgContent}</svg></div>`;
+}
+
+/**
+ * 格式化日期标签(MM/DD)
+ * @param {string} dateStr - YYYY-MM-DD 格式
+ * @returns {string} MM/DD 格式
+ */
+function formatDateLabel(dateStr) {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  return `${parts[1]}/${parts[2]}`;
 }
 
 // ============================================
@@ -2210,7 +2648,7 @@ async function renderProgressPage(filter = 'all') {
     }
   }
 
-  // 纳入自定义词语统计（仅 filter='all' 时）
+  // 纳入自定义词语统计(仅 filter='all' 时)
   if (filter === 'all') {
     const customData = await loadCustomWords();
     if (customData && customData.words && customData.words.length > 0) {
@@ -2321,11 +2759,11 @@ async function renderProgressPage(filter = 'all') {
         </select>
         <select id="manual-round-select" class="manual-input">
           <option value="0">R0 新词</option>
-          <option value="1" selected>R1（1天后复习）</option>
-          <option value="2">R2（3天后复习）</option>
-          <option value="3">R3（7天后复习）</option>
-          <option value="4">R4（16天后复习）</option>
-          <option value="5">R5（35天后复习）</option>
+          <option value="1" selected>R1(1天后复习)</option>
+          <option value="2">R2(3天后复习)</option>
+          <option value="3">R3(7天后复习)</option>
+          <option value="4">R4(16天后复习)</option>
+          <option value="5">R5(35天后复习)</option>
           <option value="6">已掌握</option>
         </select>
         <div class="add-word-buttons">
@@ -2436,14 +2874,14 @@ async function manualAddWordR1() {
   const [subject, lessonId] = lessonSelect.value.split('|');
   const text = wordInput.value.trim();
 
-  // 自定义词语：直接入库
+  // 自定义词语:直接入库
   if (subject === 'custom') {
     let customData = await loadCustomWords();
     if (!customData) customData = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
     if (!customData.words) customData.words = [];
     const existing = customData.words.find(w => w.text === text);
     if (existing) {
-      // 已存在，更新轮次和错词次数
+      // 已存在,更新轮次和错词次数
       existing.round = 1;
       existing.nextReview = getLocalDate();
       existing.wrongCount = (existing.wrongCount || 0) + 1;
@@ -2454,7 +2892,7 @@ async function manualAddWordR1() {
     }
     updateWordProgress('custom', 'CUSTOM', text, 1, 1);
     wordInput.value = '';
-    alert(`✅ "${text}" 已添加到自定义词库（R1 复习中）`);
+    alert(`✅ "${text}" 已添加到自定义词库(R1 复习中)`);
     const activeFilter = document.querySelector('.filter-btn.active');
     const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
     renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
@@ -2464,12 +2902,12 @@ async function manualAddWordR1() {
   const cacheKey = `${subject}/${lessonId}`;
   const data = AppState.wordData[cacheKey];
   if (!data || !data.words || !data.words.find(w => w.text === text)) {
-    if (!confirm(`词库中未找到 "${text}"，仍要添加吗？`)) return;
+    if (!confirm(`词库中未找到 "${text}",仍要添加吗?`)) return;
   }
 
   updateWordProgress(subject, lessonId, text, 1, 1);
   wordInput.value = '';
-  alert(`✅ ${text} 已设为 R1 复习中（错词次数+1）`);
+  alert(`✅ ${text} 已设为 R1 复习中(错词次数+1)`);
   const activeFilter = document.querySelector('.filter-btn.active');
   const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
   renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
@@ -2486,7 +2924,7 @@ async function manualAddWordWithRound() {
   const text = wordInput.value.trim();
   const round = parseInt(roundSelect.value, 10);
 
-  // 自定义词语：直接入库，不弹确认
+  // 自定义词语:直接入库,不弹确认
   if (subject === 'custom') {
     let customData = await loadCustomWords();
     if (!customData) customData = { lessonId: 'CUSTOM', lessonName: '自定义词语', words: [] };
@@ -2502,7 +2940,7 @@ async function manualAddWordWithRound() {
     updateWordProgress('custom', 'CUSTOM', text, round);
     const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
     wordInput.value = '';
-    alert(`✅ "${text}" 已添加到自定义词库（${roundName}）`);
+    alert(`✅ "${text}" 已添加到自定义词库(${roundName})`);
     const activeFilter = document.querySelector('.filter-btn.active');
     const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
     renderProgressPage(filter === '语文' ? 'chinese' : filter === '英语' ? 'english' : 'all');
@@ -2512,7 +2950,7 @@ async function manualAddWordWithRound() {
   const cacheKey = `${subject}/${lessonId}`;
   const data = AppState.wordData[cacheKey];
   if (!data || !data.words || !data.words.find(w => w.text === text)) {
-    if (!confirm(`词库中未找到 "${text}"，仍要添加吗？`)) return;
+    if (!confirm(`词库中未找到 "${text}",仍要添加吗?`)) return;
   }
 
   updateWordProgress(subject, lessonId, text, round);
@@ -2556,7 +2994,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchPage(btn.dataset.page));
   });
 
-  // 事件委托：点击喇叭按钮播放英语读音（动态生成的元素也能响应）
+  // 事件委托:点击喇叭按钮播放英语读音(动态生成的元素也能响应)
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.speak-btn');
     if (btn) {
@@ -2580,11 +3018,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * 同步状态指示：token 已内置，无需手动配置
+ * 同步状态指示:token 已内置,无需手动配置
  */
 document.addEventListener('DOMContentLoaded', () => {
   const syncEl = document.getElementById('sync-status');
   if (syncEl) {
-    syncEl.title = isGitHubConfigured ? 'GitHub 同步状态' : '本地调试模式：不与 GitHub 同步';
+    syncEl.title = isGitHubConfigured ? 'GitHub 同步状态' : '本地调试模式:不与 GitHub 同步';
   }
 });
