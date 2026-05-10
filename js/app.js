@@ -581,6 +581,74 @@ async function forceSyncToGitHub() {
 }
 
 /**
+ * 每日统计同步：将 daily stats 推送到 data/daily-stats.json
+ * 注意：debouncedSyncToGitHub() 同步的是 progress，不是 daily stats！
+ */
+const DAILY_STATS_DEBOUNCE_MS = 3000;
+let dailyStatsSyncTimer = null;
+
+async function saveDailyStatsToGitHub(stats) {
+  try {
+    const token = await loadGitHubToken();
+    if (!token) {
+      console.warn('[DailyStats Sync] 未找到 GITHUB_TOKEN，跳过同步');
+      return false;
+    }
+
+    const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
+
+    // 先获取远程 SHA
+    const getResp = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
+      headers: getGitHubHeaders(token)
+    });
+    let sha = null;
+    if (getResp.ok) {
+      const getData = await parseJsonSafe(getResp);
+      sha = getData.sha;
+    }
+
+    const safeJson = unicodeEscapeChinese(JSON.stringify(stats, null, 2));
+    const body = {
+      message: `chore: 同步每日统计 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
+      content: encodeBase64Utf8(safeJson),
+      branch: GITHUB_CONFIG.branch
+    };
+    if (sha) body.sha = sha;
+
+    const response = await fetchWithTimeout(url, {
+      method: 'PUT',
+      headers: {
+        ...getGitHubHeaders(token),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub 每日统计保存失败: HTTP ${response.status}`);
+    }
+
+    const result = await parseJsonSafe(response);
+    console.log('[DailyStats Sync] 同步完成');
+    return true;
+  } catch (error) {
+    console.error('[DailyStats Sync] 同步失败:', error);
+    return false;
+  }
+}
+
+function debouncedSyncDailyStats() {
+  if (!isGitHubConfigured) return;
+  if (dailyStatsSyncTimer) clearTimeout(dailyStatsSyncTimer);
+
+  dailyStatsSyncTimer = setTimeout(async () => {
+    if (typeof DailyStats === 'undefined') return;
+    const stats = DailyStats.getAll() || {};
+    await saveDailyStatsToGitHub(stats);
+  }, DAILY_STATS_DEBOUNCE_MS);
+}
+
+/**
  * 合并 GitHub 进度到 v2 存储(页面加载时调用)
  */
 async function mergeGitHubProgress() {
@@ -2993,6 +3061,9 @@ function manualAddWordMastered() {
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
   ProgressStore.init();
+  if (typeof DailyStats !== 'undefined' && typeof DailyStats.init === 'function') {
+    DailyStats.init();
+  }
   loadEnglishAudioManifest().catch(error => {
     console.warn('[Audio] 固定音频清单预加载失败:', error);
   });

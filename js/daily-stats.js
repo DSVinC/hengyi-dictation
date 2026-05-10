@@ -54,8 +54,8 @@ function saveToStorage(stats) {
  * 触发 GitHub 同步（如果存在）
  */
 function triggerSync() {
-  if (typeof debouncedSyncToGitHub === 'function') {
-    debouncedSyncToGitHub();
+  if (typeof debouncedSyncDailyStats === 'function') {
+    debouncedSyncDailyStats();
   }
 }
 
