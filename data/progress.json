@@ -183,28 +183,28 @@
     "text": "ruler",
     "lessonId": "U3",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-05-10",
+    "round": 3,
+    "nextReview": "2026-05-13",
     "wrongCount": 3,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U3|pen": {
     "text": "pen",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-25",
     "wrongCount": 1,
-    "updatedAt": "2026-05-02T07:23:23.951Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U2|has": {
     "text": "has",
     "lessonId": "U2",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-23",
     "wrongCount": 2,
-    "updatedAt": "2026-05-02T07:23:23.951Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U2|long": {
     "text": "long",
@@ -273,10 +273,10 @@
     "text": "card",
     "lessonId": "U2",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-10",
-    "wrongCount": 2,
-    "updatedAt": "2026-05-03T02:27:27.202Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U2|sing": {
     "text": "sing",
@@ -381,19 +381,19 @@
     "text": "about",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-10",
+    "round": 4,
+    "nextReview": "2026-05-15",
     "wrongCount": 3,
-    "updatedAt": "2026-05-07T12:52:26.101Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U1|today": {
     "text": "today",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-10",
-    "wrongCount": 7,
-    "updatedAt": "2026-05-04T03:00:36.336Z"
+    "wrongCount": 8,
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U1|teacher": {
     "text": "teacher",
@@ -1173,10 +1173,10 @@
     "text": "hear",
     "lessonId": "U3",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-05-10",
+    "round": 3,
+    "nextReview": "2026-05-12",
     "wrongCount": 6,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "chinese|L15|e68993e68d9e": {
     "text": "\u6253\u635e",
@@ -1245,10 +1245,10 @@
     "text": "learn",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-09",
+    "round": 2,
+    "nextReview": "2026-05-11",
     "wrongCount": 6,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "chinese|L12|e799bbe9ab98": {
     "text": "\u767b\u9ad8",
@@ -1587,19 +1587,19 @@
     "text": "breakfast",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-20",
     "wrongCount": 7,
-    "updatedAt": "2026-05-04T03:00:36.336Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|time": {
     "text": "time",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-10",
-    "wrongCount": 5,
-    "updatedAt": "2026-05-01T03:32:58.018Z"
+    "wrongCount": 6,
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|bread": {
     "text": "bread",
@@ -1614,10 +1614,10 @@
     "text": "egg",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-09",
+    "round": 2,
+    "nextReview": "2026-05-11",
     "wrongCount": 1,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "chinese|L17|e9babbe783a6": {
     "text": "\u9ebb\u70e6",
@@ -1659,28 +1659,28 @@
     "text": "milk",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-24",
     "wrongCount": 2,
-    "updatedAt": "2026-05-03T02:27:27.202Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|noodle": {
     "text": "noodle",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-22",
     "wrongCount": 3,
-    "updatedAt": "2026-05-01T03:32:58.018Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|juice": {
     "text": "juice",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-10",
-    "wrongCount": 4,
-    "updatedAt": "2026-05-01T03:32:58.018Z"
+    "wrongCount": 5,
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|rice": {
     "text": "rice",
@@ -1722,10 +1722,10 @@
     "text": "meat",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-24",
     "wrongCount": 2,
-    "updatedAt": "2026-05-02T07:23:23.951Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|vegetable": {
     "text": "vegetable",
@@ -1740,10 +1740,10 @@
     "text": "healthy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 2,
-    "nextReview": "2026-05-10",
+    "round": 3,
+    "nextReview": "2026-05-11",
     "wrongCount": 6,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "chinese|L02|e78795e5ad90": {
     "text": "\u71d5\u5b50",
@@ -1812,10 +1812,10 @@
     "text": "soup",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-10",
+    "round": 5,
+    "nextReview": "2026-05-23",
     "wrongCount": 3,
-    "updatedAt": "2026-05-03T02:27:27.202Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "english|U4|fruit": {
     "text": "fruit",
@@ -1830,10 +1830,10 @@
     "text": "candy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-09",
+    "round": 2,
+    "nextReview": "2026-05-11",
     "wrongCount": 6,
-    "updatedAt": "2026-05-09T13:43:52.608Z"
+    "updatedAt": "2026-05-10T03:51:24.378Z"
   },
   "chinese|L02|e58589e5bda9e5a4bae79bae": {
     "text": "\u5149\u5f69\u593a\u76ee",
