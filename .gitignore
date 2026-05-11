@@ -6,3 +6,4 @@ js/config.js
 .playwright-mcp/
 .tmp/
 tmp/
+.claude/
