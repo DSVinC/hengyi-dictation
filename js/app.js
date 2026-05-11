@@ -637,14 +637,41 @@ async function saveDailyStatsToGitHub(stats) {
   }
 }
 
+/**
+ * 本地模式：将每日统计数据保存为文件供用户手动覆盖
+ */
+async function saveDailyStatsToFile(stats) {
+  try {
+    const safeJson = unicodeEscapeChinese(JSON.stringify(stats, null, 2));
+    const blob = new Blob([safeJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'daily-stats.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    console.log('[DailyStats Local] 已触发 daily-stats.json 下载');
+    return true;
+  } catch (error) {
+    console.error('[DailyStats Local] 保存文件失败:', error);
+    return false;
+  }
+}
+
 function debouncedSyncDailyStats() {
-  if (!isGitHubConfigured) return;
   if (dailyStatsSyncTimer) clearTimeout(dailyStatsSyncTimer);
 
   dailyStatsSyncTimer = setTimeout(async () => {
     if (typeof DailyStats === 'undefined') return;
     const stats = DailyStats.getAll() || {};
-    await saveDailyStatsToGitHub(stats);
+    if (isGitHubConfigured) {
+      await saveDailyStatsToGitHub(stats);
+    } else {
+      // 本地调试模式：数据仅存 localStorage，触发文件下载供用户手动覆盖
+      await saveDailyStatsToFile(stats);
+    }
   }, DAILY_STATS_DEBOUNCE_MS);
 }
 
@@ -2420,7 +2447,9 @@ async function getTotalMasteredCount() {
 
 async function renderStatsPage() {
   const stats = DailyStats.getAll() || {};
-  const dates = Object.keys(stats).sort((a, b) => b.localeCompare(a)); // 按日期降序
+  // 过滤出有效的日期键（YYYY-MM-DD 格式）
+  const isValidDate = (key) => /^\d{4}-\d{2}-\d{2}$/.test(key);
+  const dates = Object.keys(stats).filter(isValidDate).sort((a, b) => b.localeCompare(a)); // 按日期降序
 
   if (dates.length === 0) {
     // 尝试加载词数据统计掌握词数
@@ -2536,6 +2565,7 @@ function renderStatsSvgChart(stats) {
   thirtyDaysAgo.setDate(today.getDate() - 30);
 
   const allDates = Object.keys(stats)
+    .filter(date => /^\d{4}-\d{2}-\d{2}$/.test(date))
     .filter(date => {
       const d = new Date(date);
       return d >= thirtyDaysAgo && d <= today;
