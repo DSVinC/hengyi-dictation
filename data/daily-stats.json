@@ -1,1 +1,14 @@
-{}
+{
+  "date": "2026-05-11",
+  "words": [],
+  "2026-05-11": {
+    "chinese": {
+      "correct": 41,
+      "total": 46
+    },
+    "english": {
+      "correct": 15,
+      "total": 16
+    }
+  }
+}
