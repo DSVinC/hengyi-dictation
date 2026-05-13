@@ -15,6 +15,16 @@
     "chinese": {
       "correct": 41,
       "total": 44
+    },
+    "english": {
+      "correct": 14,
+      "total": 15
+    }
+  },
+  "2026-05-13": {
+    "chinese": {
+      "correct": 26,
+      "total": 30
     }
   }
 }
