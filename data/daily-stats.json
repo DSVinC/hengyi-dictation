@@ -31,6 +31,10 @@
     "chinese": {
       "correct": 49,
       "total": 54
+    },
+    "english": {
+      "correct": 12,
+      "total": 14
     }
   }
 }
