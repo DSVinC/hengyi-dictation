@@ -273,10 +273,10 @@
     "text": "card",
     "lessonId": "U2",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-15",
+    "round": 4,
+    "nextReview": "2026-05-21",
     "wrongCount": 3,
-    "updatedAt": "2026-05-12T12:48:04.881Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U2|sing": {
     "text": "sing",
@@ -372,19 +372,19 @@
     "text": "from",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-14",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 3,
-    "updatedAt": "2026-05-14T12:24:42.900Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U1|about": {
     "text": "about",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-15",
+    "round": 5,
+    "nextReview": "2026-05-28",
     "wrongCount": 3,
-    "updatedAt": "2026-05-10T03:51:24.378Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U1|today": {
     "text": "today",
@@ -453,10 +453,10 @@
     "text": "woman",
     "lessonId": "U1",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-15",
+    "round": 5,
+    "nextReview": "2026-05-29",
     "wrongCount": 2,
-    "updatedAt": "2026-05-08T11:39:13.068Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U1|man": {
     "text": "man",
@@ -1155,28 +1155,28 @@
     "text": "these",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-15",
+    "round": 5,
+    "nextReview": "2026-05-28",
     "wrongCount": 3,
-    "updatedAt": "2026-05-11T12:18:56.975Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U3|see": {
     "text": "see",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-14",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 3,
-    "updatedAt": "2026-05-14T12:24:42.901Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U3|hear": {
     "text": "hear",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-16",
+    "round": 5,
+    "nextReview": "2026-05-27",
     "wrongCount": 6,
-    "updatedAt": "2026-05-12T12:48:04.881Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "chinese|L15|e68993e68d9e": {
     "text": "\u6253\u635e",
@@ -1677,10 +1677,10 @@
     "text": "juice",
     "lessonId": "U4",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-15",
+    "round": 4,
+    "nextReview": "2026-05-21",
     "wrongCount": 5,
-    "updatedAt": "2026-05-12T12:48:04.881Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U4|rice": {
     "text": "rice",
@@ -1740,10 +1740,10 @@
     "text": "healthy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-15",
+    "round": 4,
+    "nextReview": "2026-05-20",
     "wrongCount": 7,
-    "updatedAt": "2026-05-14T12:24:42.900Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "chinese|L02|e78795e5ad90": {
     "text": "\u71d5\u5b50",
