@@ -57,6 +57,10 @@
     "chinese": {
       "correct": 50,
       "total": 57
+    },
+    "english": {
+      "correct": 5,
+      "total": 5
     }
   }
 }
