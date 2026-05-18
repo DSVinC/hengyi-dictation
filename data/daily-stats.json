@@ -62,5 +62,11 @@
       "correct": 5,
       "total": 5
     }
+  },
+  "2026-05-18": {
+    "chinese": {
+      "correct": 51,
+      "total": 58
+    }
   }
 }
