@@ -1146,10 +1146,10 @@
     "text": "paper",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-18",
+    "round": 5,
+    "nextReview": "2026-05-31",
     "wrongCount": 2,
-    "updatedAt": "2026-05-12T12:48:04.881Z"
+    "updatedAt": "2026-05-18T10:38:55.367Z"
   },
   "english|U3|these": {
     "text": "these",
@@ -1245,10 +1245,10 @@
     "text": "learn",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-18",
+    "round": 5,
+    "nextReview": "2026-05-29",
     "wrongCount": 6,
-    "updatedAt": "2026-05-14T12:24:42.900Z"
+    "updatedAt": "2026-05-18T10:38:55.367Z"
   },
   "chinese|L12|e799bbe9ab98": {
     "text": "\u767b\u9ad8",
@@ -1596,10 +1596,10 @@
     "text": "time",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-18",
+    "round": 5,
+    "nextReview": "2026-05-30",
     "wrongCount": 6,
-    "updatedAt": "2026-05-14T12:24:42.900Z"
+    "updatedAt": "2026-05-18T10:38:55.367Z"
   },
   "english|U4|bread": {
     "text": "bread",
