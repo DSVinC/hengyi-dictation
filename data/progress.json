@@ -183,10 +183,10 @@
     "text": "ruler",
     "lessonId": "U3",
     "subject": "english",
-    "round": 4,
+    "round": 1,
     "nextReview": "2026-05-19",
-    "wrongCount": 3,
-    "updatedAt": "2026-05-14T12:24:42.901Z"
+    "wrongCount": 4,
+    "updatedAt": "2026-05-19T11:14:42.031Z"
   },
   "english|U3|pen": {
     "text": "pen",
@@ -264,10 +264,10 @@
     "text": "picture",
     "lessonId": "U2",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-19",
+    "round": 5,
+    "nextReview": "2026-06-01",
     "wrongCount": 2,
-    "updatedAt": "2026-05-14T12:24:42.901Z"
+    "updatedAt": "2026-05-19T11:14:42.031Z"
   },
   "english|U2|card": {
     "text": "card",
