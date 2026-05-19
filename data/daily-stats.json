@@ -52,25 +52,5 @@
       "correct": 9,
       "total": 9
     }
-  },
-  "2026-05-17": {
-    "chinese": {
-      "correct": 50,
-      "total": 57
-    },
-    "english": {
-      "correct": 5,
-      "total": 5
-    }
-  },
-  "2026-05-18": {
-    "chinese": {
-      "correct": 51,
-      "total": 58
-    },
-    "english": {
-      "correct": 3,
-      "total": 3
-    }
   }
 }
