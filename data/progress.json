@@ -183,10 +183,10 @@
     "text": "ruler",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
+    "round": 4,
     "nextReview": "2026-05-19",
-    "wrongCount": 4,
-    "updatedAt": "2026-05-19T11:14:42.031Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-05-14T12:24:42.901Z"
   },
   "english|U3|pen": {
     "text": "pen",
@@ -219,10 +219,10 @@
     "text": "short",
     "lessonId": "U2",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-30",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 3,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-12T12:48:04.881Z"
   },
   "english|U2|fat": {
     "text": "fat",
@@ -264,10 +264,10 @@
     "text": "picture",
     "lessonId": "U2",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-06-01",
+    "round": 4,
+    "nextReview": "2026-05-19",
     "wrongCount": 2,
-    "updatedAt": "2026-05-19T11:14:42.031Z"
+    "updatedAt": "2026-05-14T12:24:42.901Z"
   },
   "english|U2|card": {
     "text": "card",
@@ -372,10 +372,10 @@
     "text": "from",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 3,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U1|about": {
     "text": "about",
@@ -390,10 +390,10 @@
     "text": "today",
     "lessonId": "U1",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-28",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 8,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-14T12:24:42.900Z"
   },
   "english|U1|teacher": {
     "text": "teacher",
@@ -642,10 +642,10 @@
     "text": "\u9022",
     "lessonId": "L12",
     "subject": "chinese",
-    "round": 6,
-    "nextReview": "2026-06-11",
+    "round": 5,
+    "nextReview": "2026-05-19",
     "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L12|e4bdb3": {
     "text": "\u4f73",
@@ -777,10 +777,10 @@
     "text": "\u666f\u7269",
     "lessonId": "L10",
     "subject": "chinese",
-    "round": 6,
-    "nextReview": "2026-06-11",
+    "round": 5,
+    "nextReview": "2026-05-19",
     "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L10|e883bde58a9b": {
     "text": "\u80fd\u529b",
@@ -840,10 +840,10 @@
     "text": "\u65b9\u6cd5",
     "lessonId": "L09",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-05",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-04-24T11:30:10.350Z"
   },
   "chinese|L09|e8828ce88289": {
     "text": "\u808c\u8089",
@@ -957,10 +957,10 @@
     "text": "\u521b\u4e3e",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-21",
-    "wrongCount": 3,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "round": 5,
+    "nextReview": "2026-05-17",
+    "wrongCount": 2,
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L14|e5878fe8bdbb": {
     "text": "\u51cf\u8f7b",
@@ -1038,10 +1038,10 @@
     "text": "\u5386\u53f2",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "round": 4,
+    "nextReview": "2026-05-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "chinese|L14|e69687e58c96": {
     "text": "\u6587\u5316",
@@ -1065,37 +1065,37 @@
     "text": "\u6865",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-07",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-07T12:40:10.438Z"
   },
   "chinese|L14|e68bb1": {
     "text": "\u62f1",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-05",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L14|e6b58e": {
     "text": "\u6d4e",
     "lessonId": "L14",
     "subject": "chinese",
-    "round": 6,
-    "nextReview": "2026-06-09",
+    "round": 5,
+    "nextReview": "2026-05-18",
     "wrongCount": 2,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L14|e6a08f": {
     "text": "\u680f",
     "lessonId": "L14",
     "subject": "chinese",
     "round": 4,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "english|U3|pencil": {
     "text": "pencil",
@@ -1128,10 +1128,10 @@
     "text": "\u63f4\u52a9",
     "lessonId": "L15",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-18",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L15|e68a95e68eb7": {
     "text": "\u6295\u63b7",
@@ -1146,10 +1146,10 @@
     "text": "paper",
     "lessonId": "U3",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-31",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 2,
-    "updatedAt": "2026-05-18T10:38:55.367Z"
+    "updatedAt": "2026-05-12T12:48:04.881Z"
   },
   "english|U3|these": {
     "text": "these",
@@ -1164,10 +1164,10 @@
     "text": "see",
     "lessonId": "U3",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 3,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-16T03:15:43.992Z"
   },
   "english|U3|hear": {
     "text": "hear",
@@ -1191,10 +1191,10 @@
     "text": "\u62c6\u5206",
     "lessonId": "L15",
     "subject": "chinese",
-    "round": 6,
-    "nextReview": "2026-06-10",
+    "round": 5,
+    "nextReview": "2026-05-19",
     "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L15|e69085e58aa8": {
     "text": "\u6405\u52a8",
@@ -1245,10 +1245,10 @@
     "text": "learn",
     "lessonId": "U3",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-29",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 6,
-    "updatedAt": "2026-05-18T10:38:55.367Z"
+    "updatedAt": "2026-05-14T12:24:42.900Z"
   },
   "chinese|L12|e799bbe9ab98": {
     "text": "\u767b\u9ad8",
@@ -1326,28 +1326,28 @@
     "text": "\u5b8c\u5168",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-08",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "chinese|L16|e7bb93e5ae9e": {
     "text": "\u7ed3\u5b9e",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "chinese|L16|e7a1aee5ae9a": {
     "text": "\u786e\u5b9a",
     "lessonId": "L16",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-07",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "chinese|L16|e8b6b3e5a49f": {
     "text": "\u8db3\u591f",
@@ -1560,10 +1560,10 @@
     "text": "\u60f3\u5ff5",
     "lessonId": "L17",
     "subject": "chinese",
-    "round": 6,
-    "nextReview": "2026-06-08",
+    "round": 5,
+    "nextReview": "2026-05-19",
     "wrongCount": 2,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-05T01:18:30.908Z"
   },
   "chinese|L17|e9a5ade88f9c": {
     "text": "\u996d\u83dc",
@@ -1578,10 +1578,10 @@
     "text": "\u53ef\u80fd",
     "lessonId": "L17",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "english|U4|breakfast": {
     "text": "breakfast",
@@ -1596,10 +1596,10 @@
     "text": "time",
     "lessonId": "U4",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-30",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 6,
-    "updatedAt": "2026-05-18T10:38:55.367Z"
+    "updatedAt": "2026-05-14T12:24:42.900Z"
   },
   "english|U4|bread": {
     "text": "bread",
@@ -1785,10 +1785,10 @@
     "text": "\u8f7b\u98ce",
     "lessonId": "L02",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-02",
+    "round": 3,
+    "nextReview": "2026-05-17",
     "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-14T12:01:18.974Z"
   },
   "chinese|L02|e6b492e890bd": {
     "text": "\u6d12\u843d",
@@ -1830,10 +1830,10 @@
     "text": "candy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-28",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 6,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-14T12:24:42.900Z"
   },
   "chinese|L02|e58589e5bda9e5a4bae79bae": {
     "text": "\u5149\u5f69\u593a\u76ee",
@@ -1939,18 +1939,18 @@
     "lessonId": "L18",
     "subject": "chinese",
     "round": 4,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-07T12:40:10.438Z"
   },
   "chinese|L18|e59e82e69fb3": {
     "text": "\u5782\u67f3",
     "lessonId": "L18",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-02",
+    "round": 3,
+    "nextReview": "2026-05-17",
     "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-14T12:01:18.974Z"
   },
   "chinese|L18|e5b9b3e99d99": {
     "text": "\u5e73\u9759",
@@ -1975,9 +1975,9 @@
     "lessonId": "L18",
     "subject": "chinese",
     "round": 4,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-08T11:30:53.545Z"
   },
   "chinese|L18|e891abe88aa6": {
     "text": "\u846b\u82a6",
@@ -1993,9 +1993,9 @@
     "lessonId": "L18",
     "subject": "chinese",
     "round": 4,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-07T12:40:10.438Z"
   },
   "chinese|L18|e6b885e788bd": {
     "text": "\u6e05\u723d",
@@ -2028,10 +2028,10 @@
     "text": "\u67d3",
     "lessonId": "L18",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-07",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-06T11:43:16.619Z"
   },
   "chinese|L18|e7a28e": {
     "text": "\u788e",
@@ -2082,10 +2082,10 @@
     "text": "\u8377\u82b1",
     "lessonId": "L03",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-05",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-11T12:06:44.567Z"
   },
   "chinese|L03|e585ace59bad": {
     "text": "\u516c\u56ed",
@@ -2118,10 +2118,10 @@
     "text": "\u8377\u53f6",
     "lessonId": "L03",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-05",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-11T12:06:44.567Z"
   },
   "chinese|L03|e88eb2e893ac": {
     "text": "\u83b2\u84ec",
@@ -2145,19 +2145,19 @@
     "text": "\u59ff\u52bf",
     "lessonId": "L03",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-28",
+    "round": 3,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-09T13:29:53.624Z"
   },
   "chinese|L03|e794bbe5aeb6": {
     "text": "\u753b\u5bb6",
     "lessonId": "L03",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L03|e69cace9a286": {
     "text": "\u672c\u9886",
@@ -2244,10 +2244,10 @@
     "text": "\u5176\u4e2d",
     "lessonId": "L19",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L19|e6bab6e58c96": {
     "text": "\u6eb6\u5316",
@@ -2271,10 +2271,10 @@
     "text": "\u5206\u88c2",
     "lessonId": "L19",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-05",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-11T12:06:44.567Z"
   },
   "chinese|L19|e5bda2e5bc8f": {
     "text": "\u5f62\u5f0f",
@@ -2307,19 +2307,19 @@
     "text": "\u76ee\u9001",
     "lessonId": "L19",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L19|e9aa84e582b2": {
     "text": "\u9a84\u50b2",
     "lessonId": "L19",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-06",
+    "round": 4,
+    "nextReview": "2026-05-18",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L19|e5bc84": {
     "text": "\u5f04",
@@ -2370,10 +2370,10 @@
     "text": "\u7c89\u7ea2",
     "lessonId": "L20",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "round": 4,
+    "nextReview": "2026-05-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L20|e4bbb0e69c9b": {
     "text": "\u4ef0\u671b",
@@ -2389,9 +2389,9 @@
     "lessonId": "L20",
     "subject": "chinese",
     "round": 4,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-13T11:47:47.341Z"
   },
   "chinese|L20|e4b8a5e5af92": {
     "text": "\u4e25\u5bd2",
@@ -2442,10 +2442,10 @@
     "text": "\u8bda\u5b9e",
     "lessonId": "L20",
     "subject": "chinese",
-    "round": 5,
-    "nextReview": "2026-06-04",
+    "round": 4,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-12T11:56:59.101Z"
   },
   "chinese|L20|e99b80": {
     "text": "\u96c0",
@@ -2487,10 +2487,10 @@
     "text": "\u65ed\u65e5",
     "lessonId": "L21",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-28",
+    "round": 3,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-13T11:47:47.341Z"
   },
   "chinese|L21|e5b29be5b1bf": {
     "text": "\u5c9b\u5c7f",
@@ -2514,10 +2514,10 @@
     "text": "\u6d6a\u82b1",
     "lessonId": "L21",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-27",
+    "round": 3,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-13T11:47:47.341Z"
   },
   "chinese|L21|e5869be888b0": {
     "text": "\u519b\u8230",
@@ -2559,585 +2559,297 @@
     "text": "\u706b\u70e7\u4e91",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e7ac91e79b88e79b88": {
     "text": "\u7b11\u76c8\u76c8",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-18",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e4b998e58789": {
     "text": "\u4e58\u51c9",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-28",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e9ab98e5afbf": {
     "text": "\u9ad8\u5bff",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "round": 2,
+    "nextReview": "2026-05-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e7baa2e5bda4e5bda4": {
     "text": "\u7ea2\u5f64\u5f64",
     "lessonId": "L22",
     "subject": "chinese",
     "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 2,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "nextReview": "2026-05-17",
+    "wrongCount": 1,
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e58f98e58c96": {
     "text": "\u53d8\u5316",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-26",
+    "round": 2,
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e98791e781bfe781bf": {
     "text": "\u91d1\u707f\u707f",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-21",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e9a29ce889b2": {
     "text": "\u989c\u8272",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-25",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e4bcbce4b98e": {
     "text": "\u4f3c\u4e4e",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e5a881e6ada6": {
     "text": "\u5a01\u6b66",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e99587e99d99": {
     "text": "\u9547\u9759",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-18",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e585b6e5ae9e": {
     "text": "\u5176\u5b9e",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-22",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e6b289e99d99": {
     "text": "\u6c89\u9759",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-26",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e5818fe5818f": {
     "text": "\u504f\u504f",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-22",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e7ad89e5be85": {
     "text": "\u7b49\u5f85",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L22|e788b1e5a5bd": {
     "text": "\u7231\u597d",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-25",
+    "round": 2,
+    "nextReview": "2026-05-19",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-15T10:49:21.360Z"
   },
   "chinese|L22|e9929f": {
     "text": "\u949f",
     "lessonId": "L22",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-25",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e5a587e5a699": {
     "text": "\u5947\u5999",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-22",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e7949fe591bd": {
     "text": "\u751f\u547d",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e59188e78eb0": {
     "text": "\u5448\u73b0",
     "lessonId": "L24",
     "subject": "chinese",
     "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "nextReview": "2026-05-17",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e58f98e5b9bb": {
     "text": "\u53d8\u5e7b",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
+    "round": 1,
+    "nextReview": "2026-05-16",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e59c86e6b6a6": {
     "text": "\u5706\u6da6",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-27",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 1,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e69d8ee5ad90": {
     "text": "\u674e\u5b50",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-21",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e5a48fe697a5": {
     "text": "\u590f\u65e5",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e6849fe58fb9": {
     "text": "\u611f\u53f9",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e58589e8be89": {
     "text": "\u5149\u8f89",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e7a59ee5a587": {
     "text": "\u795e\u5947",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e58589e88a92": {
     "text": "\u5149\u8292",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e5bbbae980a0": {
     "text": "\u5efa\u9020",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-21",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e586b0e69fb1": {
     "text": "\u51b0\u67f1",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-27",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e9948be588a9": {
     "text": "\u950b\u5229",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e58880e58991": {
     "text": "\u5200\u5251",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 4,
-    "nextReview": "2026-05-28",
+    "round": 2,
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   },
   "chinese|L24|e89e8de58c96": {
     "text": "\u878d\u5316",
     "lessonId": "L24",
     "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-23",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-17T03:26:28.136Z"
-  },
-  "chinese|L23|e69da5e4b8b4": {
-    "text": "\u6765\u4e34",
-    "lessonId": "L23",
-    "subject": "chinese",
     "round": 2,
-    "nextReview": "2026-05-20",
+    "nextReview": "2026-05-17",
     "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e6b289e997b7": {
-    "text": "\u6c89\u95f7",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-26",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L23|e5a587e5bda2e680aae78ab6": {
-    "text": "\u5947\u5f62\u602a\u72b6",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e6988fe69a97": {
-    "text": "\u660f\u6697",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L23|e8bdbbe5beae": {
-    "text": "\u8f7b\u5fae",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-21",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e68385e586b5": {
-    "text": "\u60c5\u51b5",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-21",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e58aa8e99d99": {
-    "text": "\u52a8\u9759",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-22",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L23|e8b5b6e8b7af": {
-    "text": "\u8d76\u8def",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L23|e68a96e58aa8": {
-    "text": "\u6296\u52a8",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-27",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L23|e6a091e6a2a2": {
-    "text": "\u6811\u68a2",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-21",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e4b9b1e893ace893ac": {
-    "text": "\u4e71\u84ec\u84ec",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e8bdb0e99a86e99a86": {
-    "text": "\u8f70\u9686\u9686",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 2,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L23|e8b68a": {
-    "text": "\u8d8a",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-22",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-18T10:10:59.208Z"
-  },
-  "chinese|L23|e68aa5": {
-    "text": "\u62a5",
-    "lessonId": "L23",
-    "subject": "chinese",
-    "round": 3,
-    "nextReview": "2026-05-22",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e680a7e5ad90": {
-    "text": "\u6027\u5b50",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e9a1bee5aea2": {
-    "text": "\u987e\u5ba2",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e7ac91e8af9d": {
-    "text": "\u7b11\u8bdd",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e5a4a7e696b9": {
-    "text": "\u5927\u65b9",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e5a4b8e5a596": {
-    "text": "\u5938\u5956",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e689bfe8aea4": {
-    "text": "\u627f\u8ba4",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e68f90e5898d": {
-    "text": "\u63d0\u524d",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e69c8de58aa1": {
-    "text": "\u670d\u52a1",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e6bba1e6848f": {
-    "text": "\u6ee1\u610f",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e8a296e5ad90": {
-    "text": "\u8896\u5b50",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e8a1ace8a1ab": {
-    "text": "\u886c\u886b",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e8b49fe8b4a3": {
-    "text": "\u8d1f\u8d23",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e5908de5a3b0": {
-    "text": "\u540d\u58f0",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e6b384e6b094": {
-    "text": "\u6cc4\u6c14",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e694bee5bf83": {
-    "text": "\u653e\u5fc3",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e6898be889ba": {
-    "text": "\u624b\u827a",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 1,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:04:10.735Z"
-  },
-  "chinese|L25|e6849fe58aa8": {
-    "text": "\u611f\u52a8",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 0,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
-  },
-  "chinese|L25|e681bce68092": {
-    "text": "\u607c\u6012",
-    "lessonId": "L25",
-    "subject": "chinese",
-    "round": 2,
-    "nextReview": "2026-05-20",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-19T11:12:35.861Z"
+    "updatedAt": "2026-05-16T02:55:24.636Z"
   }
 }
