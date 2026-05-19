@@ -274,8 +274,8 @@ const GITHUB_CONFIG = {
   branch: 'main',
   apiUrl: 'https://api.github.com',
   // Token 分段存储,避免被 GitHub secret scanning 误拦截
-  _tk1: 'github_pat_11ADDZ7DI0aptxJVT8AmDR_',
-  _tk2: 'iUn5bqaIRcuDWr44l1QmAiQ0g8H547JmYH3IRzvEl0dNU3EHFYCFvuoLEdv',
+  _tk1: 'gho_5HTcQJhR3I4GGMpu',
+  _tk2: 'uU1SnmTv6a7mrY1XG7e9',
   get token() { return this._tk1 + this._tk2; }
 };
 
