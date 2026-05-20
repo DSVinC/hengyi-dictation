@@ -100,8 +100,26 @@
       }
     }
   },
-  "_devices": {},
-  "_updatedAt": null,
+  "_devices": {
+    "device-mpdxwdj1-se4w4ldli0l": {
+      "dates": {
+        "2026-05-20": {
+          "chinese": {
+            "correct": 47,
+            "total": 49,
+            "updatedAt": "2026-05-20T10:49:26.654Z"
+          },
+          "english": {
+            "correct": 6,
+            "total": 7,
+            "updatedAt": "2026-05-20T10:55:19.801Z"
+          }
+        }
+      },
+      "updatedAt": "2026-05-20T10:55:19.801Z"
+    }
+  },
+  "_updatedAt": "2026-05-20T10:55:19.801Z",
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -182,6 +200,16 @@
     "english": {
       "correct": 3,
       "total": 3
+    }
+  },
+  "2026-05-20": {
+    "chinese": {
+      "correct": 47,
+      "total": 49
+    },
+    "english": {
+      "correct": 6,
+      "total": 7
     }
   }
 }
