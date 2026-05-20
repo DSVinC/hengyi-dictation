@@ -183,10 +183,10 @@
     "text": "ruler",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-19",
+    "round": 2,
+    "nextReview": "2026-05-21",
     "wrongCount": 4,
-    "updatedAt": "2026-05-19T11:14:42.031Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "english|U3|pen": {
     "text": "pen",
@@ -372,10 +372,10 @@
     "text": "from",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
+    "round": 1,
     "nextReview": "2026-05-20",
-    "wrongCount": 3,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "wrongCount": 4,
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "english|U1|about": {
     "text": "about",
@@ -444,10 +444,10 @@
     "text": "boy",
     "lessonId": "U1",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-20",
+    "round": 6,
+    "nextReview": "2026-06-10",
     "wrongCount": 0,
-    "updatedAt": "2026-05-05T02:28:53.009Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "english|U1|woman": {
     "text": "woman",
@@ -1164,10 +1164,10 @@
     "text": "see",
     "lessonId": "U3",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-20",
+    "round": 4,
+    "nextReview": "2026-05-25",
     "wrongCount": 3,
-    "updatedAt": "2026-05-17T04:51:25.154Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "english|U3|hear": {
     "text": "hear",
@@ -1587,10 +1587,10 @@
     "text": "breakfast",
     "lessonId": "U4",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-20",
+    "round": 6,
+    "nextReview": "2026-06-08",
     "wrongCount": 7,
-    "updatedAt": "2026-05-10T03:51:24.378Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "english|U4|time": {
     "text": "time",
@@ -1614,10 +1614,10 @@
     "text": "egg",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-20",
+    "round": 5,
+    "nextReview": "2026-06-01",
     "wrongCount": 1,
-    "updatedAt": "2026-05-14T12:24:42.901Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "chinese|L17|e9babbe783a6": {
     "text": "\u9ebb\u70e6",
@@ -1740,10 +1740,10 @@
     "text": "healthy",
     "lessonId": "U4",
     "subject": "english",
-    "round": 4,
-    "nextReview": "2026-05-20",
+    "round": 5,
+    "nextReview": "2026-05-31",
     "wrongCount": 7,
-    "updatedAt": "2026-05-16T03:15:43.992Z"
+    "updatedAt": "2026-05-20T10:55:19.801Z"
   },
   "chinese|L02|e78795e5ad90": {
     "text": "\u71d5\u5b50",
