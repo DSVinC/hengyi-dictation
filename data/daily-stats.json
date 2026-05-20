@@ -1,6 +1,83 @@
 {
-  "date": "2026-05-11",
-  "words": [],
+  "_schemaVersion": 2,
+  "_legacy": {
+    "2026-05-11": {
+      "chinese": {
+        "correct": 41,
+        "total": 46,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 15,
+        "total": 16,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-12": {
+      "chinese": {
+        "correct": 41,
+        "total": 44,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 14,
+        "total": 15,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-13": {
+      "chinese": {
+        "correct": 26,
+        "total": 30,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-14": {
+      "chinese": {
+        "correct": 49,
+        "total": 54,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 12,
+        "total": 14,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-15": {
+      "chinese": {
+        "correct": 29,
+        "total": 30,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-16": {
+      "chinese": {
+        "correct": 55,
+        "total": 56,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 9,
+        "total": 9,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-19": {
+      "chinese": {
+        "correct": 30,
+        "total": 30,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 1,
+        "total": 2,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    }
+  },
+  "_devices": {},
+  "_updatedAt": null,
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -51,6 +128,16 @@
     "english": {
       "correct": 9,
       "total": 9
+    }
+  },
+  "2026-05-19": {
+    "chinese": {
+      "correct": 30,
+      "total": 30
+    },
+    "english": {
+      "correct": 1,
+      "total": 2
     }
   }
 }
