@@ -74,6 +74,30 @@
         "total": 2,
         "updatedAt": "1970-01-01T00:00:00.000Z"
       }
+    },
+    "2026-05-17": {
+      "chinese": {
+        "correct": 50,
+        "total": 57,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 5,
+        "total": 5,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
+    },
+    "2026-05-18": {
+      "chinese": {
+        "correct": 51,
+        "total": 58,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      },
+      "english": {
+        "correct": 3,
+        "total": 3,
+        "updatedAt": "1970-01-01T00:00:00.000Z"
+      }
     }
   },
   "_devices": {},
@@ -138,6 +162,26 @@
     "english": {
       "correct": 1,
       "total": 2
+    }
+  },
+  "2026-05-17": {
+    "chinese": {
+      "correct": 50,
+      "total": 57
+    },
+    "english": {
+      "correct": 5,
+      "total": 5
+    }
+  },
+  "2026-05-18": {
+    "chinese": {
+      "correct": 51,
+      "total": 58
+    },
+    "english": {
+      "correct": 3,
+      "total": 3
     }
   }
 }
