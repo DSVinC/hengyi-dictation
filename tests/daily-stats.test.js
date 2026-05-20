@@ -57,11 +57,11 @@ function mockDate(dateStr) {
 // ============================================
 const wrapper = `
 ${code}
-return { DailyStats, getLocalDateString, DAILY_STATS_STORAGE_KEY };
+return { DailyStats: globalThis.DailyStats };
 `;
 const mod = new Function(wrapper)();
 
-const { DailyStats, getLocalDateString, DAILY_STATS_STORAGE_KEY } = mod;
+const { DailyStats } = mod;
 
 let fail = 0;
 function ok(cond, label) {
@@ -232,14 +232,90 @@ const emptyData = DailyStats.getAll();
 ok(Object.keys(emptyData).length === 0, '清除后数据为空');
 
 // ============================================
-// Test 12: getLocalDateString() 返回本地时区日期
+// Test 12: getToday() 使用本地时区日期
 // ============================================
-console.log('\n=== Test 12: getLocalDateString() 返回本地时区日期 ===');
+console.log('\n=== Test 12: getToday() 使用本地时区日期 ===');
 
-const dateStr = getLocalDateString();
-const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+reset();
+const restoreLocalDate = mockDate('2026-05-08T23:30:00+08:00');
+DailyStats.record('chinese', 1, 1);
+const localToday = DailyStats.getToday();
+restoreLocalDate();
 
-ok(dateRegex.test(dateStr), '日期格式为 YYYY-MM-DD');
+ok(localToday !== null, '本地当天有数据');
+ok(localToday.chinese.correct === 1, '本地当天语文正确数=1');
+
+// ============================================
+// Test 13: 多设备增量合并不会互相覆盖
+// ============================================
+console.log('\n=== Test 13: 多设备增量合并不会互相覆盖 ===');
+reset();
+
+const remoteStats = {
+  _schemaVersion: 2,
+  _legacy: {
+    '2026-05-16': {
+      chinese: { correct: 55, total: 56, updatedAt: '1970-01-01T00:00:00.000Z' }
+    }
+  },
+  _devices: {
+    ipad: {
+      dates: {
+        '2026-05-19': {
+          english: { correct: 9, total: 10, updatedAt: '2026-05-19T10:00:00.000Z' }
+        }
+      },
+      updatedAt: '2026-05-19T10:00:00.000Z'
+    }
+  }
+};
+
+const localStats = {
+  _schemaVersion: 2,
+  _legacy: {},
+  _devices: {
+    iphone: {
+      dates: {
+        '2026-05-18': {
+          chinese: { correct: 44, total: 50, updatedAt: '2026-05-18T10:00:00.000Z' }
+        }
+      },
+      updatedAt: '2026-05-18T10:00:00.000Z'
+    }
+  }
+};
+
+const merged = DailyStats.mergeForSync(remoteStats, localStats);
+DailyStats.mergeFromRemote(merged);
+const mergedPublic = DailyStats.getAll();
+
+ok(mergedPublic['2026-05-16'].chinese.correct === 55, '保留远端历史数据');
+ok(mergedPublic['2026-05-18'].chinese.correct === 44, '保留 iPhone 数据');
+ok(mergedPublic['2026-05-19'].english.correct === 9, '保留 iPad 数据');
+
+// ============================================
+// Test 14: 旧 flat 数据迁移不会把同一天重复累加
+// ============================================
+console.log('\n=== Test 14: 旧 flat 数据迁移不会把同一天重复累加 ===');
+reset();
+
+const remoteLegacy = {
+  '2026-05-16': {
+    chinese: { correct: 55, total: 56 }
+  }
+};
+const ipadLegacy = {
+  '2026-05-16': {
+    chinese: { correct: 55, total: 56 }
+  },
+  '2026-05-19': {
+    english: { correct: 9, total: 10 }
+  }
+};
+const migrated = DailyStats.mergeForSync(remoteLegacy, ipadLegacy);
+
+ok(migrated['2026-05-16'].chinese.correct === 55, '相同历史日期不重复累加');
+ok(migrated['2026-05-19'].english.correct === 9, '保留本机新增日期');
 
 // ============================================
 // Summary

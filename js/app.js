@@ -602,12 +602,27 @@ async function saveDailyStatsToGitHub(stats) {
       headers: getGitHubHeaders(token)
     });
     let sha = null;
+    let remoteStats = {};
     if (getResp.ok) {
       const getData = await parseJsonSafe(getResp);
       sha = getData.sha;
+      if (getData.content) {
+        remoteStats = JSON.parse(decodeBase64Utf8(getData.content));
+      }
     }
 
-    const safeJson = unicodeEscapeChinese(JSON.stringify(stats, null, 2));
+    const localStats = typeof DailyStats !== 'undefined' && typeof DailyStats.normalizeForSync === 'function'
+      ? DailyStats.normalizeForSync(stats)
+      : stats;
+    const statsToSave = typeof DailyStats !== 'undefined' && typeof DailyStats.mergeForSync === 'function'
+      ? DailyStats.mergeForSync(remoteStats, localStats)
+      : { ...remoteStats, ...localStats };
+
+    if (typeof DailyStats !== 'undefined' && typeof DailyStats.mergeFromRemote === 'function') {
+      DailyStats.mergeFromRemote(statsToSave);
+    }
+
+    const safeJson = unicodeEscapeChinese(JSON.stringify(statsToSave, null, 2));
     const body = {
       message: `chore: 同步每日统计 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
       content: encodeBase64Utf8(safeJson),
@@ -665,7 +680,9 @@ function debouncedSyncDailyStats() {
 
   dailyStatsSyncTimer = setTimeout(async () => {
     if (typeof DailyStats === 'undefined') return;
-    const stats = DailyStats.getAll() || {};
+    const stats = typeof DailyStats.getSyncData === 'function'
+      ? DailyStats.getSyncData()
+      : DailyStats.getAll() || {};
     if (isGitHubConfigured) {
       await saveDailyStatsToGitHub(stats);
     } else {
@@ -673,6 +690,23 @@ function debouncedSyncDailyStats() {
       await saveDailyStatsToFile(stats);
     }
   }, DAILY_STATS_DEBOUNCE_MS);
+}
+
+async function loadDailyStatsFromGitHub() {
+  const token = await loadGitHubToken();
+  const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
+  const response = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
+    headers: getGitHubHeaders(token)
+  });
+
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    throw new Error(`GitHub 每日统计拉取失败: HTTP ${response.status}`);
+  }
+
+  const data = await parseJsonSafe(response);
+  if (!data.content) return null;
+  return JSON.parse(decodeBase64Utf8(data.content));
 }
 
 /**
@@ -687,6 +721,12 @@ async function mergeGitHubProgress() {
     }
 
     ProgressStore.mergeFromRemote(remoteProgress);
+    const afterMerge = ProgressStore.getAll();
+    const remoteJson = JSON.stringify(sanitizeProgress(remoteProgress));
+    const afterJson = JSON.stringify(sanitizeProgress(afterMerge));
+    if (afterJson !== remoteJson) {
+      debouncedSyncToGitHub();
+    }
     SyncState.status = 'synced';
     console.log('[GitHub Sync] 合并完成');
   } catch (error) {
@@ -717,18 +757,31 @@ async function backgroundSyncRefresh() {
 
   try {
     const remoteProgress = await loadProgressFromGitHub();
-    if (!remoteProgress) return;
+    const beforeProgress = ProgressStore.getAll();
+    if (remoteProgress) {
+      ProgressStore.mergeFromRemote(remoteProgress);
+    }
+    const afterProgress = ProgressStore.getAll();
 
-    const before = ProgressStore.getAll();
-    ProgressStore.mergeFromRemote(remoteProgress);
-    const after = ProgressStore.getAll();
+    let statsChanged = false;
+    if (typeof DailyStats !== 'undefined' && typeof DailyStats.mergeFromRemote === 'function') {
+      const beforeStats = typeof DailyStats.getSyncData === 'function' ? DailyStats.getSyncData() : DailyStats.getAll();
+      const remoteStats = await loadDailyStatsFromGitHub();
+      if (remoteStats) {
+        DailyStats.mergeFromRemote(remoteStats);
+        const afterStats = typeof DailyStats.getSyncData === 'function' ? DailyStats.getSyncData() : DailyStats.getAll();
+        statsChanged = JSON.stringify(afterStats) !== JSON.stringify(beforeStats);
+      }
+    }
 
-    if (JSON.stringify(after) !== JSON.stringify(before)) {
+    if (JSON.stringify(afterProgress) !== JSON.stringify(beforeProgress) || statsChanged) {
       SyncState.status = 'synced';
       SyncState.lastSync = new Date();
       updateSyncIndicator();
       if (AppState.currentPage === 'progress') {
         renderProgressPage();
+      } else if (AppState.currentPage === 'stats') {
+        renderStatsPage();
       }
     }
   } catch (error) {
