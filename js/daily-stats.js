@@ -273,7 +273,7 @@
      */
     async init() {
       try {
-        const response = await fetch(DAILY_STATS_FILE);
+        const response = await fetch(`${DAILY_STATS_FILE}?t=${Date.now()}`, { cache: 'no-store' });
         if (response.ok) {
           const fileData = await response.json();
           const localData = loadFromStorage();

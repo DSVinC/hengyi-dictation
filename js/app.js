@@ -695,7 +695,8 @@ function debouncedSyncDailyStats() {
 async function loadDailyStatsFromGitHub() {
   const token = await loadGitHubToken();
   const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
-  const response = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
+  const response = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}&t=${Date.now()}`, {
+    cache: 'no-store',
     headers: getGitHubHeaders(token)
   });
 
