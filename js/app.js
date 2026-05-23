@@ -2174,7 +2174,7 @@ function finishDictationGrading() {
     if (isMastered) {
       newRound = isWrong ? 5 : 7;
     } else {
-      newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 6);
+      newRound = isWrong ? 1 : Math.min((item.round || 0) + 1, 7);
     }
     const nextReview = isWrong
       ? getLocalDate()
@@ -2295,7 +2295,7 @@ function mergeProgressToWords(data, subject, lessonId) {
 
 function getWordStatus(round) {
   if (round === 0) return { icon: '🆕', text: '新词', className: 'status-new' };
-  if (round >= 1 && round <= 5) return { icon: '📝', text: `复习中 R${round}`, className: 'status-review' };
+  if (round >= 1 && round <= 6) return { icon: '📝', text: `复习中 R${round}`, className: 'status-review' };
   return { icon: '✅', text: '已掌握', className: 'status-mastered' };
 }
 
@@ -2356,8 +2356,8 @@ async function selectVocabSubject(subject) {
     return {
       ...item,
       newCount: data.words.filter(w => w.round === 0).length,
-      reviewCount: data.words.filter(w => w.round >= 1 && w.round <= 5).length,
-      masteredCount: data.words.filter(w => w.round >= 6).length,
+      reviewCount: data.words.filter(w => w.round >= 1 && w.round <= 6).length,
+      masteredCount: data.words.filter(w => w.round >= 7).length,
       totalCount: data.words.length
     };
   }));
@@ -2399,7 +2399,7 @@ async function selectVocabLesson(lessonId) {
 
   const title = isChinese ? data.lessonName : data.unitName;
   const sortedWords = [...data.words].sort((a, b) => {
-    const p = w => w.round === 0 ? 0 : w.round <= 5 ? 1 : 2;
+    const p = w => w.round === 0 ? 0 : w.round <= 6 ? 1 : 2;
     return p(a) - p(b);
   });
 
@@ -2421,8 +2421,8 @@ async function selectVocabLesson(lessonId) {
   }).join('');
 
   const newCount = data.words.filter(w => w.round === 0).length;
-  const reviewCount = data.words.filter(w => w.round >= 1 && w.round <= 5).length;
-  const masteredCount = data.words.filter(w => w.round >= 6).length;
+  const reviewCount = data.words.filter(w => w.round >= 1 && w.round <= 6).length;
+  const masteredCount = data.words.filter(w => w.round >= 7).length;
 
   renderContent(`
     <button class="back-btn" onclick="selectVocabSubject('${subject}')">← 返回</button>
@@ -2792,7 +2792,7 @@ async function renderProgressPage(filter = 'all') {
       if (data && data.words) {
         data = mergeProgressToWords(data, 'chinese', lesson.id);
         data.words.forEach(word => allWords.push({ ...word, subject: 'chinese', lessonId: lesson.id, lessonName: data.lessonName }));
-        const mastered = data.words.filter(w => w.round >= 6).length;
+        const mastered = data.words.filter(w => w.round >= 7).length;
         lessonStats.push({ name: lesson.name, subject: 'chinese', mastered, total: data.words.length, percent: data.words.length > 0 ? Math.round((mastered / data.words.length) * 100) : 0 });
       }
     }
@@ -2804,7 +2804,7 @@ async function renderProgressPage(filter = 'all') {
       if (data && data.words) {
         data = mergeProgressToWords(data, 'english', unit.id);
         data.words.forEach(word => allWords.push({ ...word, subject: 'english', unitId: unit.id, unitName: data.unitName }));
-        const mastered = data.words.filter(w => w.round >= 6).length;
+        const mastered = data.words.filter(w => w.round >= 7).length;
         lessonStats.push({ name: unit.name, subject: 'english', mastered, total: data.words.length, percent: data.words.length > 0 ? Math.round((mastered / data.words.length) * 100) : 0 });
       }
     }
@@ -2816,14 +2816,14 @@ async function renderProgressPage(filter = 'all') {
     if (customData && customData.words && customData.words.length > 0) {
       mergeProgressToWords(customData, 'custom', 'CUSTOM');
       customData.words.forEach(word => allWords.push({ ...word, subject: 'custom', lessonId: 'CUSTOM', lessonName: '自定义词语' }));
-      const mastered = customData.words.filter(w => w.round >= 6).length;
+      const mastered = customData.words.filter(w => w.round >= 7).length;
       lessonStats.push({ name: '📝 自定义词语', subject: 'custom', mastered, total: customData.words.length, percent: customData.words.length > 0 ? Math.round((mastered / customData.words.length) * 100) : 0 });
     }
   }
 
   const totalCount = allWords.length;
-  const masteredCount = allWords.filter(w => w.round >= 6).length;
-  const reviewCount = allWords.filter(w => w.round >= 1 && w.round <= 5).length;
+  const masteredCount = allWords.filter(w => w.round >= 7).length;
+  const reviewCount = allWords.filter(w => w.round >= 1 && w.round <= 6).length;
   const newCount = allWords.filter(w => w.round === 0).length;
   const masteryPercent = totalCount > 0 ? Math.round((masteredCount / totalCount) * 100) : 0;
 
@@ -2862,7 +2862,7 @@ async function renderProgressPage(filter = 'all') {
     </div>
   `;
 
-  const reviewWords = allWords.filter(w => w.round >= 1 && w.round <= 5).sort((a, b) => a.round - b.round);
+  const reviewWords = allWords.filter(w => w.round >= 1 && w.round <= 6).sort((a, b) => a.round - b.round);
   const REVIEW_PAGE_SIZE = 20;
   const totalReviewPages = Math.ceil(reviewWords.length / REVIEW_PAGE_SIZE);
   const reviewPage = Math.min(AppState.reviewWordsPage, totalReviewPages) || 1;
@@ -2886,8 +2886,13 @@ async function renderProgressPage(filter = 'all') {
               <span class="manual-btn-group">
                 <select class="manual-round-select" id="round-select-${safeId}">
                   <option value="0">R0</option>
-                  ${[1,2,3,4,5].map(r => `<option value="${r}" ${word.round===r?'selected':''}>R${r}</option>`).join('')}
-                  <option value="6">已掌握</option>
+                  <option value="1" ${word.round===1?'selected':''}>R1(1天后复习)</option>
+                  <option value="2" ${word.round===2?'selected':''}>R2(2天后复习)</option>
+                  <option value="3" ${word.round===3?'selected':''}>R3(3天后复习)</option>
+                  <option value="4" ${word.round===4?'selected':''}>R4(5天后复习)</option>
+                  <option value="5" ${word.round===5?'selected':''}>R5(12天后复习)</option>
+                  <option value="6" ${word.round===6?'selected':''}>R6(20天后复习)</option>
+                  <option value="7">R7 已掌握</option>
                 </select>
                 <button class="manual-btn btn-r1" onclick="manualSetRound('${word.subject}','${word.lessonId || word.unitId}','${safeId}',document.getElementById('round-select-${safeId}').value)">确认</button>
                 <button class="manual-btn btn-reset" onclick="manualResetWord('${word.subject}','${word.lessonId || word.unitId}','${safeId}')">重置</button>
@@ -2922,11 +2927,12 @@ async function renderProgressPage(filter = 'all') {
         <select id="manual-round-select" class="manual-input">
           <option value="0">R0 新词</option>
           <option value="1" selected>R1(1天后复习)</option>
-          <option value="2">R2(3天后复习)</option>
-          <option value="3">R3(7天后复习)</option>
-          <option value="4">R4(16天后复习)</option>
-          <option value="5">R5(35天后复习)</option>
-          <option value="6">已掌握</option>
+          <option value="2">R2(2天后复习)</option>
+          <option value="3">R3(3天后复习)</option>
+          <option value="4">R4(5天后复习)</option>
+          <option value="5">R5(12天后复习)</option>
+          <option value="6">R6(20天后复习)</option>
+          <option value="7">R7 已掌握</option>
         </select>
         <div class="add-word-buttons">
           <button class="btn btn-primary" style="flex:1;font-size:14px;padding:10px;" onclick="manualAddWordWithRound()">添加</button>
@@ -3011,7 +3017,7 @@ function updateWordProgress(subject, lessonId, text, round, wrongCountIncrement 
 function manualSetRound(subject, lessonId, text, round) {
   round = parseInt(round, 10);
   updateWordProgress(subject, lessonId, text, round);
-  const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+  const roundName = round >= 7 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
   alert(`✅ ${text} 已设为${roundName}`);
   const activeFilter = document.querySelector('.filter-btn.active');
   const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
@@ -3100,7 +3106,7 @@ async function manualAddWordWithRound() {
     customData.words.push({ text, type: 'word', round, nextReview: getNextReviewForRound(round), wrongCount: 0, history: [] });
     await saveCustomWords(customData);
     updateWordProgress('custom', 'CUSTOM', text, round);
-    const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+    const roundName = round >= 7 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
     wordInput.value = '';
     alert(`✅ "${text}" 已添加到自定义词库(${roundName})`);
     const activeFilter = document.querySelector('.filter-btn.active');
@@ -3116,7 +3122,7 @@ async function manualAddWordWithRound() {
   }
 
   updateWordProgress(subject, lessonId, text, round);
-  const roundName = round >= 6 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
+  const roundName = round >= 7 ? '已掌握' : round === 0 ? '新词' : `R${round} 复习中`;
   wordInput.value = '';
   alert(`✅ ${text} 已设为${roundName}`);
   const activeFilter = document.querySelector('.filter-btn.active');
@@ -3133,7 +3139,7 @@ function manualAddWordMastered() {
   const [subject, lessonId] = lessonSelect.value.split('|');
   const text = wordInput.value.trim();
   wordInput.value = '';
-  updateWordProgress(subject, lessonId, text, 6);
+  updateWordProgress(subject, lessonId, text, 7);
   alert(`✅ ${text} 已设为已掌握`);
   const activeFilter = document.querySelector('.filter-btn.active');
   const filter = activeFilter ? activeFilter.textContent.trim().toLowerCase() : 'all';
