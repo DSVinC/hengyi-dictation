@@ -116,15 +116,15 @@
           }
         },
         "2026-05-23": {
-          "english": {
-            "correct": 16,
-            "total": 23,
-            "updatedAt": "2026-05-23T05:31:14.277Z"
-          },
           "chinese": {
             "correct": 23,
             "total": 29,
             "updatedAt": "2026-05-23T05:46:04.409Z"
+          },
+          "english": {
+            "correct": 16,
+            "total": 23,
+            "updatedAt": "2026-05-23T05:31:14.277Z"
           }
         }
       },
@@ -153,9 +153,21 @@
         }
       },
       "updatedAt": "2026-05-22T11:08:21.514Z"
+    },
+    "device-mpj7urfc-511zfzqmuob": {
+      "dates": {
+        "2026-05-24": {
+          "chinese": {
+            "correct": 43,
+            "total": 44,
+            "updatedAt": "2026-05-24T03:26:58.392Z"
+          }
+        }
+      },
+      "updatedAt": "2026-05-24T03:26:58.392Z"
     }
   },
-  "_updatedAt": "2026-05-23T05:46:04.409Z",
+  "_updatedAt": "2026-05-24T03:26:58.392Z",
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -272,6 +284,12 @@
     "chinese": {
       "correct": 28,
       "total": 30
+    }
+  },
+  "2026-05-24": {
+    "chinese": {
+      "correct": 43,
+      "total": 44
     }
   }
 }
