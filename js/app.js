@@ -49,7 +49,8 @@ const AppState = {
   reviewWordsPage: 1,         // 复习中的词分页页码
   retryWordsMode: false,      // 重听错词模式
   dueReviewWords: [],         // 当前页面的到期复习词
-  debtMode: false,            // 清债模式
+  debtMode: true,             // 清债模式默认打开
+  debtModeTouched: false,     // 用户是否手动切换过清债模式
   currentAudio: null,         // 当前播放的固定音频
   englishAudioManifest: null, // 英语固定音频清单
   englishAudioManifestPromise: null,
@@ -954,8 +955,13 @@ function renderDebtModeOption() {
 
   if (totalPlanned <= WORD_LIMIT || dueBreakdown.total === 0) {
     container.innerHTML = '';
-    AppState.debtMode = false;
+    AppState.debtMode = true;
+    AppState.debtModeTouched = false;
     return;
+  }
+
+  if (!AppState.debtModeTouched) {
+    AppState.debtMode = true;
   }
 
   container.innerHTML = `
@@ -978,6 +984,7 @@ function refreshSelectionUi() {
 
 function toggleDebtMode(checked) {
   AppState.debtMode = Boolean(checked);
+  AppState.debtModeTouched = true;
   renderDebtModeOption();
 }
 
@@ -1547,7 +1554,8 @@ async function selectLesson(lessonId) {
   AppState.currentLesson = lessonId;
   AppState.selectedWords.clear();
   AppState.dueReviewWords = [];
-  AppState.debtMode = false;
+  AppState.debtMode = true;
+  AppState.debtModeTouched = false;
 
   const subject = AppState.currentSubject;
   let data = await loadWordData(subject, lessonId);
