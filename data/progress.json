@@ -174,10 +174,10 @@
     "text": "find",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 4,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U3|ruler": {
     "text": "ruler",
@@ -246,10 +246,10 @@
     "text": "slow",
     "lessonId": "U2",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 4,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U2|love": {
     "text": "love",
@@ -300,10 +300,10 @@
     "text": "talk",
     "lessonId": "U2",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-15",
     "wrongCount": 1,
-    "updatedAt": "2026-05-07T12:52:26.101Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U2|face": {
     "text": "face",
@@ -345,19 +345,19 @@
     "text": "so",
     "lessonId": "U2",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-14",
     "wrongCount": 2,
-    "updatedAt": "2026-05-08T11:39:13.068Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U2|much": {
     "text": "much",
     "lessonId": "U2",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-13",
     "wrongCount": 3,
-    "updatedAt": "2026-05-12T12:48:04.881Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|where": {
     "text": "where",
@@ -372,10 +372,10 @@
     "text": "from",
     "lessonId": "U1",
     "subject": "english",
-    "round": 3,
-    "nextReview": "2026-05-24",
+    "round": 4,
+    "nextReview": "2026-05-29",
     "wrongCount": 4,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|about": {
     "text": "about",
@@ -399,19 +399,19 @@
     "text": "teacher",
     "lessonId": "U1",
     "subject": "english",
-    "round": 2,
+    "round": 1,
     "nextReview": "2026-05-24",
-    "wrongCount": 2,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "wrongCount": 3,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|student": {
     "text": "student",
     "lessonId": "U1",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 3,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|after": {
     "text": "after",
@@ -462,10 +462,10 @@
     "text": "man",
     "lessonId": "U1",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-15",
     "wrongCount": 1,
-    "updatedAt": "2026-05-11T12:18:56.975Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|he": {
     "text": "he",
@@ -489,10 +489,10 @@
     "text": "she",
     "lessonId": "U1",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-15",
     "wrongCount": 1,
-    "updatedAt": "2026-05-11T12:18:56.975Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|UK": {
     "text": "UK",
@@ -507,10 +507,10 @@
     "text": "China",
     "lessonId": "U1",
     "subject": "english",
-    "round": 5,
+    "round": 1,
     "nextReview": "2026-05-24",
-    "wrongCount": 1,
-    "updatedAt": "2026-05-08T11:39:13.068Z"
+    "wrongCount": 2,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U1|Canada": {
     "text": "Canada",
@@ -1110,10 +1110,10 @@
     "text": "book",
     "lessonId": "U3",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-16",
     "wrongCount": 0,
-    "updatedAt": "2026-05-11T12:18:56.975Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U3|bag": {
     "text": "bag",
@@ -1227,19 +1227,19 @@
     "text": "class",
     "lessonId": "U3",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 7,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U3|computer": {
     "text": "computer",
     "lessonId": "U3",
     "subject": "english",
     "round": 1,
-    "nextReview": "2026-05-23",
-    "wrongCount": 8,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "nextReview": "2026-05-24",
+    "wrongCount": 9,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U3|learn": {
     "text": "learn",
@@ -1605,10 +1605,10 @@
     "text": "bread",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 3,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U4|egg": {
     "text": "egg",
@@ -1659,10 +1659,10 @@
     "text": "milk",
     "lessonId": "U4",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-14",
     "wrongCount": 2,
-    "updatedAt": "2026-05-10T03:51:24.378Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U4|noodle": {
     "text": "noodle",
@@ -1686,10 +1686,10 @@
     "text": "rice",
     "lessonId": "U4",
     "subject": "english",
-    "round": 1,
-    "nextReview": "2026-05-23",
+    "round": 2,
+    "nextReview": "2026-05-25",
     "wrongCount": 3,
-    "updatedAt": "2026-05-23T05:31:14.276Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|u1|apple": {
     "text": "apple",
@@ -1722,10 +1722,10 @@
     "text": "meat",
     "lessonId": "U4",
     "subject": "english",
-    "round": 5,
-    "nextReview": "2026-05-24",
+    "round": 6,
+    "nextReview": "2026-06-14",
     "wrongCount": 2,
-    "updatedAt": "2026-05-10T03:51:24.378Z"
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   },
   "english|U4|vegetable": {
     "text": "vegetable",
@@ -3139,5 +3139,41 @@
     "nextReview": "2026-06-03",
     "wrongCount": 1,
     "updatedAt": "2026-05-24T03:26:58.391Z"
+  },
+  "english|U5|boat": {
+    "text": "boat",
+    "lessonId": "U5",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-05-25",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
+  },
+  "english|U5|cool": {
+    "text": "cool",
+    "lessonId": "U5",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-05-25",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
+  },
+  "english|U5|keep": {
+    "text": "keep",
+    "lessonId": "U5",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-05-25",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
+  },
+  "english|U5|at": {
+    "text": "at",
+    "lessonId": "U5",
+    "subject": "english",
+    "round": 1,
+    "nextReview": "2026-05-25",
+    "wrongCount": 0,
+    "updatedAt": "2026-05-24T03:43:08.750Z"
   }
 }
