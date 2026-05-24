@@ -161,13 +161,18 @@
             "correct": 43,
             "total": 44,
             "updatedAt": "2026-05-24T03:26:58.392Z"
+          },
+          "english": {
+            "correct": 19,
+            "total": 22,
+            "updatedAt": "2026-05-24T03:43:08.751Z"
           }
         }
       },
-      "updatedAt": "2026-05-24T03:26:58.392Z"
+      "updatedAt": "2026-05-24T03:43:08.751Z"
     }
   },
-  "_updatedAt": "2026-05-24T03:26:58.392Z",
+  "_updatedAt": "2026-05-24T03:43:08.751Z",
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -290,6 +295,10 @@
     "chinese": {
       "correct": 43,
       "total": 44
+    },
+    "english": {
+      "correct": 19,
+      "total": 22
     }
   }
 }
