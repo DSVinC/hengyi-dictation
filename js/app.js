@@ -442,6 +442,8 @@ const SyncState = {
   remoteSha: null
 };
 
+const GITHUB_WRITE_MAX_ATTEMPTS = 3;
+
 // 防抖定时器
 let syncDebounceTimer = null;
 const SYNC_DEBOUNCE_MS = 2000; // 2秒防抖
@@ -506,37 +508,46 @@ async function saveProgressToGitHub(localProgress) {
       throw new Error('未找到 GITHUB_TOKEN');
     }
 
-    const remoteProgress = await loadProgressFromGitHub();
-    const progressToSave = mergeProgress(remoteProgress || {}, sanitizeProgress(localProgress || {}));
-    ProgressStore.mergeFromRemote(progressToSave);
+    for (let attempt = 1; attempt <= GITHUB_WRITE_MAX_ATTEMPTS; attempt++) {
+      const remoteProgress = await loadProgressFromGitHub();
+      const progressToSave = mergeProgress(remoteProgress || {}, sanitizeProgress(localProgress || {}));
+      ProgressStore.mergeFromRemote(progressToSave);
 
-    const safeJson = unicodeEscapeChinese(JSON.stringify(progressToSave, null, 2));
-    const body = {
-      message: `chore: 同步进度 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
-      content: encodeBase64Utf8(safeJson),
-      branch: GITHUB_CONFIG.branch
-    };
-    if (SyncState.remoteSha) body.sha = SyncState.remoteSha;
+      const safeJson = unicodeEscapeChinese(JSON.stringify(progressToSave, null, 2));
+      const body = {
+        message: `chore: 同步进度 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
+        content: encodeBase64Utf8(safeJson),
+        branch: GITHUB_CONFIG.branch
+      };
+      if (SyncState.remoteSha) body.sha = SyncState.remoteSha;
 
-    const response = await fetchWithTimeout(getGitHubContentUrl(), {
-      method: 'PUT',
-      headers: {
-        ...getGitHubHeaders(token),
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
+      const response = await fetchWithTimeout(getGitHubContentUrl(), {
+        method: 'PUT',
+        headers: {
+          ...getGitHubHeaders(token),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
 
-    if (!response.ok) {
-      throw new Error(`GitHub 保存失败: HTTP ${response.status}`);
+      if (response.status === 409 && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
+        console.warn(`[GitHub Sync] SHA 冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(`GitHub 保存失败: HTTP ${response.status}`);
+      }
+
+      const result = await parseJsonSafe(response);
+      SyncState.remoteSha = result.content?.sha || SyncState.remoteSha;
+      SyncState.status = 'synced';
+      SyncState.lastSync = new Date();
+      SyncState.error = null;
+      return true;
     }
 
-    const result = await parseJsonSafe(response);
-    SyncState.remoteSha = result.content?.sha || SyncState.remoteSha;
-    SyncState.status = 'synced';
-    SyncState.lastSync = new Date();
-    SyncState.error = null;
-    return true;
+    throw new Error('GitHub 保存失败: SHA 冲突重试后仍失败');
   } catch (error) {
     SyncState.status = 'error';
     SyncState.error = error;
@@ -598,55 +609,68 @@ async function saveDailyStatsToGitHub(stats) {
 
     const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
 
-    // 先获取远程 SHA
-    const getResp = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
-      headers: getGitHubHeaders(token)
-    });
-    let sha = null;
-    let remoteStats = {};
-    if (getResp.ok) {
-      const getData = await parseJsonSafe(getResp);
-      sha = getData.sha;
-      if (getData.content) {
-        remoteStats = JSON.parse(decodeBase64Utf8(getData.content));
+    for (let attempt = 1; attempt <= GITHUB_WRITE_MAX_ATTEMPTS; attempt++) {
+      // 先获取远程 SHA；409 时会回到这里重新拉最新版本。
+      const getResp = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
+        headers: getGitHubHeaders(token)
+      });
+      let sha = null;
+      let remoteStats = {};
+      if (getResp.ok) {
+        const getData = await parseJsonSafe(getResp);
+        sha = getData.sha;
+        if (getData.content) {
+          remoteStats = JSON.parse(decodeBase64Utf8(getData.content));
+        }
       }
+
+      const localStats = typeof DailyStats !== 'undefined' && typeof DailyStats.normalizeForSync === 'function'
+        ? DailyStats.normalizeForSync(stats)
+        : stats;
+      const statsToSave = typeof DailyStats !== 'undefined' && typeof DailyStats.mergeForSync === 'function'
+        ? DailyStats.mergeForSync(remoteStats, localStats)
+        : { ...remoteStats, ...localStats };
+
+      if (typeof DailyStats !== 'undefined' && typeof DailyStats.mergeFromRemote === 'function') {
+        DailyStats.mergeFromRemote(statsToSave);
+      }
+
+      const safeJson = unicodeEscapeChinese(JSON.stringify(statsToSave, null, 2));
+      const body = {
+        message: `chore: 同步每日统计 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
+        content: encodeBase64Utf8(safeJson),
+        branch: GITHUB_CONFIG.branch
+      };
+      if (sha) body.sha = sha;
+
+      const response = await fetchWithTimeout(url, {
+        method: 'PUT',
+        headers: {
+          ...getGitHubHeaders(token),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (response.status === 409 && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
+        console.warn(`[DailyStats Sync] SHA 冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(`GitHub 每日统计保存失败: HTTP ${response.status}`);
+      }
+
+      await parseJsonSafe(response);
+      SyncState.status = 'synced';
+      SyncState.lastSync = new Date();
+      SyncState.error = null;
+      updateSyncIndicator();
+      console.log('[DailyStats Sync] 同步完成');
+      return true;
     }
 
-    const localStats = typeof DailyStats !== 'undefined' && typeof DailyStats.normalizeForSync === 'function'
-      ? DailyStats.normalizeForSync(stats)
-      : stats;
-    const statsToSave = typeof DailyStats !== 'undefined' && typeof DailyStats.mergeForSync === 'function'
-      ? DailyStats.mergeForSync(remoteStats, localStats)
-      : { ...remoteStats, ...localStats };
-
-    if (typeof DailyStats !== 'undefined' && typeof DailyStats.mergeFromRemote === 'function') {
-      DailyStats.mergeFromRemote(statsToSave);
-    }
-
-    const safeJson = unicodeEscapeChinese(JSON.stringify(statsToSave, null, 2));
-    const body = {
-      message: `chore: 同步每日统计 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
-      content: encodeBase64Utf8(safeJson),
-      branch: GITHUB_CONFIG.branch
-    };
-    if (sha) body.sha = sha;
-
-    const response = await fetchWithTimeout(url, {
-      method: 'PUT',
-      headers: {
-        ...getGitHubHeaders(token),
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      throw new Error(`GitHub 每日统计保存失败: HTTP ${response.status}`);
-    }
-
-    const result = await parseJsonSafe(response);
-    console.log('[DailyStats Sync] 同步完成');
-    return true;
+    throw new Error('GitHub 每日统计保存失败: SHA 冲突重试后仍失败');
   } catch (error) {
     console.error('[DailyStats Sync] 同步失败:', error);
     return false;
