@@ -157,9 +157,21 @@
             "total": 61,
             "updatedAt": "2026-05-28T12:31:13.095Z"
           }
+        },
+        "2026-05-30": {
+          "chinese": {
+            "correct": 54,
+            "total": 56,
+            "updatedAt": "2026-05-30T02:54:33.487Z"
+          },
+          "english": {
+            "correct": 15,
+            "total": 22,
+            "updatedAt": "2026-05-30T03:09:35.157Z"
+          }
         }
       },
-      "updatedAt": "2026-05-28T12:31:13.095Z"
+      "updatedAt": "2026-05-30T03:09:35.157Z"
     },
     "device-mpj7urfc-511zfzqmuob": {
       "dates": {
@@ -244,7 +256,7 @@
       "updatedAt": "2026-05-28T15:14:40.850Z"
     }
   },
-  "_updatedAt": "2026-05-28T15:14:40.850Z",
+  "_updatedAt": "2026-05-30T03:09:35.157Z",
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -371,6 +383,16 @@
     "english": {
       "correct": 14,
       "total": 16
+    }
+  },
+  "2026-05-30": {
+    "chinese": {
+      "correct": 54,
+      "total": 56
+    },
+    "english": {
+      "correct": 15,
+      "total": 22
     }
   },
   "2026-05-24": {
