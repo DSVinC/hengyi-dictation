@@ -139,10 +139,15 @@
             "correct": 32,
             "total": 38,
             "updatedAt": "2026-05-31T11:14:04.595Z"
+          },
+          "english": {
+            "correct": 9,
+            "total": 13,
+            "updatedAt": "2026-05-31T11:26:23.634Z"
           }
         }
       },
-      "updatedAt": "2026-05-31T11:14:04.595Z"
+      "updatedAt": "2026-05-31T11:26:23.634Z"
     },
     "device-mpfeq1nw-i1oo386c2he": {
       "dates": {
@@ -270,7 +275,7 @@
       "updatedAt": "2026-05-28T15:14:40.850Z"
     }
   },
-  "_updatedAt": "2026-05-31T11:14:04.595Z",
+  "_updatedAt": "2026-05-31T11:26:23.634Z",
   "2026-05-11": {
     "chinese": {
       "correct": 41,
@@ -387,6 +392,10 @@
     "chinese": {
       "correct": 32,
       "total": 38
+    },
+    "english": {
+      "correct": 9,
+      "total": 13
     }
   },
   "2026-05-21": {
