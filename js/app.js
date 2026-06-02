@@ -265,20 +265,10 @@ function clearRetryWords() {
 }
 
 // ============================================
-// GitHub 云端同步
+// 云端同步
 // ============================================
 
-const GITHUB_CONFIG = {
-  owner: 'DSVinC',
-  repo: 'hengyi-dictation',
-  path: 'data/progress.json',
-  branch: 'main',
-  apiUrl: 'https://api.github.com',
-  // Token 分段存储,避免被 GitHub secret scanning 误拦截
-  _tk1: 'gho_5HTcQJhR3I4GGMpu',
-  _tk2: 'uU1SnmTv6a7mrY1XG7e9',
-  get token() { return this._tk1 + this._tk2; }
-};
+const SYNC_API_BASE = window.HENGYI_SYNC_API_BASE || 'https://hengyi-learning-system.pages.dev/api/dictation-sync';
 
 function isLocalDebugEnvironment() {
   const hostname = window.location.hostname;
@@ -289,49 +279,6 @@ function isLocalDebugEnvironment() {
 }
 
 const isGitHubConfigured = !isLocalDebugEnvironment();
-
-function getGitHubContentUrl() {
-  return `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
-}
-
-function parseEnvToken(content) {
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
-    const [key, ...valueParts] = trimmed.split('=');
-    if (key.trim() === 'GITHUB_TOKEN') {
-      return valueParts.join('=').trim().replace(/^["']|["']$/g, '');
-    }
-  }
-  return '';
-}
-
-async function loadGitHubToken() {
-  return GITHUB_CONFIG.token;
-}
-
-function getGitHubHeaders(token) {
-  const headers = {
-    'Accept': 'application/vnd.github.v3+json'
-  };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  return headers;
-}
-
-function decodeBase64Utf8(base64) {
-  const binary = atob(base64.replace(/\n/g, ''));
-  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
-  return new TextDecoder('utf-8').decode(bytes);
-}
-
-function encodeBase64Utf8(text) {
-  const bytes = new TextEncoder().encode(text);
-  let binary = '';
-  bytes.forEach(byte => {
-    binary += String.fromCharCode(byte);
-  });
-  return btoa(binary);
-}
 
 function unicodeEscapeChinese(json) {
   return json.replace(/[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/g,
@@ -453,12 +400,11 @@ let syncRefreshTimer = null;
 const SYNC_REFRESH_MS = 30000; // 30秒刷新远程
 
 /**
- * 从 GitHub 加载进度
+ * 从云端加载进度
  */
 async function loadProgressFromGitHub() {
-  const token = await loadGitHubToken();
-  const response = await fetchWithTimeout(`${getGitHubContentUrl()}?ref=${GITHUB_CONFIG.branch}`, {
-    headers: getGitHubHeaders(token)
+  const response = await fetchWithTimeout(`${SYNC_API_BASE}?kind=progress&t=${Date.now()}`, {
+    cache: 'no-store'
   });
 
   if (response.status === 404) {
@@ -467,91 +413,60 @@ async function loadProgressFromGitHub() {
   }
 
   if (!response.ok) {
-    throw new Error(`GitHub 拉取失败: HTTP ${response.status}`);
+    throw new Error(`云端进度拉取失败: HTTP ${response.status}`);
   }
 
-  const data = await parseJsonSafe(response);
-  SyncState.remoteSha = data.sha;
+  const payload = await parseJsonSafe(response);
   SyncState.lastSync = new Date();
-
-  let content = data.content ? decodeBase64Utf8(data.content) : '';
-  if (!content) {
-    const rawResponse = await fetchWithTimeout(`${getGitHubContentUrl()}?ref=${GITHUB_CONFIG.branch}`, {
-      headers: {
-        ...getGitHubHeaders(token),
-        'Accept': 'application/vnd.github.raw'
-      }
-    });
-    if (rawResponse.ok) content = await rawResponse.text();
+  if (!payload || payload.success === false) {
+    throw new Error(payload?.error || '云端进度拉取失败');
   }
-  if (!content && data.download_url) {
-    const rawResponse = await fetchWithTimeout(data.download_url, {
-      headers: getGitHubHeaders(token)
-    });
-    if (!rawResponse.ok) {
-      throw new Error(`GitHub 原始文件拉取失败: HTTP ${rawResponse.status}`);
-    }
-    content = await rawResponse.text();
-  }
-  if (!content) return null;
 
-  return sanitizeProgress(JSON.parse(content));
+  return sanitizeProgress(payload.data || {});
 }
 
 /**
- * 保存进度到 GitHub
+ * 保存进度到云端
  */
 async function saveProgressToGitHub(localProgress) {
   try {
-    const token = await loadGitHubToken();
-    if (!token) {
-      throw new Error('未找到 GITHUB_TOKEN');
-    }
-
     for (let attempt = 1; attempt <= GITHUB_WRITE_MAX_ATTEMPTS; attempt++) {
       const remoteProgress = await loadProgressFromGitHub();
       const progressToSave = mergeProgress(remoteProgress || {}, sanitizeProgress(localProgress || {}));
       ProgressStore.mergeFromRemote(progressToSave);
 
-      const safeJson = unicodeEscapeChinese(JSON.stringify(progressToSave, null, 2));
-      const body = {
-        message: `chore: 同步进度 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
-        content: encodeBase64Utf8(safeJson),
-        branch: GITHUB_CONFIG.branch
-      };
-      if (SyncState.remoteSha) body.sha = SyncState.remoteSha;
-
-      const response = await fetchWithTimeout(getGitHubContentUrl(), {
-        method: 'PUT',
+      const response = await fetchWithTimeout(SYNC_API_BASE, {
+        method: 'POST',
         headers: {
-          ...getGitHubHeaders(token),
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          kind: 'progress',
+          data: progressToSave
+        })
       });
 
-      if (response.status === 409 && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
-        console.warn(`[GitHub Sync] SHA 冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
+      if ((response.status === 409 || response.status === 412) && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
+        console.warn(`[Cloud Sync] 进度写入冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
         continue;
       }
 
       if (!response.ok) {
-        throw new Error(`GitHub 保存失败: HTTP ${response.status}`);
+        throw new Error(`云端进度保存失败: HTTP ${response.status}`);
       }
 
-      const result = await parseJsonSafe(response);
-      SyncState.remoteSha = result.content?.sha || SyncState.remoteSha;
+      await parseJsonSafe(response);
       SyncState.status = 'synced';
       SyncState.lastSync = new Date();
       SyncState.error = null;
       return true;
     }
 
-    throw new Error('GitHub 保存失败: SHA 冲突重试后仍失败');
+    throw new Error('云端进度保存失败: 冲突重试后仍失败');
   } catch (error) {
     SyncState.status = 'error';
     SyncState.error = error;
-    console.error('[GitHub Sync] 保存失败:', error);
+    console.error('[Cloud Sync] 进度保存失败:', error);
     return false;
   }
 }
@@ -571,7 +486,7 @@ function debouncedSyncToGitHub() {
     const success = await saveProgressToGitHub(progress);
     updateSyncIndicator();
     if (success) {
-      console.log('[GitHub Sync] 防抖同步完成');
+      console.log('[Cloud Sync] 进度防抖同步完成');
     }
   }, SYNC_DEBOUNCE_MS);
 }
@@ -593,7 +508,7 @@ async function forceSyncToGitHub() {
 }
 
 /**
- * 每日统计同步：将 daily stats 推送到 data/daily-stats.json
+ * 每日统计同步
  * 注意：debouncedSyncToGitHub() 同步的是 progress，不是 daily stats！
  */
 const DAILY_STATS_DEBOUNCE_MS = 3000;
@@ -601,28 +516,8 @@ let dailyStatsSyncTimer = null;
 
 async function saveDailyStatsToGitHub(stats) {
   try {
-    const token = await loadGitHubToken();
-    if (!token) {
-      console.warn('[DailyStats Sync] 未找到 GITHUB_TOKEN，跳过同步');
-      return false;
-    }
-
-    const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
-
     for (let attempt = 1; attempt <= GITHUB_WRITE_MAX_ATTEMPTS; attempt++) {
-      // 先获取远程 SHA；409 时会回到这里重新拉最新版本。
-      const getResp = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}`, {
-        headers: getGitHubHeaders(token)
-      });
-      let sha = null;
-      let remoteStats = {};
-      if (getResp.ok) {
-        const getData = await parseJsonSafe(getResp);
-        sha = getData.sha;
-        if (getData.content) {
-          remoteStats = JSON.parse(decodeBase64Utf8(getData.content));
-        }
-      }
+      const remoteStats = await loadDailyStatsFromGitHub() || {};
 
       const localStats = typeof DailyStats !== 'undefined' && typeof DailyStats.normalizeForSync === 'function'
         ? DailyStats.normalizeForSync(stats)
@@ -635,30 +530,24 @@ async function saveDailyStatsToGitHub(stats) {
         DailyStats.mergeFromRemote(statsToSave);
       }
 
-      const safeJson = unicodeEscapeChinese(JSON.stringify(statsToSave, null, 2));
-      const body = {
-        message: `chore: 同步每日统计 (${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })})`,
-        content: encodeBase64Utf8(safeJson),
-        branch: GITHUB_CONFIG.branch
-      };
-      if (sha) body.sha = sha;
-
-      const response = await fetchWithTimeout(url, {
-        method: 'PUT',
+      const response = await fetchWithTimeout(SYNC_API_BASE, {
+        method: 'POST',
         headers: {
-          ...getGitHubHeaders(token),
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          kind: 'daily-stats',
+          data: statsToSave
+        })
       });
 
-      if (response.status === 409 && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
-        console.warn(`[DailyStats Sync] SHA 冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
+      if ((response.status === 409 || response.status === 412) && attempt < GITHUB_WRITE_MAX_ATTEMPTS) {
+        console.warn(`[Cloud Sync] 每日统计写入冲突，重新拉取后重试 ${attempt}/${GITHUB_WRITE_MAX_ATTEMPTS}`);
         continue;
       }
 
       if (!response.ok) {
-        throw new Error(`GitHub 每日统计保存失败: HTTP ${response.status}`);
+        throw new Error(`云端每日统计保存失败: HTTP ${response.status}`);
       }
 
       await parseJsonSafe(response);
@@ -670,7 +559,7 @@ async function saveDailyStatsToGitHub(stats) {
       return true;
     }
 
-    throw new Error('GitHub 每日统计保存失败: SHA 冲突重试后仍失败');
+    throw new Error('云端每日统计保存失败: 冲突重试后仍失败');
   } catch (error) {
     console.error('[DailyStats Sync] 同步失败:', error);
     return false;
@@ -718,31 +607,30 @@ function debouncedSyncDailyStats() {
 }
 
 async function loadDailyStatsFromGitHub() {
-  const token = await loadGitHubToken();
-  const url = `${GITHUB_CONFIG.apiUrl}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/daily-stats.json`;
-  const response = await fetchWithTimeout(`${url}?ref=${GITHUB_CONFIG.branch}&t=${Date.now()}`, {
-    cache: 'no-store',
-    headers: getGitHubHeaders(token)
+  const response = await fetchWithTimeout(`${SYNC_API_BASE}?kind=daily-stats&t=${Date.now()}`, {
+    cache: 'no-store'
   });
 
   if (response.status === 404) return null;
   if (!response.ok) {
-    throw new Error(`GitHub 每日统计拉取失败: HTTP ${response.status}`);
+    throw new Error(`云端每日统计拉取失败: HTTP ${response.status}`);
   }
 
-  const data = await parseJsonSafe(response);
-  if (!data.content) return null;
-  return JSON.parse(decodeBase64Utf8(data.content));
+  const payload = await parseJsonSafe(response);
+  if (!payload || payload.success === false) {
+    throw new Error(payload?.error || '云端每日统计拉取失败');
+  }
+  return payload.data || null;
 }
 
 /**
- * 合并 GitHub 进度到 v2 存储(页面加载时调用)
+ * 合并云端进度到 v2 存储(页面加载时调用)
  */
 async function mergeGitHubProgress() {
   try {
     const remoteProgress = await loadProgressFromGitHub();
     if (!remoteProgress) {
-      console.log('[GitHub Sync] 未找到远程进度,使用本地数据');
+      console.log('[Cloud Sync] 未找到远程进度,使用本地数据');
       return;
     }
 
@@ -754,11 +642,11 @@ async function mergeGitHubProgress() {
       debouncedSyncToGitHub();
     }
     SyncState.status = 'synced';
-    console.log('[GitHub Sync] 合并完成');
+    console.log('[Cloud Sync] 合并完成');
   } catch (error) {
     SyncState.status = 'error';
     SyncState.error = error;
-    console.warn('[GitHub Sync] 合并失败:', error.message);
+    console.warn('[Cloud Sync] 合并失败:', error.message);
   }
 }
 
@@ -775,7 +663,7 @@ async function loadLocalDebugProgress() {
 }
 
 /**
- * 后台刷新:从 GitHub 拉取最新数据并合并到 v2 存储
+ * 后台刷新:从云端拉取最新数据并合并到 v2 存储
  */
 async function backgroundSyncRefresh() {
   if (!isGitHubConfigured) return;
@@ -811,7 +699,7 @@ async function backgroundSyncRefresh() {
       }
     }
   } catch (error) {
-    console.warn('[GitHub Sync] 后台刷新失败:', error.message);
+    console.warn('[Cloud Sync] 后台刷新失败:', error.message);
   }
 }
 
@@ -827,7 +715,7 @@ function startBackgroundSync() {
       backgroundSyncRefresh();
     }
   });
-  console.log('[GitHub Sync] 后台定时刷新已启动(30秒)');
+  console.log('[Cloud Sync] 后台定时刷新已启动(30秒)');
 }
 
 /**
@@ -3226,6 +3114,6 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const syncEl = document.getElementById('sync-status');
   if (syncEl) {
-    syncEl.title = isGitHubConfigured ? 'GitHub 同步状态' : '本地调试模式:不与 GitHub 同步';
+    syncEl.title = isGitHubConfigured ? '云端同步状态' : '本地调试模式:不与云端同步';
   }
 });
