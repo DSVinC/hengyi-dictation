@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * GitHub 同步重试保护回归测试。
+ * 云端同步重试保护回归测试。
  *
- * 当前听写工具是静态页面，GitHub API 同步逻辑在 js/app.js 中。
+ * 当前听写工具是静态页面，云端同步逻辑在 js/app.js 中。
  * 这里用轻量源码断言保护两个关键点：
  * - progress.json 写入遇到 409 SHA 冲突会重新拉取后重试。
  * - daily-stats.json 写入遇到 409 SHA 冲突也会重新拉取后重试。
@@ -24,11 +24,11 @@ function ok(cond, label) {
   }
 }
 
-console.log('\n=== GitHub sync retry safeguards ===');
+console.log('\n=== Cloud sync retry safeguards ===');
 ok(source.includes('const GITHUB_WRITE_MAX_ATTEMPTS = 3'), '统一配置最多重试 3 次');
-ok(source.includes('response.status === 409 && attempt < GITHUB_WRITE_MAX_ATTEMPTS'), '409 SHA 冲突会进入重试分支');
-ok(source.includes('[GitHub Sync] SHA 冲突，重新拉取后重试'), 'progress.json 同步有冲突重试日志');
-ok(source.includes('[DailyStats Sync] SHA 冲突，重新拉取后重试'), 'daily-stats.json 同步有冲突重试日志');
+ok(source.includes('(response.status === 409 || response.status === 412) && attempt < GITHUB_WRITE_MAX_ATTEMPTS'), '409/412 冲突会进入重试分支');
+ok(source.includes('[Cloud Sync] 进度写入冲突，重新拉取后重试'), 'progress 同步有冲突重试日志');
+ok(source.includes('[Cloud Sync] 每日统计写入冲突，重新拉取后重试'), 'daily-stats 同步有冲突重试日志');
 ok(source.includes(`SyncState.status = 'synced';
       SyncState.lastSync = new Date();
       SyncState.error = null;
