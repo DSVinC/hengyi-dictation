@@ -1117,6 +1117,10 @@ function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
   return getLocalDate(nextDate);
 }
 
+function getDictationRoundTag(round) {
+  return Number(round) >= 7 ? '✅' : `R${Number(round) || 0}`;
+}
+
 /**
  * 获取明天日期字符串(本地时区)
  */
@@ -1766,7 +1770,7 @@ async function generateDictationList() {
         <h3 class="section-title review">🔄 到期复习-R2+ (${finalR2Plus.length})</h3>
         <div class="dictation-words">
           ${finalR2Plus.map(w => {
-            const roundTag = w.round >= 5 ? '✅' : `R${w.round}`;
+            const roundTag = getDictationRoundTag(w.round);
             return `<span class="dictation-word review" data-meaning="${encodeURIComponent(w.meaning || '')}" data-lesson="${escapeHtml(w.lessonId || lessonId)}" data-subject="${escapeHtml(subject)}">${escapeHtml(w.text)}${formatWordExtra(w)} <small>${roundTag}</small></span>`;
           }).join('')}
         </div>

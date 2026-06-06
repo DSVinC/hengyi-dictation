@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Unreleased - 2026-06-06
+
+### 修复听写清单 R5/R6 标签误导
+
+**修复项**：
+- 到期复习 `R2+` 区块中，R5、R6 不再显示为 `✅`，改为显示真实轮次 `R5`、`R6`
+- 只有真正 `R7/已掌握` 的词继续显示 `✅`
+- 新增 `getDictationRoundTag` 小函数，避免听写清单标签和掌握状态混用
+
+**验证**：
+- `node --check js/app.js` 通过
+- `node tests/dictation-round-tag.test.js` 通过
+- `node tests/daily-stats.test.js` 通过
+
+**变更文件**：`js/app.js` + `index.html` + `tests/dictation-round-tag.test.js`
+
+---
+
 ## v0.8.14 - 2026-04-29
 
 ### 修复英语错词重听批改缺少复选框
