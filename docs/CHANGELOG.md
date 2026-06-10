@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## Unreleased - 2026-06-11
+
+### 修复复习间隔提前和掌握词抽查计数
+
+**修复项**：
+- 批量错开复习时，只允许把同批词向后分散，不再把词语提前到早于当前轮次的设定间隔
+- 修复 R2 正确后升到 R3 时，部分词第二天又出现在复习清单的问题
+- 掌握词抽查现在计入听写阶段的 `共 X 个词` 总数，避免孩子听写时漏看抽查词、批改时才发现多了词
+- 听写复习日期、每日统计日期、掌握词抽查日期统一使用 `Asia/Shanghai` 业务时区
+
+**验证**：
+- `node --check js/app.js` 通过
+- `node tests/review-schedule.test.js` 通过
+- `node tests/mastered-dictation-list.test.js` 通过
+- `node tests/dictation-round-tag.test.js` 通过
+- `node tests/daily-stats.test.js` 通过
+
+**变更文件**：`js/app.js` + `js/daily-stats.js` + `js/mastered-pool.js` + `index.html` + `tests/review-schedule.test.js` + `tests/mastered-dictation-list.test.js` + `tests/daily-stats.test.js`
+
+---
+
 ## Unreleased - 2026-06-06
 
 ### 修复听写清单 R5/R6 标签误导

@@ -63,6 +63,7 @@ const AppState = {
 // ============================================
 const FETCH_TIMEOUT = 10000; // 10秒超时
 const WORD_LIMIT = 30;
+const BUSINESS_TIME_ZONE = 'Asia/Shanghai';
 
 // ============================================
 // 艾宾浩斯复习间隔(天)
@@ -75,9 +76,33 @@ const EBINGHAUS_INTERVALS = [1, 1, 2, 3, 5, 12, 20];
  * 使用本地时区而非 UTC,修复 UTC+8 时区在 00:00-07:59
  * 返回前一天日期的 bug(导致错词第二天早上不出现)
  */
-function getLocalDate(d) {
-  if (!d) d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function getShanghaiDateParts(d = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: BUSINESS_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(d);
+  const partMap = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return {
+    year: Number(partMap.year),
+    month: Number(partMap.month),
+    day: Number(partMap.day)
+  };
+}
+
+function formatBusinessDate(parts) {
+  return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}`;
+}
+
+function addBusinessDays(days, fromDate = new Date()) {
+  const base = getShanghaiDateParts(fromDate);
+  const shiftedNoonUtc = new Date(Date.UTC(base.year, base.month - 1, base.day + days, 12));
+  return getLocalDate(shiftedNoonUtc);
+}
+
+function getLocalDate(d = new Date()) {
+  return formatBusinessDate(getShanghaiDateParts(d));
 }
 
 // ============================================
@@ -1082,9 +1107,7 @@ function hideError() {
 function calculateNextReview(round) {
   if (round >= 7) return null; // 第7轮后视为完全掌握
   const days = EBINGHAUS_INTERVALS[round];
-  const nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + days);
-  return getLocalDate(nextDate);
+  return addBusinessDays(days);
 }
 
 /**
@@ -1110,11 +1133,9 @@ function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
   if (round >= 7) return null;
   const baseDays = EBINGHAUS_INTERVALS[round];
   const spread = Math.max(1, Math.floor(totalInBatch / 6));
-  const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread * 2) - spread : 0;
-  const days = Math.max(1, baseDays + offset);
-  const nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + days);
-  return getLocalDate(nextDate);
+  const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread) : 0;
+  const days = baseDays + offset;
+  return addBusinessDays(days);
 }
 
 function getDictationRoundTag(round) {
@@ -1125,9 +1146,7 @@ function getDictationRoundTag(round) {
  * 获取明天日期字符串(本地时区)
  */
 function getTomorrowDate() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return getLocalDate(d);
+  return addBusinessDays(1);
 }
 
 /**
@@ -1807,7 +1826,7 @@ async function generateDictationList() {
     resultHtml += `<div class="postponed-notice">📝 已选新词中有 ${postponedR0.length} 个未纳入今日清单,请明天继续听写。</div>`;
   }
 
-  const totalIncluded = finalR0.length + finalR1.length + finalR2Plus.length;
+  const totalIncluded = finalR0.length + finalR1.length + finalR2Plus.length + finalMastered.length;
   resultHtml += `<p class="dictation-total">共 ${totalIncluded} 个词(${postponedWords.length} 个未纳入今日清单)</p>`;
   resultHtml += `
     <div class="action-bar grading-action-bar">
@@ -2225,15 +2244,14 @@ function getWordStatus(round) {
 
 function formatDate(dateStr) {
   if (!dateStr) return '-';
-  const date = new Date(dateStr);
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const today = getLocalDate();
+  const tomorrow = getTomorrowDate();
 
-  if (date.toDateString() === today.toDateString()) return '今天';
-  if (date.toDateString() === tomorrow.toDateString()) return '明天';
+  if (dateStr === today) return '今天';
+  if (dateStr === tomorrow) return '明天';
 
-  return `${date.getMonth() + 1}月${date.getDate()}日`;
+  const [, month, day] = dateStr.split('-');
+  return `${Number(month)}月${Number(day)}日`;
 }
 
 // ============================================
@@ -2538,16 +2556,12 @@ async function renderStatsPage() {
  */
 function renderStatsSvgChart(stats) {
   // 取近 30 天数据,按日期升序排序
-  const today = new Date();
-  const thirtyDaysAgo = new Date(today);
-  thirtyDaysAgo.setDate(today.getDate() - 30);
+  const today = getLocalDate();
+  const thirtyDaysAgo = addBusinessDays(-30);
 
   const allDates = Object.keys(stats)
     .filter(date => /^\d{4}-\d{2}-\d{2}$/.test(date))
-    .filter(date => {
-      const d = new Date(date);
-      return d >= thirtyDaysAgo && d <= today;
-    })
+    .filter(date => date >= thirtyDaysAgo && date <= today)
     .sort((a, b) => a.localeCompare(b)); // 升序
 
   if (allDates.length === 0) {

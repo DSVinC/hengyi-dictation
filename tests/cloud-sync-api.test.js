@@ -31,7 +31,7 @@ ok(source.includes("fetchWithTimeout(`${SYNC_API_BASE}?kind=daily-stats"), '每�
 ok(source.includes("kind: 'progress'"), '进度写入使用 progress kind');
 ok(source.includes("kind: 'daily-stats'"), '每日统计写入使用 daily-stats kind');
 ok(!source.includes("api.github.com/repos/DSVinC/hengyi-dictation/contents"), '浏览器端不再直连 GitHub contents API');
-ok(indexHtml.includes('js/app.js?v=0.8.22'), '入口已提升 app.js 缓存版本');
+ok(indexHtml.includes('js/app.js?v=0.8.25'), '入口已提升 app.js 缓存版本');
 
 console.log('\n' + '='.repeat(50));
 if (fail === 0) {

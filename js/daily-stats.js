@@ -16,6 +16,7 @@
   const DAILY_STATS_DEVICE_ID_KEY = 'hengyi-daily-stats-device-id';
   const DAILY_STATS_SCHEMA_VERSION = 2;
   const LEGACY_UPDATED_AT = '1970-01-01T00:00:00.000Z';
+  const BUSINESS_TIME_ZONE = 'Asia/Shanghai';
 
   // 兼容浏览器和 Node.js 环境
   const _global = typeof window !== 'undefined' ? window : globalThis;
@@ -25,14 +26,17 @@
   // ============================================
 
   /**
-   * 获取当前日期（YYYY-MM-DD 格式，本地时区）
+   * 获取当前日期（YYYY-MM-DD 格式，固定 Asia/Shanghai 业务时区）
    */
-  function getLocalDateString() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  function getLocalDateString(d = new Date()) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: BUSINESS_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(d);
+    const partMap = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return `${partMap.year}-${partMap.month}-${partMap.day}`;
   }
 
   /**

@@ -52,6 +52,17 @@ function mockDate(dateStr) {
   return () => { globalThis.Date = originalDate; };
 }
 
+function getLocalDate(d = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(d);
+  const partMap = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${partMap.year}-${partMap.month}-${partMap.day}`;
+}
+
 // ============================================
 // Extract module symbols
 // ============================================
@@ -83,7 +94,7 @@ ok(Object.keys(empty).length === 0, '对象为空');
 // ============================================
 console.log('\n=== Test 2: record("chinese", 17, 20) 后 getAll() 返回当天语文数据 ===');
 reset();
-const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const today = getLocalDate(); // YYYY-MM-DD, same local-date rule as the app
 
 DailyStats.record('chinese', 17, 20);
 const result = DailyStats.getAll();
@@ -103,7 +114,7 @@ DailyStats.record('chinese', 17, 20);
 DailyStats.record('chinese', 3, 5);
 
 const result2 = DailyStats.getAll();
-const todayData2 = result2[new Date().toISOString().split('T')[0]];
+const todayData2 = result2[getLocalDate()];
 
 ok(todayData2.chinese.correct === 20, '累计正确数=20 (17+3)');
 ok(todayData2.chinese.total === 25, '累计总数=25 (20+5)');
@@ -118,7 +129,7 @@ DailyStats.record('chinese', 17, 20);
 DailyStats.record('english', 15, 18);
 
 const result3 = DailyStats.getAll();
-const todayData3 = result3[new Date().toISOString().split('T')[0]];
+const todayData3 = result3[getLocalDate()];
 
 ok(todayData3.chinese.correct === 17, '语文正确数=17');
 ok(todayData3.chinese.total === 20, '语文总数=20');
@@ -244,6 +255,20 @@ restoreLocalDate();
 
 ok(localToday !== null, '本地当天有数据');
 ok(localToday.chinese.correct === 1, '本地当天语文正确数=1');
+
+// ============================================
+// Test 12.1: getToday() 固定使用 Asia/Shanghai 日期
+// ============================================
+console.log('\n=== Test 12.1: getToday() 固定使用 Asia/Shanghai 日期 ===');
+
+reset();
+const restoreShanghaiDate = mockDate('2026-05-08T16:30:00.000Z'); // 上海 5月9日 00:30
+DailyStats.record('english', 1, 1);
+const shanghaiToday = DailyStats.getToday();
+restoreShanghaiDate();
+
+ok(shanghaiToday !== null, '按上海日期创建第二天记录');
+ok(shanghaiToday.english.correct === 1, '上海日期英语正确数=1');
 
 // ============================================
 // Test 13: 多设备增量合并不会互相覆盖
