@@ -31,6 +31,14 @@ ok(
   /掌握词抽查 \(\$\{finalMastered\.length\}\)/.test(appCode),
   'mastered sample section is rendered in the dictation list'
 );
+ok(
+  /const scheduledWordKeys = new Set\([\s\S]*\[\.\.\.finalR0, \.\.\.finalDueWords\]\.map\(word => getWordListKey\(word, subject\)\)[\s\S]*\);/.test(appCode),
+  'mastered sample candidates exclude words already scheduled in the dictation list'
+);
+ok(
+  /isMasteredWordEligibleForSample\(masteredWord\) && !scheduledWordKeys\.has\(getWordListKey\(masteredWord, subject\)\)/.test(appCode),
+  'mastered sample candidates must be due and non-duplicate'
+);
 
 if (fail > 0) {
   console.error(`\n${fail} tests failed`);

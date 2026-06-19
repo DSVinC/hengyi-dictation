@@ -1105,8 +1105,7 @@ function hideError() {
  * @returns {string|null} 下次复习日期 (本地日期格式) 或 null
  */
 function calculateNextReview(round) {
-  if (round >= 7) return null; // 第7轮后视为完全掌握
-  const days = EBINGHAUS_INTERVALS[round];
+  const days = round >= 7 ? EBINGHAUS_INTERVALS[6] : EBINGHAUS_INTERVALS[round];
   return addBusinessDays(days);
 }
 
@@ -1116,7 +1115,7 @@ function calculateNextReview(round) {
  * 否则会与批改错词路径(错词直接今天复习)产生冲突。
  */
 function getNextReviewForRound(round) {
-  if (round >= 7) return null;
+  if (round >= 7) return calculateNextReview(7);
   if (round <= 0) return getLocalDate();
   if (round === 1) return getLocalDate();
   return calculateNextReview(round);
@@ -1130,12 +1129,20 @@ function getNextReviewForRound(round) {
  * @returns {string|null}
  */
 function calculateStaggeredNextReview(round, index = 0, totalInBatch = 1) {
-  if (round >= 7) return null;
-  const baseDays = EBINGHAUS_INTERVALS[round];
+  const baseDays = round >= 7 ? EBINGHAUS_INTERVALS[6] : EBINGHAUS_INTERVALS[round];
   const spread = Math.max(1, Math.floor(totalInBatch / 6));
   const offset = totalInBatch > 1 ? Math.floor((index / Math.max(1, totalInBatch - 1)) * spread) : 0;
   const days = baseDays + offset;
   return addBusinessDays(days);
+}
+
+function getWordListKey(word, fallbackSubject = AppState.currentSubject) {
+  return `${word.subject || fallbackSubject || ''}|${word.text || ''}`;
+}
+
+function isMasteredWordEligibleForSample(word) {
+  if ((word.round || 0) < 7) return false;
+  return !word.nextReview || word.nextReview <= getLocalDate();
 }
 
 function getDictationRoundTag(round) {
@@ -1175,7 +1182,7 @@ async function getAllDueReviewWords(subject) {
     if (data && data.words) {
       mergeProgressToWords(data, 'custom', 'CUSTOM');
       data.words.forEach(word => {
-        if (word.round >= 1 && word.nextReview && word.nextReview <= today) {
+        if (word.round >= 1 && word.round < 7 && word.nextReview && word.nextReview <= today) {
           dueWords.push({
             ...word,
             subject: 'custom',
@@ -1209,7 +1216,8 @@ async function getAllDueReviewWords(subject) {
       mergeProgressToWords(data, subject, item.id);
       const lessonName = isChinese ? data.lessonName : data.unitName;
       data.words.forEach(word => {
-        if (word.round >= 1 && word.nextReview && word.nextReview <= today) {
+        // BUG FIX: exclude mastered words (round >= 7) from due review list
+        if (word.round >= 1 && word.round < 7 && word.nextReview && word.nextReview <= today) {
           dueWords.push({
             ...word,
             subject: subject,
@@ -1556,7 +1564,7 @@ async function loadAndRenderDueReviewWords(subject, isChinese) {
   const dueReviewWords = await getAllDueReviewWords(subject);
   AppState.dueReviewWords = dueReviewWords;
   const r1DueWords = dueReviewWords.filter(w => w.round === 1);
-  const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2);
+  const r2PlusDueWords = dueReviewWords.filter(w => w.round >= 2 && w.round < 7);
 
   refreshSelectionUi();
 
@@ -1700,7 +1708,10 @@ async function generateDictationList() {
   }
 
   const finalR1 = finalDueWords.filter(word => word.round === 1);
-  const finalR2Plus = finalDueWords.filter(word => word.round >= 2);
+  const finalR2Plus = finalDueWords.filter(word => word.round >= 2 && word.round < 7);
+  const scheduledWordKeys = new Set(
+    [...finalR0, ...finalDueWords].map(word => getWordListKey(word, subject))
+  );
 
   // 掌握词随机选择(round >= 7)
   const allMasteredWords = [];
@@ -1723,13 +1734,16 @@ async function generateDictationList() {
       mergeProgressToWords(data, subject, item.id);
       const lessonName = isChinese ? data.lessonName : data.unitName;
       data.words.forEach(word => {
-        if (word.round >= 7) {
+        const masteredWord = {
+          ...word,
+          subject,
+          lessonId: item.id,
+          lessonName,
+          type: 'mastered'
+        };
+        if (isMasteredWordEligibleForSample(masteredWord) && !scheduledWordKeys.has(getWordListKey(masteredWord, subject))) {
           allMasteredWords.push({
-            ...word,
-            subject,
-            lessonId: item.id,
-            lessonName,
-            type: 'mastered'
+            ...masteredWord
           });
         }
       });

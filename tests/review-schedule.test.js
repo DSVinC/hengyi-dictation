@@ -81,6 +81,10 @@ if (intervalsMatch && timezoneMatch && shanghaiPartsMatch && formatBusinessDateM
     calculateStaggeredNextReview(6, 0, 30) >= '2026-07-01',
     'R6 in a large batch is not due earlier than 20 days'
   );
+  ok(
+    calculateStaggeredNextReview(7, 0, 30) >= '2026-07-01',
+    'R7 mastered sampling is not due earlier than the R6 interval'
+  );
   restoreDate();
 }
 
